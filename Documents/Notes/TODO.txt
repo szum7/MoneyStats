@@ -1,0 +1,1 @@
+﻿- a tranzakciókat típus átalakítottan tárolom. Legyen metódus, ami adatbázisból kiolvassa a tranzakciót, és visszaadja úgy, ahogy az az excel-ben volt.

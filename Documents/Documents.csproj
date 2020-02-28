@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Notes\" />
     <Folder Include="SQL\" />
   </ItemGroup>
 
