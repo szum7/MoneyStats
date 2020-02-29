@@ -1,0 +1,19 @@
+﻿> add-migration InitialCreate
+Info:
+-----
+Creates a script to create or update the database based on your current model.
+
+Running it the first time: creates a <current_date>_InitialCreate.cs file with mostly CreateTable commands.
+
+Running it after a model change: creates a <current_date>_<name-you-have-given-it>.cs file with alters, if 
+a table needs to change.
+
+Not removing these .cs files will give you a nice history what happened with your DB and when.
+
+
+> remove-migration
+// Running it once will remove the last (?) migration .cs file.
+
+
+> update-database
+// Runs the last (?) migration .cs.

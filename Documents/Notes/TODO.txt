@@ -1,1 +1,2 @@
 ﻿- a tranzakciókat típus átalakítottan tárolom. Legyen metódus, ami adatbázisból kiolvassa a tranzakciót, és visszaadja úgy, ahogy az az excel-ben volt.
+- egy kiexportált xls-ben a közlemény (Message property) után több oszlop is van. Ezek értéke (nekem) mind null vagy NOTPROVIDED. Van olyan, hogy ezek ki vannak töltve? Felvegyük őket a modelbe?
