@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
-namespace MoneyStats.DAL.Model
+namespace MoneyStats.DAL.Models
 {
-    [Table("TransactionTagConn")]
-    public class TransactionTagConn
-    {
-
-    }
-
     [Table("Transaction")]
-    public class Transaction : EntityBase
+    public partial class Transaction : EntityBase // (K&H exported transactions)
     {
-        public int Id { get; set; }
         public DateTime AccountingDate { get; set; }
-        public string TransactionId { get; set; } // TODO átnevezni, ne legyen class+id neve
+        public string TransactionId { get; set; }
         public string Type { get; set; }
         public string Account { get; set; }
         public string AccountName { get; set; }
@@ -27,5 +19,10 @@ namespace MoneyStats.DAL.Model
         public string Message { get; set; }
 
         public virtual ICollection<TransactionTagConn> TransactionTagConn { get; set; }
+
+        public Transaction()
+        {
+            TransactionTagConn = new HashSet<TransactionTagConn>();
+        }
     }
 }

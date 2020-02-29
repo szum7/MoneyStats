@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MoneyStats.DAL.Model;
+using MoneyStats.DAL.Models;
 
 namespace MoneyStats.DAL
 {
