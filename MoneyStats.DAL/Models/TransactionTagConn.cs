@@ -3,9 +3,8 @@
 namespace MoneyStats.DAL.Models
 {
     [Table("TransactionTagConn")]
-    public class TransactionTagConn
+    public class TransactionTagConn : EntityBase
     {
-        public int Id { get; set; }
         public int TransactionId { get; set; }
         public int TagId { get; set; }
 
