@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace MoneyStats.BL.Repositories
 {
-    public abstract class EntityBaseRepository<TEntity> : IEntityRepository<TEntity> where TEntity : EntityBase
+    public abstract class EntityBaseRepository<TEntity> : IEntityBaseRepository<TEntity> where TEntity : EntityBase
     {
         public int Insert(TEntity entity)
         {
@@ -23,6 +23,7 @@ namespace MoneyStats.BL.Repositories
         {
             using (var context = new MoneyStatsContext())
             {
+                // TODO "context.Set<TEntity>().ToList().Where(x => x.IsActive);" works, but why do we need it?
                 return context.Set<TEntity>().Where(x => x.IsActive);
             }
         }

@@ -24,7 +24,10 @@ namespace MoneyStats.BL.Repositories
 
         public void ExtraMethod()
         {
-            throw new System.NotImplementedException();
+            using (var context = new MoneyStatsContext())
+            {
+                var list = context.Transactions.ToList().Where(x => x.IsActive).ToList();
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace MoneyStats.BL.Interfaces
 {
-    public interface ITransactionRepository : IEntityRepository<Transaction>
+    public interface ITransactionRepository : IEntityBaseRepository<Transaction>
     {
         void ExtraMethod();
     }

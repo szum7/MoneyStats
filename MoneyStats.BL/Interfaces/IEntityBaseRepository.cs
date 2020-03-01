@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MoneyStats.BL.Interfaces
 {
-    public interface IEntityRepository<TEntity> where TEntity : EntityBase
+    public interface IEntityBaseRepository<TEntity> where TEntity : EntityBase
     {
         IEnumerable<TEntity> Get();
 
