@@ -1,6 +1,7 @@
 ﻿using MoneyStats.BL.Interfaces;
 using MoneyStats.DAL;
 using MoneyStats.DAL.Models;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MoneyStats.BL.Repositories
@@ -27,6 +28,28 @@ namespace MoneyStats.BL.Repositories
             using (var context = new MoneyStatsContext())
             {
                 var list = context.Transactions.ToList().Where(x => x.IsActive).ToList();
+            }
+        }
+
+        public List<Transaction> LazyLoading()
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                return context.Transactions.ToList();
+            }
+        }
+
+        public List<Transaction> EagerLoading()
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                return (from e in context.Transactions
+                        select new Transaction()
+                        {
+                            Id = e.Id,
+                            State = e.State,
+                            TransactionTagConn = e.TransactionTagConn
+                        }).ToList();
             }
         }
     }

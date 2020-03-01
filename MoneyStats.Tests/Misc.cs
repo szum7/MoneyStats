@@ -19,5 +19,15 @@ namespace MoneyStats.Tests
 
             Assert.AreEqual(1, 1);
         }
+
+        [TestMethod]
+        public void Test2()
+        {
+            TransactionRepository repo = new TransactionRepository();
+            var tr1 = repo.LazyLoading();
+            var tr2 = repo.EagerLoading();
+
+            Assert.AreEqual(1, 1);
+        }
     }
 }
