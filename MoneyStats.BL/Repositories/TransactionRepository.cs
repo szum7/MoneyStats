@@ -1,10 +1,11 @@
-﻿using MoneyStats.DAL;
+﻿using MoneyStats.BL.Interfaces;
+using MoneyStats.DAL;
 using MoneyStats.DAL.Models;
 using System.Linq;
 
 namespace MoneyStats.BL.Repositories
 {
-    public class TransactionRepository : EntityBaseRepository<Transaction>
+    public class TransactionRepository : EntityBaseRepository<Transaction>, ITransactionRepository
     {
         public new int Insert(Transaction transaction)
         {
@@ -19,6 +20,11 @@ namespace MoneyStats.BL.Repositories
                 context.SaveChanges();
                 return transaction.Id;
             }
+        }
+
+        public void ExtraMethod()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace MoneyStats.DAL.Models
 {
-    public partial class EntityBase
+    public abstract partial class EntityBase
     {
         [NotMapped]
         public bool IsActive => this.State == 1;

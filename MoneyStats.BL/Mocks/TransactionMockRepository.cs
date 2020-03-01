@@ -18,6 +18,11 @@ namespace MoneyStats.BL.Mocks
             return true;
         }
 
+        public void ExtraMethod()
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Transaction> Get()
         {
             throw new NotImplementedException();

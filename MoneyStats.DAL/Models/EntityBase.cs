@@ -2,7 +2,7 @@
 
 namespace MoneyStats.DAL.Models
 {
-    public partial class EntityBase
+    public abstract partial class EntityBase
     {
         public int Id { get; set; }
         public int? ModifiedBy { get; set; }
