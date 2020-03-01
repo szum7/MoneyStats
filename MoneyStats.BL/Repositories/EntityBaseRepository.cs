@@ -9,6 +9,16 @@ namespace MoneyStats.BL.Repositories
 {
     public abstract class EntityBaseRepository<TEntity> : IEntityBaseRepository<TEntity> where TEntity : EntityBase
     {
+        public IEnumerable<int> InsertRange(IEnumerable<TEntity> entities)
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                context.Set<TEntity>().AddRange(entities);
+                context.SaveChanges();
+                return entities.Select(x => x.Id);
+            }
+        }
+
         public int Insert(TEntity entity)
         {
             using (var context = new MoneyStatsContext())
@@ -19,12 +29,20 @@ namespace MoneyStats.BL.Repositories
             }
         }
 
+        public IEnumerable<TEntity> ForceGet()
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                return context.Set<TEntity>().ToList();
+            }
+        }
+
         public IEnumerable<TEntity> Get()
         {
             using (var context = new MoneyStatsContext())
             {
                 // TODO "context.Set<TEntity>().ToList().Where(x => x.IsActive);" works, but why do we need it?
-                return context.Set<TEntity>().Where(x => x.IsActive);
+                return context.Set<TEntity>().ToList().Where(x => x.IsActive);
             }
         }
 
@@ -41,6 +59,7 @@ namespace MoneyStats.BL.Repositories
                     context.SaveChanges();
                     return true;
                 }
+
                 // TODO log or throw
                 return false;
             }
@@ -51,6 +70,29 @@ namespace MoneyStats.BL.Repositories
             using (var context = new MoneyStatsContext())
             {
                 return context.Set<TEntity>().SingleOrDefault(x => x.Id == id && x.IsActive);
+            }
+        }
+
+        public bool DeleteRange(IEnumerable<int> ids)
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                var objs = this.Get();
+                var toDeleteList = objs.Where(x => ids.Contains(x.Id));
+
+                if (toDeleteList.ToList().Count == 0)
+                {
+                    // TODO log or throw
+                    return false;
+                }
+
+                foreach (var toDeleteItem in toDeleteList)
+                {
+                    toDeleteItem.ModifiedDate = DateTime.Now;
+                    toDeleteItem.State = 0;
+                }
+                context.SaveChanges();
+                return true;
             }
         }
 
@@ -67,8 +109,29 @@ namespace MoneyStats.BL.Repositories
                     context.SaveChanges();
                     return true;
                 }
+
                 // TODO log or throw
                 return false;
+            }
+        }
+
+        public bool DestroyRange(IEnumerable<int> ids)
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                var objs = (from e in context.Set<TEntity>()
+                            where ids.Contains(e.Id)
+                            select e).ToList();
+
+                if (objs.Count == 0)
+                {
+                    // TODO log or throw
+                    return false;
+                }
+
+                context.Set<TEntity>().RemoveRange(objs);
+                context.SaveChanges();
+                return true;
             }
         }
 
@@ -84,6 +147,7 @@ namespace MoneyStats.BL.Repositories
                     context.SaveChanges();
                     return true;
                 }
+
                 // TODO log or throw
                 return false;
             }

@@ -2,3 +2,4 @@
 - egy kiexportált xls-ben a közlemény (Message property) után több oszlop is van. Ezek értéke (nekem) mind null vagy NOTPROVIDED. Van olyan, hogy ezek ki vannak töltve? Felvegyük őket a modelbe?
 - néha egybe utalnak összegeket, pl 2 havi egyetemi ösztöndíj. Lehet kezelni kell ezt a helyzetet
 - generikus repositorynál ne legyen lazy loading, vagy legyen mindkettő
+- van egy csomó YAGNI repo metódus. Ezeket majd törölni kell, ha kiderül, mire van szükség

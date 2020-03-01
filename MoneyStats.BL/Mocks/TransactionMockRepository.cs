@@ -13,12 +13,27 @@ namespace MoneyStats.BL.Mocks
             return true;
         }
 
+        public bool DeleteRange(IEnumerable<int> ids)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Destroy(int id)
         {
             return true;
         }
 
+        public bool DestroyRange(IEnumerable<int> ids)
+        {
+            throw new NotImplementedException();
+        }
+
         public void ExtraMethod()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Transaction> ForceGet()
         {
             throw new NotImplementedException();
         }
@@ -29,6 +44,11 @@ namespace MoneyStats.BL.Mocks
         }
 
         public int Insert(Transaction transaction)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<int> InsertRange(IEnumerable<Transaction> entities)
         {
             throw new NotImplementedException();
         }
