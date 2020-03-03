@@ -17,3 +17,25 @@ Not removing these .cs files will give you a nice history what happened with you
 
 > update-database
 // Runs the last (?) migration .cs.
+
+
+// Object properties (e.g.: TransactionTagConn) will remain null
+public List<Transaction> LazyLoading() {
+    using (var context = new MoneyStatsContext()) {
+        return context.Transactions.ToList();
+    }
+}
+
+
+// TransactionTagConn will have values (if present in db)
+public List<Transaction> EagerLoading() {
+    using (var context = new MoneyStatsContext()) {
+        return (from e in context.Transactions
+                select new Transaction() {
+                    Id = e.Id,
+                    State = e.State,
+					...
+                    TransactionTagConn = e.TransactionTagConn
+                }).ToList();
+    }
+}
