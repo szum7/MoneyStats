@@ -14,6 +14,7 @@ import { LoadingScreenComponent } from './components/loading-screen/loading-scre
 // Pages
 import { HomePage } from './pages/home-page/home.page';
 import { TestTablePage } from './pages/test-table-page/test-table.page';
+import { ExcelTestPage } from './pages/excel-test-page/excel-test.page';
 
 // Services
 import { LoadingScreenService } from './services/loading-screen-service/loading-screen.service';
@@ -29,7 +30,8 @@ import { BaseHttpService } from './services/base-http.service';
     LoadingScreenComponent,
     // Pages
     HomePage,
-    TestTablePage
+    TestTablePage,
+    ExcelTestPage
   ],
   imports: [
     BrowserModule,
@@ -38,6 +40,7 @@ import { BaseHttpService } from './services/base-http.service';
     RouterModule.forRoot([
       { path: '', component: HomePage },
       { path: 'testtable', component: TestTablePage },
+      { path: 'excel', component: ExcelTestPage },
     ], { useHash: true })
   ],
   providers: [
