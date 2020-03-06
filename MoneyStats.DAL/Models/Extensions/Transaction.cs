@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoneyStats.DAL.Models
 {
@@ -6,5 +7,8 @@ namespace MoneyStats.DAL.Models
     {
         [NotMapped]
         public string ContentId => $"{AccountingDate.ToString()}{TransactionId}{Type}{Account}{AccountName}{PartnerAccount}{PartnerName}{Sum?.ToString()}{Currency}{Message}";
+
+        [NotMapped]
+        public List<Tag> Tags { get; set; }
     }
 }
