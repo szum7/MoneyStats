@@ -17,6 +17,7 @@ namespace MoneyStats.DAL.Models
         public decimal? Sum { get; set; }
         public string Currency { get; set; }
         public string Message { get; set; }
+        public string OriginalContentId { get; set; }
 
         public virtual ICollection<TransactionTagConn> TransactionTagConn { get; set; }
 
