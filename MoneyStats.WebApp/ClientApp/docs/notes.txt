@@ -1,2 +1,4 @@
 // Read excel in Angular
 https://github.com/SheetJS/sheetjs
+
+https://stackoverflow.com/questions/51949848/angular-get-headers-from-excel-uploaded-using-xlsx
