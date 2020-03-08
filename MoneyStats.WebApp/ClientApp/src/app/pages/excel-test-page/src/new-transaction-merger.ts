@@ -3,7 +3,7 @@ import { InputMessages } from "src/app/utilities/input-messages.static";
 
 export class NewTransactionMerger {
 
-    public defineRows(matrix: Array<Array<NewTransaction>>) {
+    public setExclusion(matrix: Array<Array<NewTransaction>>) {
         for (let i = 0; i < matrix.length; i++) {
             let sheet = matrix[i];
             for (let j = 0; j < sheet.length; j++) {

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import * as XLSX from 'xlsx';
-import { ExcelTransactionMapper } from './src/excel-transaction-mapper';
 import { NewTransactionMerger } from './src/new-transaction-merger';
 import { NewTransaction } from './src/new-transaction';
+import { map } from 'rxjs/operators';
+import { ExcelReader } from './src/excel-reader';
 
 @Component({
     selector: 'app-excel-test-page',
@@ -21,85 +21,59 @@ export class ExcelTestPage {
     
     // TODO rendetrakni ebben a controllerben. Új osztályokat létrehozni, stb.
 
-    readFiles: Array<any>;
+    reader: ExcelReader;
     mappedExcelList: Array<Array<NewTransaction>>;
     flattenedExcelList: Array<NewTransaction>;
-    arrayBuffer: any;
-
+    
     constructor() {
+        this.reader = new ExcelReader();
     }
 
-    comperer(a, b){
+    dateComparer(a, b){
         let d1 = (new Date(a)).getTime();
         let d2 = (new Date(b)).getTime();
         return d1 > d2 ? 1 : d1 === d2 ? 0 : -1
     }
 
-    sortBy(arr: Array<NewTransaction>) {
-        return arr.sort((a, b) => this.comperer(a.AccountingDate, b.AccountingDate));
+    sortBy(arr: Array<any>, property: string) {
+        return arr.sort((a, b) => this.dateComparer(a[property], b[property]));
     }
 
     formatDate(date: string): string {
         return (new Date(date)).toISOString().substring(0, 10);
     }
 
-    toggleRowExclusion(row: NewTransaction): void {
+    click_toggleRowExclusion(row: NewTransaction): void {
         row.isExcluded = !row.isExcluded;
     }
 
-    evaluateReadFiles() {
+    click_evaluateReadFiles() {
         if (this.mappedExcelList == null || this.mappedExcelList.length == 0) {
             console.log("No read files/rows to work with.");
             return;
         }
 
         let merger: NewTransactionMerger = new NewTransactionMerger();
-        merger.defineRows(this.mappedExcelList);
+        merger.setExclusion(this.mappedExcelList);
         this.flattenedExcelList = [].concat.apply([], this.mappedExcelList);
     }
 
-    filesSelected(event) {
-        this.readFiles = event.target.files;
+    change_filesSelected(event) {
+        this.reader.inputFiles = event.target.files;
+        for (let i = 0; i < event.target.files.length; i++) { // TODO find a typescript linq (map doesn't work (?))
+            const file = event.target.files[i];
+            this.reader.inputFileNames.push(file.name);
+        }
     }
 
-    upload() {
-        let self = this;
+    click_upload() {
 
-        if (self.readFiles == null) {
+        if (this.reader.inputFiles == null) {
             console.log("No files uploaded.");
             return;
         }
 
-        self.mappedExcelList = [];
-        let mapper: ExcelTransactionMapper = new ExcelTransactionMapper();
-
-        for (let i = 0; i < self.readFiles.length; i++) {
-            self.readFile(self.readFiles[i], function(unmappedArray) {
-                self.mappedExcelList.push(mapper.mapTransactions(unmappedArray));
-            });
-        }
-
-        console.log(self.mappedExcelList);
-    }
-
-    readFile(file: File, callback: Function) {
-
-        let fileReader = new FileReader();
-        let arrayBuffer: any;
-
-        fileReader.onload = (e) => {
-            arrayBuffer = fileReader.result;
-            var data = new Uint8Array(arrayBuffer);
-            var arr = new Array();
-            for (var i = 0; i != data.length; ++i) {
-                arr[i] = String.fromCharCode(data[i]);
-            }
-            var bstr = arr.join("");
-            var workbook = XLSX.read(bstr, { type: "binary" });
-            var first_sheet_name = workbook.SheetNames[0];
-            var worksheet = workbook.Sheets[first_sheet_name];
-            callback(XLSX.utils.sheet_to_json(worksheet, { raw: true }));
-        }
-        fileReader.readAsArrayBuffer(file);
+        this.mappedExcelList = this.reader.getTransactionMatrix();
+        console.log(this.mappedExcelList);
     }
 }
