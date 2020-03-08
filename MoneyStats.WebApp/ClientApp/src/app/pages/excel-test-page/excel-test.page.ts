@@ -3,6 +3,7 @@ import { NewTransactionMerger } from './src/new-transaction-merger';
 import { NewTransaction } from './src/new-transaction';
 import { map } from 'rxjs/operators';
 import { ExcelReader } from './src/excel-reader';
+import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 
 @Component({
     selector: 'app-excel-test-page',
@@ -22,10 +23,9 @@ export class ExcelTestPage {
     // TODO rendetrakni ebben a controllerben. Új osztályokat létrehozni, stb.
 
     reader: ExcelReader;
-    mappedExcelList: Array<Array<NewTransaction>>;
-    flattenedExcelList: Array<NewTransaction>;
+    transactionList: Array<NewTransaction>;
     
-    constructor() {
+    constructor(private loadingScreen: LoadingScreenService) {
         this.reader = new ExcelReader();
     }
 
@@ -47,33 +47,41 @@ export class ExcelTestPage {
         row.isExcluded = !row.isExcluded;
     }
 
-    click_evaluateReadFiles() {
-        if (this.mappedExcelList == null || this.mappedExcelList.length == 0) {
-            console.log("No read files/rows to work with.");
-            return;
-        }
-
-        let merger: NewTransactionMerger = new NewTransactionMerger();
-        merger.setExclusion(this.mappedExcelList);
-        this.flattenedExcelList = [].concat.apply([], this.mappedExcelList);
-    }
-
     change_filesSelected(event) {
-        this.reader.inputFiles = event.target.files;
-        for (let i = 0; i < event.target.files.length; i++) { // TODO find a typescript linq (map doesn't work (?))
-            const file = event.target.files[i];
-            this.reader.inputFileNames.push(file.name);
-        }
-    }
 
-    click_upload() {
+        let files = event.target.files;
 
-        if (this.reader.inputFiles == null) {
+        // Read files
+        if (files == null || files.length === 0) {
             console.log("No files uploaded.");
             return;
         }
+        let mappedExcelMatrix: Array<Array<NewTransaction>> = this.reader.getTransactionMatrix(files);
+        console.log(mappedExcelMatrix);
 
-        this.mappedExcelList = this.reader.getTransactionMatrix();
-        console.log(this.mappedExcelList);
+        this.loadingScreen.start();
+        
+        // Wait for reader to read files
+        var _this = this;
+        var finishedReadingInterval = setInterval(function() {
+            
+            if (_this.reader.isReadingFinished()) {
+                clearInterval(finishedReadingInterval);
+                
+                // Evaluate read files
+                if (mappedExcelMatrix == null || mappedExcelMatrix.length == 0) {
+                    console.log("No read files/rows to work with.");
+                    return;
+                }
+                
+                let merger: NewTransactionMerger = new NewTransactionMerger();
+                merger.setExclusion(mappedExcelMatrix);
+                _this.transactionList = [].concat.apply([], mappedExcelMatrix);
+
+                _this.loadingScreen.stop();
+            }
+        }, 10);
+
+        
     }
 }

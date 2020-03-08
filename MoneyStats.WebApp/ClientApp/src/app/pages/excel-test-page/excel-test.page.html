@@ -2,15 +2,15 @@
   Excel test page
 </p>
 <input type="file" class="file-browser" multiple placeholder="Upload file" accept=".xlsx,.xls" (change)="change_filesSelected($event)">
-<button type="button" class="btn btn-info" (click)="click_upload()">Upload</button>
-<button type="button" class="btn btn-info" (click)="click_evaluateReadFiles()">Evaluate</button>
 
 <ul *ngIf="!!reader.inputFileNames">
   <li *ngFor="let fileName of reader.inputFileNames">{{fileName}}</li>
 </ul>
 
-<div class="mapped-transactions" *ngIf="flattenedExcelList != null">
-  <div class="transaction" *ngFor="let tr of sortBy(flattenedExcelList, 'AccountingDate')" [ngClass]="{'excluded': tr.isExcluded}">
+<!-- TODO kattintható header-t csinálni, amire összecsukja az adott oszlopot -->
+
+<div class="mapped-transactions" *ngIf="transactionList != null">
+  <div class="transaction" *ngFor="let tr of sortBy(transactionList, 'AccountingDate')" [ngClass]="{'excluded': tr.isExcluded}">
     <button type="button" (click)="click_toggleRowExclusion(tr)">{{tr.isExcluded ? "-" : "+"}}</button>
     <span class="tr-row acd">{{formatDate(tr.AccountingDate)}}</span>
     <span class="tr-row tri">{{tr.TransactionId}}</span>
