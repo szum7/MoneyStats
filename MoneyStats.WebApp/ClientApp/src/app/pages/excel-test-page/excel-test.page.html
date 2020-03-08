@@ -6,17 +6,17 @@
 <button type="button" class="btn btn-info" (click)="evaluateReadFiles()">Evaluate</button>
 
 <div class="mapped-transactions">
-  <div class="transaction" *ngFor="let tr of flattenedExcelList" [ngClass]="{'excluded': tr.isExcluded}">
+  <div class="transaction" *ngFor="let tr of sortBy(flattenedExcelList)" [ngClass]="{'excluded': tr.isExcluded}">
     <button type="button" (click)="toggleRowExclusion(tr)">{{tr.isExcluded ? "-" : "+"}}</button>
-    <span>{{tr.AccountingDate}}</span>
-    <span>{{tr.TransactionId}}</span>
-    <span>{{tr.Type}}</span>
-    <span>{{tr.Account}}</span>
-    <span>{{tr.AccountName}}</span>
-    <span>{{tr.PartnerAccount}}</span>
-    <span>{{tr.PartnerName}}</span>
-    <span>{{tr.Sum}}</span>
-    <span>{{tr.Currency}}</span>
-    <span>{{tr.Message}}</span>
+    <span class="tr-row acd">{{formatDate(tr.AccountingDate)}}</span>
+    <span class="tr-row tri">{{tr.TransactionId}}</span>
+    <span class="tr-row typ">{{tr.Type}}</span>
+    <span class="tr-row acc">{{tr.Account}}</span>
+    <span class="tr-row acn">{{tr.AccountName}}</span>
+    <span class="tr-row paa">{{tr.PartnerAccount}}</span>
+    <span class="tr-row pan">{{tr.PartnerName}}</span>
+    <span class="tr-row sum">{{tr.Sum}}</span>
+    <span class="tr-row cur">{{tr.Currency}}</span>
+    <span class="tr-row msg">{{tr.Message}}</span>
   </div>
 </div>

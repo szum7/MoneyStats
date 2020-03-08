@@ -19,7 +19,7 @@ export class ExcelTransactionMapper {
         let m: NewTransaction = new NewTransaction();
 
         m.AccountingDate = (this.getJsDateFromExcel(tr["Könyvelés dátuma"])).toString();
-        m.TransactionId = tr['Tranzakció azonosító']; // TODO weird column name, reading is faulty(?)
+        m.TransactionId = tr["Tranzakció azonosító "]; // TODO weird column name, reading is faulty(?)
         m.Type = tr["Típus"];
         m.Account = tr["Könyvelési számla"];
         m.AccountName = tr["Könyvelési számla elnevezése"];

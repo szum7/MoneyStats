@@ -19,12 +19,28 @@ export class ExcelTestPage {
     // Edit transactions page
     // 1. list transactions from db for edition
     
+    // TODO rendetrakni ebben a controllerben. Új osztályokat létrehozni, stb.
+
     readFiles: Array<any>;
     mappedExcelList: Array<Array<NewTransaction>>;
     flattenedExcelList: Array<NewTransaction>;
     arrayBuffer: any;
 
     constructor() {
+    }
+
+    comperer(a, b){
+        let d1 = (new Date(a)).getTime();
+        let d2 = (new Date(b)).getTime();
+        return d1 > d2 ? 1 : d1 === d2 ? 0 : -1
+    }
+
+    sortBy(arr: Array<NewTransaction>) {
+        return arr.sort((a, b) => this.comperer(a.AccountingDate, b.AccountingDate));
+    }
+
+    formatDate(date: string): string {
+        return (new Date(date)).toISOString().substring(0, 10);
     }
 
     toggleRowExclusion(row: NewTransaction): void {
