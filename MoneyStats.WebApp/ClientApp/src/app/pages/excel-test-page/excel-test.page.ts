@@ -1,63 +1,46 @@
 import { Component } from '@angular/core';
 import * as XLSX from 'xlsx';
-import { Transaction } from 'src/app/services/transaction-service/models/transaction.model';
-
-class ExcelTransactionMapper {
-
-    constructor() {
-    }
-
-    private getJsDateFromExcel(excelDate) {
-        // JavaScript dates can be constructed by passing milliseconds
-        // since the Unix epoch (January 1, 1970) example: new Date(12312512312);
-        
-        // 1. Subtract number of days between Jan 1, 1900 and Jan 1, 1970, plus 1  (Google "excel leap year bug")
-        // Neet to add +1 for some reason - Sz. Aron
-        // 2. Convert to milliseconds.
-        return new Date((excelDate - (25567 + 1 + 1)) * 86400 * 1000); // TODO hour is at 01:00:00. Should be at 00:00:00
-    }
-
-    private mapTransaction(tr: any): Transaction {
-        let m: Transaction = new Transaction();
-
-        m.AccountingDate = (this.getJsDateFromExcel(tr["Könyvelés dátuma"])).toString();
-        m.TransactionId = tr['Tranzakció azonosító']; // TODO weird column name, reading is faulty(?)
-        m.Type = tr["Típus"];
-        m.Account = tr["Könyvelési számla"];
-        m.AccountName = tr["Könyvelési számla elnevezése"];
-        m.PartnerAccount = tr["Partner számla"];
-        m.PartnerName = tr["Partner elnevezése"];
-        m.Sum = tr["Összeg"];
-        m.Currency = tr["Összeg devizaneme"];
-        m.Message = tr["Közlemény"];
-
-        m.OriginalContentId = m.getContentId();
-
-        return m;
-    }
-
-    public mapTransactions(list: Array<any>): Array<Transaction> {
-        let ms: Array<Transaction> = [];
-        for (let i = 0; i < list.length; i++) {
-            ms.push(this.mapTransaction(list[i]));
-        }
-        return ms;
-    }
-}
+import { ExcelTransactionMapper } from './src/excel-transaction-mapper';
+import { NewTransactionMerger } from './src/new-transaction-merger';
+import { NewTransaction } from './src/new-transaction';
 
 @Component({
     selector: 'app-excel-test-page',
     templateUrl: './excel-test.page.html',
     styleUrls: ['./excel-test.page.scss']
 })
-export class ExcelTestPage {    
+export class ExcelTestPage {
+    
+    // New transactions page
+    // 1. file merge stage (exclude duplicates between xml rows from multiple files)
+    // 2. db merge stage (exclude duplicates between db rows and xml rows)
+    // 3. eval rule and edit stage (evaluate rules and allow edition to rows)
+
+    // Edit transactions page
+    // 1. list transactions from db for edition
     
     readFiles: Array<any>;
-    mappedExcelList: Array<any>;
+    mappedExcelList: Array<Array<NewTransaction>>;
+    flattenedExcelList: Array<NewTransaction>;
     arrayBuffer: any;
 
     constructor() {
-    }    
+    }
+
+    toggleRowExclusion(row: NewTransaction): void {
+        row.isExcluded = !row.isExcluded;
+    }
+
+    evaluateReadFiles() {
+        if (this.mappedExcelList == null || this.mappedExcelList.length == 0) {
+            console.log("No read files/rows to work with.");
+            return;
+        }
+
+        let merger: NewTransactionMerger = new NewTransactionMerger();
+        merger.defineRows(this.mappedExcelList);
+        this.flattenedExcelList = [].concat.apply([], this.mappedExcelList);
+    }
 
     filesSelected(event) {
         this.readFiles = event.target.files;

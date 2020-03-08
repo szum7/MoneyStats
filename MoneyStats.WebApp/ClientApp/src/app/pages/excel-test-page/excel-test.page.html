@@ -3,3 +3,20 @@
 </p>
 <input type="file" class="file-browser" multiple placeholder="Upload file" accept=".xlsx,.xls" (change)="filesSelected($event)">
 <button type="button" class="btn btn-info" (click)="upload()">Upload</button>
+<button type="button" class="btn btn-info" (click)="evaluateReadFiles()">Evaluate</button>
+
+<div class="mapped-transactions">
+  <div class="transaction" *ngFor="let tr of flattenedExcelList" [ngClass]="{'excluded': tr.isExcluded}">
+    <button type="button" (click)="toggleRowExclusion(tr)">{{tr.isExcluded ? "-" : "+"}}</button>
+    <span>{{tr.AccountingDate}}</span>
+    <span>{{tr.TransactionId}}</span>
+    <span>{{tr.Type}}</span>
+    <span>{{tr.Account}}</span>
+    <span>{{tr.AccountName}}</span>
+    <span>{{tr.PartnerAccount}}</span>
+    <span>{{tr.PartnerName}}</span>
+    <span>{{tr.Sum}}</span>
+    <span>{{tr.Currency}}</span>
+    <span>{{tr.Message}}</span>
+  </div>
+</div>
