@@ -4,6 +4,7 @@ import { NewTransaction } from './src/new-transaction';
 import { map } from 'rxjs/operators';
 import { ExcelReader } from './src/excel-reader';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
+import { ExcelTransactionMapper } from './src/excel-transaction-mapper';
 
 @Component({
     selector: 'app-excel-test-page',
@@ -21,10 +22,12 @@ export class ExcelTestPage {
     // 1. list transactions from db for edition    
 
     reader: ExcelReader;
+    mapper: ExcelTransactionMapper;
     transactionList: Array<NewTransaction>;
     
     constructor(private loadingScreen: LoadingScreenService) {
-        this.reader = new ExcelReader();
+        this.mapper = new ExcelTransactionMapper();
+        this.reader = new ExcelReader(this.mapper);
     }
 
     dateComparer(a, b){
@@ -35,10 +38,6 @@ export class ExcelTestPage {
 
     sortBy(arr: Array<any>, property: string) {
         return arr.sort((a, b) => this.dateComparer(a[property], b[property]));
-    }
-
-    formatDate(date: string): string {
-        return (new Date(date)).toISOString().substring(0, 10);
     }
 
     click_toggleRowExclusion(row: NewTransaction): void {
@@ -78,8 +77,6 @@ export class ExcelTestPage {
 
                 _this.loadingScreen.stop();
             }
-        }, 10);
-
-        
+        }, 10);        
     }
 }

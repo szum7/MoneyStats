@@ -1,41 +1,44 @@
 import { NewTransaction } from "./new-transaction";
-
-export class PropertyMapRow {
-    
-    cell: string; // A1 | B2 | ...
-    literal: string; // Könyvelés dátuma | Tranzakció azonosító  | ...
-    property: string; // AccountingDate | TransactionId | ...
-    parser: Function;
-
-    constructor(cell: string, property: string, parser: Function) {
-        this.cell = cell;
-        this.property = property;
-        this.parser = parser;
-    }
-}
+import { PropertyMapRow } from "./property-map-row";
 
 export class ExcelTransactionMapper {
 
     public propertyMaps: Array<PropertyMapRow> = [
-        new PropertyMapRow("A1", "AccountingDate", this.getJsDateFromExcel),
-        new PropertyMapRow("B1", "TransactionId", null),
-        new PropertyMapRow("C1", "Type", null),
-        new PropertyMapRow("D1", "Account", null),
-        new PropertyMapRow("E1", "AccountName", null),
-        new PropertyMapRow("F1", "PartnerAccount", null),
-        new PropertyMapRow("G1", "PartnerName", null),
-        new PropertyMapRow("H1", "Sum", null),
-        new PropertyMapRow("I1", "Currency", null),
-        new PropertyMapRow("J1", "Message", null)
+        new PropertyMapRow("A1", null, "100px", "AccountingDate", this.getJsDateFromExcel),
+        new PropertyMapRow("B1", null, "150px", "TransactionId", null),
+        new PropertyMapRow("C1", null, "210px", "Type", null),
+        new PropertyMapRow("D1", null, "210px", "Account", null),
+        new PropertyMapRow("E1", null, "120px", "AccountName", null),
+        new PropertyMapRow("F1", null, "210px", "PartnerAccount", null),
+        new PropertyMapRow("G1", null, "130px", "PartnerName", null),
+        new PropertyMapRow("H1", "text-right", "80px", "Sum", null),
+        new PropertyMapRow("I1", null, "40px", "Currency", null),
+        new PropertyMapRow("J1", null, "auto", "Message", null)
     ];
 
     constructor() {
+    }
+
+    public getPropertyValue(obj: NewTransaction, key: string): any {
+        // Custom rules
+        if (key == "AccountingDate") {
+            return this.formatDate(obj[key]);
+        }
+
+        return obj[key];
     }
 
     public isPropertyMapUnset(): boolean {
         if (this.propertyMaps == null || this.propertyMaps.length == 0)
             return true;
         return this.propertyMaps[0].literal == null || this.propertyMaps[0].literal == "";
+    }
+
+    public setPropertyMapLiterals(worksheet: any): void {
+        for (let i = 0; i < this.propertyMaps.length; i++) {
+            let propertyMap = this.propertyMaps[i];
+            propertyMap.literal = worksheet[propertyMap.cell].v;
+        }
     }
 
     public mapTransactions(list: Array<any>): Array<NewTransaction> {
@@ -46,11 +49,8 @@ export class ExcelTransactionMapper {
         return ms;
     }
 
-    public setPropertyMapLiterals(worksheet: any): void {
-        for (let i = 0; i < this.propertyMaps.length; i++) {
-            let propertyMap = this.propertyMaps[i];
-            propertyMap.literal = worksheet[propertyMap.cell].v;
-        }
+    private formatDate(date: string): string {
+        return (new Date(date)).toISOString().substring(0, 10);
     }
 
     private mapTransaction(tr: any): NewTransaction {

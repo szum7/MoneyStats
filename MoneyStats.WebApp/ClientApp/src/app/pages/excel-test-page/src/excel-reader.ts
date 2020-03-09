@@ -8,9 +8,9 @@ export class ExcelReader {
     private finishedArray: Array<boolean>;
     private mapper: ExcelTransactionMapper;
 
-    constructor() {
+    constructor(mapper: ExcelTransactionMapper) {
         this.inputFileNames = [];
-        this.mapper = new ExcelTransactionMapper();
+        this.mapper = mapper;
     }
 
     public isReadingFinished(): boolean {
