@@ -6,9 +6,11 @@ export class ExcelReader {
     
     public inputFileNames: Array<string>;
     private finishedArray: Array<boolean>;
+    private mapper: ExcelTransactionMapper;
 
     constructor() {
         this.inputFileNames = [];
+        this.mapper = new ExcelTransactionMapper();
     }
 
     public isReadingFinished(): boolean {
@@ -26,7 +28,7 @@ export class ExcelReader {
         
         let self = this;
         let mappedExcelMatrix: Array<Array<NewTransaction>> = [];
-        let mapper: ExcelTransactionMapper = new ExcelTransactionMapper();
+        this.inputFileNames = [];
 
         this.initFinishedArray(inputFiles.length);
 
@@ -39,7 +41,7 @@ export class ExcelReader {
 
             // Read file
             self.readFile(file, function(unmappedArray) {
-                mappedExcelMatrix.push(mapper.mapTransactions(unmappedArray));
+                mappedExcelMatrix.push(self.mapper.mapTransactions(unmappedArray));
                 self.finishedArray[i] = true;
             });
         }
@@ -58,6 +60,7 @@ export class ExcelReader {
 
         let fileReader = new FileReader();
         let arrayBuffer: any;
+        let _this = this;
 
         fileReader.onload = (e) => {
             arrayBuffer = fileReader.result;
@@ -70,6 +73,11 @@ export class ExcelReader {
             var workbook = XLSX.read(bstr, { type: "binary" });
             var first_sheet_name = workbook.SheetNames[0];
             var worksheet = workbook.Sheets[first_sheet_name];
+
+            if (_this.mapper.isPropertyMapUnset()) {
+                _this.mapper.setPropertyMapLiterals(worksheet);
+            }
+
             var result = XLSX.utils.sheet_to_json(worksheet, { raw: true });
             callback(result);
         }

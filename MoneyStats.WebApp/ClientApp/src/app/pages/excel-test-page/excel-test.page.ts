@@ -18,9 +18,7 @@ export class ExcelTestPage {
     // 3. eval rule and edit stage (evaluate rules and allow edition to rows)
 
     // Edit transactions page
-    // 1. list transactions from db for edition
-    
-    // TODO rendetrakni ebben a controllerben. Új osztályokat létrehozni, stb.
+    // 1. list transactions from db for edition    
 
     reader: ExcelReader;
     transactionList: Array<NewTransaction>;
