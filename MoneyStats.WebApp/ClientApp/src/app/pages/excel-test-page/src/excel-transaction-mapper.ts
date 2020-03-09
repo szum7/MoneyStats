@@ -12,7 +12,7 @@ export class ExcelTransactionMapper {
         new PropertyMapRow("F1", null, "210px", "PartnerAccount", null),
         new PropertyMapRow("G1", null, "130px", "PartnerName", null),
         new PropertyMapRow("H1", "text-right", "80px", "Sum", null),
-        new PropertyMapRow("I1", null, "40px", "Currency", null),
+        new PropertyMapRow("I1", null, "100px", "Currency", null),
         new PropertyMapRow("J1", null, "auto", "Message", null)
     ];
 

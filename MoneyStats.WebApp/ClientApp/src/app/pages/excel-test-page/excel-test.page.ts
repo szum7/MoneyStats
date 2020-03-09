@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { ExcelReader } from './src/excel-reader';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { ExcelTransactionMapper } from './src/excel-transaction-mapper';
+import { PropertyMapRow } from './src/property-map-row';
 
 @Component({
     selector: 'app-excel-test-page',
@@ -28,6 +29,10 @@ export class ExcelTestPage {
     constructor(private loadingScreen: LoadingScreenService) {
         this.mapper = new ExcelTransactionMapper();
         this.reader = new ExcelReader(this.mapper);
+    }
+
+    toggleColumnVisibility(propertyMap: PropertyMapRow): void {
+        propertyMap.isOpen = !propertyMap.isOpen;
     }
 
     dateComparer(a, b){

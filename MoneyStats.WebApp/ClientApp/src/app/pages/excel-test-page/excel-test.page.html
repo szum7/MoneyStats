@@ -7,32 +7,30 @@
   <li *ngFor="let fileName of reader.inputFileNames">{{fileName}}</li>
 </ul>
 
-<!-- TODO kattintható header-t csinálni, amire összecsukja az adott oszlopot -->
-
 <div class="mapped-transactions" *ngIf="transactionList != null">
-  <div class="transaction" *ngFor="let tr of sortBy(transactionList, 'AccountingDate')" [ngClass]="{'excluded': tr.isExcluded}">
-    <button type="button" (click)="click_toggleRowExclusion(tr)">{{tr.isExcluded ? "-" : "+"}}</button>
-    <span class="tr-row"
-          *ngFor="let propertyMap of mapper.propertyMaps" 
-          [ngClass]="propertyMap.customClass" 
-          [ngStyle]="{'min-width': propertyMap.width}">
-      {{mapper.getPropertyValue(tr, propertyMap.property)}}
+
+  <!-- TODO becsukásnál még mindig változik valamiért a row magassága -->
+
+  <!-- Header -->
+  <div class="transaction header">
+    <span class="tr-row {{propertyMap.customClass}}"
+          *ngFor="let propertyMap of mapper.propertyMaps"
+          [ngClass]="{'isClosed': !propertyMap.isOpen}" 
+          [ngStyle]="{'width': propertyMap.width}"
+          (click)="toggleColumnVisibility(propertyMap)">
+          {{propertyMap.literal}}
     </span>
   </div>
-</div>
 
-<!--<div class="mapped-transactions" *ngIf="transactionList != null">
+  <!-- Body -->
   <div class="transaction" *ngFor="let tr of sortBy(transactionList, 'AccountingDate')" [ngClass]="{'excluded': tr.isExcluded}">
-    <button type="button" (click)="click_toggleRowExclusion(tr)">{{tr.isExcluded ? "-" : "+"}}</button>
-    <span class="tr-row acd">{{formatDate(tr.AccountingDate)}}</span>
-    <span class="tr-row tri">{{tr.TransactionId}}</span>
-    <span class="tr-row typ">{{tr.Type}}</span>
-    <span class="tr-row acc">{{tr.Account}}</span>
-    <span class="tr-row acn">{{tr.AccountName}}</span>
-    <span class="tr-row paa">{{tr.PartnerAccount}}</span>
-    <span class="tr-row pan">{{tr.PartnerName}}</span>
-    <span class="tr-row sum">{{tr.Sum}}</span>
-    <span class="tr-row cur">{{tr.Currency}}</span>
-    <span class="tr-row msg">{{tr.Message}}</span>
+    <button type="button" (click)="click_toggleRowExclusion(tr)">{{tr.isExcluded ? "-" : "+"}}</button>        
+    <span class="tr-row {{propertyMap.customClass}}"
+          *ngFor="let propertyMap of mapper.propertyMaps"
+          [ngClass]="{'isClosed': !propertyMap.isOpen}" 
+          [ngStyle]="{'min-width': propertyMap.width}">
+          {{mapper.getPropertyValue(tr, propertyMap.property)}}
+    </span>    
   </div>
-</div>-->
+
+</div>

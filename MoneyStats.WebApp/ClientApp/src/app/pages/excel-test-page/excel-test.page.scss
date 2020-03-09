@@ -7,6 +7,16 @@
   margin:2px 0;
   font-size: 13px;
 
+  &.header {
+    padding-left:26px;
+
+    span {
+      cursor: pointer;
+      vertical-align: bottom;
+      border:1px solid #ddd;
+    }
+  }
+
   button {
     margin-right: 2px;
     width: 25px;
@@ -17,16 +27,13 @@
     margin-right: 2px;
     padding:2px;
 
-    &.acd { min-width:100px; }
-    &.tri { min-width:150px; }
-    &.typ { min-width:210px; }
-    &.acc { min-width:210px; }
-    &.acn { min-width:120px; }
-    &.paa { min-width:210px; }
-    &.pan { min-width:130px; }
-    &.sum { min-width:80px; text-align: right; }
-    &.cur { min-width:40px; }
-    &.msg { min-width:auto; }
+    &.isClosed {
+      min-width: auto !important;
+      width: 20px !important;
+      color: #fff;      
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
 }
 
