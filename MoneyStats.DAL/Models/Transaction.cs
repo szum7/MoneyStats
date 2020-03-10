@@ -18,6 +18,11 @@ namespace MoneyStats.DAL.Models
         public string Currency { get; set; }
         public string Message { get; set; }
         public string OriginalContentId { get; set; }
+        /// <summary>
+        /// User can set an id. Useful when user wants to add a transaction by hand, 
+        /// not read from an excel file.
+        /// </summary>
+        public string CustomId { get; set; }
 
         public virtual ICollection<TransactionTagConn> TransactionTagConn { get; set; }
 
