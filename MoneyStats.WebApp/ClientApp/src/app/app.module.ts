@@ -10,11 +10,14 @@ import { faInfoCircle, faCaretRight, faCaretLeft, faSun, faCog, faTimes, faTag, 
 import { AppComponent } from './app.component';
 import { NavComponent } from './components/nav/nav.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
+import { FileFileComparerComponent } from './components/file-file-comparer/file-file-comparer.component';
+import { DbFileComparerComponent } from './components/db-file-comparer/db-file-comparer.component';
 
 // Pages
 import { HomePage } from './pages/home-page/home.page';
 import { TestTablePage } from './pages/test-table-page/test-table.page';
 import { ExcelTestPage } from './pages/excel-test-page/excel-test.page';
+import { UpdatePage } from './pages/update-page/update.page';
 
 // Services
 import { LoadingScreenService } from './services/loading-screen-service/loading-screen.service';
@@ -29,10 +32,13 @@ import { TransactionService } from './services/transaction-service/transaction.s
     AppComponent,
     NavComponent,
     LoadingScreenComponent,
+    FileFileComparerComponent,
+    DbFileComparerComponent,
     // Pages
     HomePage,
     TestTablePage,
-    ExcelTestPage
+    ExcelTestPage,
+    UpdatePage
   ],
   imports: [
     BrowserModule,
@@ -41,6 +47,7 @@ import { TransactionService } from './services/transaction-service/transaction.s
     RouterModule.forRoot([
       { path: '', component: HomePage },
       { path: 'testtable', component: TestTablePage },
+      { path: 'update', component: UpdatePage },
       { path: 'excel', component: ExcelTestPage },
     ], { useHash: true })
   ],

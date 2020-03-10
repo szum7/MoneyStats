@@ -1,0 +1,17 @@
+<p>Update page</p>
+
+<div class="dialog-contianer" [ngSwitch]="stage">
+    <!-- Info -->
+    <div *ngSwitchCase="stageType.fileFileCompare">
+        <app-file-file-comparer-component></app-file-file-comparer-component>
+    </div>
+    <div *ngSwitchCase="stageType.dbFileCompare">
+        <app-db-file-comparer-component></app-db-file-comparer-component>
+    </div>
+    <div *ngSwitchCase="stageType.evaluateRules">
+        <p>Eval rules</p>
+    </div>
+    <div *ngSwitchDefault>
+        <p>Something went wrong.</p>
+    </div>
+</div>
