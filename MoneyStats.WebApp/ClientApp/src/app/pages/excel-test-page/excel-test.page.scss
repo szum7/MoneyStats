@@ -10,6 +10,12 @@
   &.header {
     padding-left:26px;
 
+    .tr-row.isClosed {
+      color: #666;
+      background: #666;
+      border-color:#666;
+    }
+
     span {
       cursor: pointer;
       vertical-align: bottom;
@@ -30,9 +36,10 @@
     &.isClosed {
       min-width: auto !important;
       width: 20px !important;
-      color: #fff;      
       overflow: hidden;
       white-space: nowrap;
+      height: 18px;
+      color: #fff;
     }
   }
 }
