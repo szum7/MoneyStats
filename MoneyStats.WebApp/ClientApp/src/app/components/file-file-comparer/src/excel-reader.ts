@@ -5,7 +5,7 @@ import * as XLSX from 'xlsx';
 export class ExcelReader {
     
     public inputFileNames: Array<string>;
-    private finishedArray: Array<boolean>;
+    private isFinishedArray: Array<boolean>;
     private mapper: ExcelTransactionMapper;
 
     constructor(mapper: ExcelTransactionMapper) {
@@ -15,8 +15,8 @@ export class ExcelReader {
 
     public isReadingFinished(): boolean {
         let i = 0;
-        while (i < this.finishedArray.length) {
-            if (this.finishedArray[i] === false) {
+        while (i < this.isFinishedArray.length) {
+            if (this.isFinishedArray[i] === false) {
                 return false;
             }
             i++;
@@ -42,7 +42,7 @@ export class ExcelReader {
             // Read file
             self.readFile(file, function(unmappedArray) {
                 mappedExcelMatrix.push(self.mapper.mapTransactions(unmappedArray));
-                self.finishedArray[i] = true;
+                self.isFinishedArray[i] = true;
             });
         }
 
@@ -50,13 +50,13 @@ export class ExcelReader {
     }
 
     private initFinishedArray(length: number): void {
-        this.finishedArray = new Array<boolean>(length);
+        this.isFinishedArray = new Array<boolean>(length);
         for (let i = 0; i < length; i++) {
-            this.finishedArray[i] = false;
+            this.isFinishedArray[i] = false;
         }
     }
 
-    private readFile(file: File, callback: Function): void {
+    private readFile(file: File, callback: (response: any) => void): void {
 
         let fileReader = new FileReader();
         let arrayBuffer: any;

@@ -1,12 +1,14 @@
 <p>Update page</p>
+<button (click)="click_changeStage()">Next stage</button>
+<button (click)="click_testBinding()">Test binding</button>
 
+<app-file-file-comparer-component (transactionListChange)="change_fileFileOutput($event)"></app-file-file-comparer-component>
+<app-db-file-comparer-component [params]="fileFileResult"></app-db-file-comparer-component>
 <div class="dialog-contianer" [ngSwitch]="stage">
     <!-- Info -->
     <div *ngSwitchCase="stageType.fileFileCompare">
-        <app-file-file-comparer-component></app-file-file-comparer-component>
     </div>
     <div *ngSwitchCase="stageType.dbFileCompare">
-        <app-db-file-comparer-component></app-db-file-comparer-component>
     </div>
     <div *ngSwitchCase="stageType.evaluateRules">
         <p>Eval rules</p>

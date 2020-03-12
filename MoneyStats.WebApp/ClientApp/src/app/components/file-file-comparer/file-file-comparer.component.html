@@ -1,1 +1,41 @@
-<p>file-file-comparer.component</p>
+<p>
+  Excel test page
+</p>
+<input type="file" class="file-browser" multiple placeholder="Upload file" accept=".xlsx,.xls" (change)="change_filesSelected($event)">
+
+<button (click)="click_next()">Output file-file</button>
+
+<ul *ngIf="!!reader.inputFileNames">
+  <li *ngFor="let fileName of reader.inputFileNames">{{fileName}}</li>
+</ul>
+
+<div class="mapped-transactions" *ngIf="transactionList != null">
+
+  <!-- TODO legyen a táblázat fixed headerrel, mindig lássuk mi micsoda -->
+
+  <!-- Header -->
+  <div class="transaction header">
+    <span class="tr-row {{propertyMap.customClass}}"
+          *ngFor="let propertyMap of mapper.propertyMaps"
+          [ngClass]="{'isClosed': !propertyMap.isOpen}" 
+          [ngStyle]="{'width': propertyMap.width}"
+          (click)="toggleColumnVisibility(propertyMap)">
+          {{propertyMap.literal}}
+    </span>
+  </div>
+
+  <!-- Body -->
+  <div class="transaction" 
+       *ngFor="let tr of sortBy(transactionList, 'AccountingDate')" 
+       [ngClass]="{'excluded': tr.isExcluded}">
+    <button type="button" (click)="click_toggleRowExclusion(tr)">{{tr.isExcluded ? "-" : "+"}}</button>        
+    <span class="tr-row {{propertyMap.customClass}}"
+          *ngFor="let propertyMap of mapper.propertyMaps"
+          [ngClass]="{'isClosed': !propertyMap.isOpen}" 
+          [ngStyle]="{'min-width': propertyMap.width}">
+          {{mapper.getPropertyValue(tr, propertyMap.property)}}
+    </span>    
+  </div>
+
+</div>
+
