@@ -27,15 +27,14 @@ export class FileFileComparerComponent implements OnInit {
     reader: ExcelReader;
     mapper: ExcelTransactionMapper;
     transactionList: Array<NewTransaction>;
-    @Output() transactionListChange = new EventEmitter();
+    @Output() nextStepChange = new EventEmitter();
     
     constructor(private loadingScreen: LoadingScreenService) {
         this.mapper = new ExcelTransactionMapper();
         this.reader = new ExcelReader(this.mapper);
     }
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void { }
 
     toggleColumnVisibility(propertyMap: PropertyMapRow): void {
         propertyMap.isOpen = !propertyMap.isOpen;
@@ -111,6 +110,6 @@ export class FileFileComparerComponent implements OnInit {
                 copy.push(tr);
             }
         }
-        this.transactionListChange.emit(copy);
+        this.nextStepChange.emit(copy);
     }
 }

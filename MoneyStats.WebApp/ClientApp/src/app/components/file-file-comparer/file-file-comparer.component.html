@@ -1,17 +1,17 @@
 <p>
   Excel test page
 </p>
+
+<button (click)="click_next()">Finish 1st step</button>
+
 <input type="file" class="file-browser" multiple placeholder="Upload file" accept=".xlsx,.xls" (change)="change_filesSelected($event)">
 
-<button (click)="click_next()">Output file-file</button>
-
+<!-- List of read files' paths -->
 <ul *ngIf="!!reader.inputFileNames">
   <li *ngFor="let fileName of reader.inputFileNames">{{fileName}}</li>
 </ul>
 
 <div class="mapped-transactions" *ngIf="transactionList != null">
-
-  <!-- TODO legyen a táblázat fixed headerrel, mindig lássuk mi micsoda -->
 
   <!-- Header -->
   <div class="transaction header">
@@ -23,6 +23,7 @@
           {{propertyMap.literal}}
     </span>
   </div>
+  <!-- TODO legyen a táblázat fixed headerrel, mindig lássuk mi micsoda -->
 
   <!-- Body -->
   <div class="transaction" 

@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FileFileResult } from 'src/app/pages/update-page/update.page';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FileFileResult } from 'src/app/pages/update-page/src/file-file-result';
 
 @Component({
   selector: 'app-db-file-comparer-component',
@@ -7,8 +7,15 @@ import { FileFileResult } from 'src/app/pages/update-page/update.page';
   styleUrls: ['./db-file-comparer.component.scss']
 })
 export class DbFileComparerComponent implements OnInit {
+
+    // TODO
+    // get transactions from db
+    // compare with read transactions
+    // red out the duplicates, write reason and id
+    // next step
   
     @Input() params: FileFileResult;
+    @Output() nextStepChange = new EventEmitter();
 
     constructor() {
     }
@@ -16,13 +23,12 @@ export class DbFileComparerComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    click_test() {
-        this.params.transactionList[4].isExcluded = true;
-        this.params.transactionList[5].isExcluded = true;
-        this.params.transactionList[6].isExcluded = true;
-    }
-
     click_sout() {
         console.log(this.params);
+    }
+
+    click_done() {
+        // TODO
+        this.nextStepChange.emit({});
     }
 }
