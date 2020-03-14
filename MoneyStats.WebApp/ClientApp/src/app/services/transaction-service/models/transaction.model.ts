@@ -13,6 +13,19 @@ export class Transaction {
     OriginalContentId: string;
     Tags: Array<any>;
 
+    set(ad: string, ti: string, ty: string, ac: string, acn: string, pa: string, pn: string, sum: string, curr: string, msg: string): void {
+        this.AccountingDate = ad;
+        this.TransactionId = ti;
+        this.Type = ty;
+        this.Account = ac;
+        this.AccountName = acn;
+        this.PartnerAccount = pa;
+        this.PartnerName = pn;
+        this.Sum = sum;
+        this.Currency = curr;
+        this.Message = msg;
+    }
+
     public getContentId(): string {
         return this.AccountingDate + this.TransactionId + this.Type + this.Account + this.AccountName + this.PartnerAccount + this.PartnerName + this.Sum + this.Currency + this.Message;
     }

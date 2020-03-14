@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FileFileResult } from 'src/app/pages/update-page/src/file-file-result';
+import { TransactionService } from 'src/app/services/transaction-service/transaction.service';
 
 @Component({
   selector: 'app-db-file-comparer-component',
@@ -17,10 +18,16 @@ export class DbFileComparerComponent implements OnInit {
     @Input() params: FileFileResult;
     @Output() nextStepChange = new EventEmitter();
 
-    constructor() {
+    constructor(
+        private transactionService: TransactionService) {        
     }
 
     ngOnInit(): void {
+        this.transactionService.get().subscribe(response => {
+            console.log(response);
+        }, error => {
+            console.log(error);
+        })
     }
 
     click_sout() {
