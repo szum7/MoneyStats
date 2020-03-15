@@ -32,6 +32,7 @@ export class FileFileComparerComponent implements OnInit {
     constructor(private loadingScreen: LoadingScreenService) {
         this.mapper = new ExcelTransactionMapper();
         this.reader = new ExcelReader(this.mapper);
+        this.transactionList = [];
     }
 
     ngOnInit(): void { }

@@ -11,7 +11,7 @@
   <li *ngFor="let fileName of reader.inputFileNames">{{fileName}}</li>
 </ul>
 
-<div class="mapped-transactions" *ngIf="transactionList != null">
+<div class="mapped-transactions" *ngIf="transactionList != null && transactionList.length > 0">
 
   <!-- Header -->
   <div class="transaction header">

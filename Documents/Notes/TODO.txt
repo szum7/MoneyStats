@@ -3,3 +3,4 @@
 - néha egybe utalnak összegeket, pl 2 havi egyetemi ösztöndíj. Lehet kezelni kell ezt a helyzetet
 - generikus repositorynál ne legyen lazy loading, vagy legyen mindkettő
 - van egy csomó YAGNI repo metódus. Ezeket majd törölni kell, ha kiderül, mire van szükség
+- db-file és file-file tábllázatokat külön componentbe
