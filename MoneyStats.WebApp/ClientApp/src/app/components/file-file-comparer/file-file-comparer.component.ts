@@ -98,6 +98,7 @@ export class FileFileComparerComponent implements OnInit {
             const el = this.transactionList[i];
             if (!el.isExcluded) {
                 let tr: DbTransaction = new DbTransaction();
+                tr.AccountingDate = el.AccountingDate;
                 tr.Account = el.Account;
                 tr.TransactionId = el.TransactionId;
                 tr.Type = el.Type;

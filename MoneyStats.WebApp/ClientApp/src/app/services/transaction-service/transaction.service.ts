@@ -47,7 +47,7 @@ export class TransactionService extends TransactionServiceLogic {
             res.push(new Transaction());
             res.push(new Transaction());
             
-            res[0].set('2000-01-01 10:00:00', '', '', '', '', '', '', '', '', '');
+            res[0].set('Mon Feb 02 2015 01:00:00 GMT+0100 (Central European Standard Time)', 'ó kamat', 'Kamat', '10401945223571949481012', 'TÉTE BERTALAN', undefined, undefined, '456', 'HUF', '35HUF');
             res[1].set('2000-01-02 11:00:00', '', '', '', '', '', '', '', '', '');
             res[2].set('2000-01-03 12:00:00', '', '', '', '', '', '', '', '', '');
             res[3].set('2000-01-04 13:00:00', '', '', '', '', '', '', '', '', '');

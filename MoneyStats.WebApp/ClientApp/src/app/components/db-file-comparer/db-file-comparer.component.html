@@ -5,8 +5,8 @@
     <div class="transaction"
          *ngFor="let tr of fileList"
          [ngClass]="{'new-row': tr.compareResults.isNew, 'same-content': tr.compareResults.isSameContent, 'same-original-content': tr.compareResults.isSameOriginalContent}">
-      <span>{{tr.AccountingDate}}</span>
-      <span>{{tr.TransactionId}}</span>
+      <span>{{tr.AccountingDate}},&nbsp;</span>
+      <span>{{tr.TransactionId}},&nbsp;</span>
       <span>{{tr.Sum}}</span>
     </div>
 </div>
