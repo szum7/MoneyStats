@@ -12,6 +12,7 @@ import { NavComponent } from './components/nav/nav.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { FileFileComparerComponent } from './components/file-file-comparer/file-file-comparer.component';
 import { DbFileComparerComponent } from './components/db-file-comparer/db-file-comparer.component';
+import { RuleEvaluatorComponent } from './components/rule-evaluator/rule-evaluator.component';
 
 // Pages
 import { HomePage } from './pages/home-page/home.page';
@@ -34,6 +35,7 @@ import { TransactionService } from './services/transaction-service/transaction.s
     LoadingScreenComponent,
     FileFileComparerComponent,
     DbFileComparerComponent,
+    RuleEvaluatorComponent,
     // Pages
     HomePage,
     TestTablePage,
