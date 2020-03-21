@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BaseHttpService } from '../base-http.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Transaction } from './models/transaction.model';
+import { Transaction } from '../../models/service-models/transaction.model';
 
 class TransactionServiceMap {
 

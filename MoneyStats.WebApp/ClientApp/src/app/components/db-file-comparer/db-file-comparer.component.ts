@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FileFileResult } from 'src/app/pages/update-page/src/file-file-result';
+import { FileFileResult } from 'src/app/models/component-models/file-file-result';
 import { TransactionService } from 'src/app/services/transaction-service/transaction.service';
-import { DbTransaction } from './src/db-transaction';
-import { Transaction } from '../../services/transaction-service/models/transaction.model';
+import { DbTransaction } from '../../models/component-models/db-transaction';
+import { Transaction } from '../../models/service-models/transaction.model';
 import { LoadingScreenService } from '../../services/loading-screen-service/loading-screen.service';
+import { RuleTransaction } from 'src/app/models/component-models/rule-transaction';
 
 @Component({
   selector: 'app-db-file-comparer-component',
@@ -35,11 +36,29 @@ export class DbFileComparerComponent implements OnInit {
         console.log(this.params);
     }
 
-    click_done() {
+    click_done(): void {
 
-        // TODO copy to rule-file model
+        let copy: Array<RuleTransaction> = [];
+        for (let i = 0; i < this.fileList.length; i++) {
+            const el = this.fileList[i];
+            if (!el.isExcluded) {
+                let tr: RuleTransaction = new RuleTransaction();
+                tr.AccountingDate = el.AccountingDate;
+                tr.Account = el.Account;
+                tr.TransactionId = el.TransactionId;
+                tr.Type = el.Type;
+                tr.AccountName = el.AccountName;
+                tr.PartnerAccount = el.PartnerAccount;
+                tr.PartnerName = el.PartnerName;
+                tr.Sum = el.Sum;
+                tr.Currency = el.Currency;
+                tr.Message = el.Message;
+                tr.OriginalContentId = el.OriginalContentId;
+                copy.push(tr);
+            }
+        }
 
-        this.nextStepChange.emit({});
+        this.nextStepChange.emit(copy);
     }
 
     program() {

@@ -1,13 +1,13 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { NewTransactionMerger } from '../../components/file-file-comparer/src/new-transaction-merger';
-import { NewTransaction } from '../../components/file-file-comparer/src/new-transaction';
+import { NewTransactionMerger } from '../../models/component-models/new-transaction-merger';
+import { NewTransaction } from '../../models/component-models/new-transaction';
 import { map } from 'rxjs/operators';
-import { ExcelReader } from '../../components/file-file-comparer/src/excel-reader';
+import { ExcelReader } from '../../models/component-models/excel-reader';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
-import { ExcelTransactionMapper } from '../../components/file-file-comparer/src/excel-transaction-mapper';
-import { PropertyMapRow } from '../../components/file-file-comparer/src/property-map-row';
-import { Transaction } from 'src/app/services/transaction-service/models/transaction.model';
-import { DbTransaction } from '../db-file-comparer/src/db-transaction';
+import { ExcelTransactionMapper } from '../../models/component-models/excel-transaction-mapper';
+import { PropertyMapRow } from '../../models/component-models/property-map-row';
+import { Transaction } from 'src/app/models/service-models/transaction.model';
+import { DbTransaction } from '../../models/component-models/db-transaction';
 
 @Component({
   selector: 'app-file-file-comparer-component',
