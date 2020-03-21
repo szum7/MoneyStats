@@ -1,0 +1,5 @@
+﻿
+            //List<PropertyInfo> rulableProperties = (typeof(Transaction).GetProperties())
+            //    .Where(property => property.CustomAttributes
+            //                       .Any(customAttribute => customAttribute.AttributeType == typeof(Rulable)))
+            //    .ToList();
