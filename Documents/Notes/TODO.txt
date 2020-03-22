@@ -4,3 +4,5 @@
 - generikus repositorynál ne legyen lazy loading, vagy legyen mindkettő
 - van egy csomó YAGNI repo metódus. Ezeket majd törölni kell, ha kiderül, mire van szükség
 - db-file és file-file tábllázatokat külön componentbe
+- felmerül a probléma, hogy ha a szabályokat egybefolyó string-ként tároljuk (és nem külön oszlopokban), akkor property név változásnál azokat is frissíteni kéne
+	- (?) szabályellenőrző metódus létrehozása, ajánljuk fel, hogy az elavult szabályokat kitöröljük
