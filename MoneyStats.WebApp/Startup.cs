@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MoneyStats.BL.Interfaces;
+using MoneyStats.BL.Repositories;
 
 namespace MoneyStats.WebApp
 {
@@ -26,6 +28,8 @@ namespace MoneyStats.WebApp
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddSingleton<IBankRowRepository, BankRowRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
