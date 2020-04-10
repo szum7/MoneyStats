@@ -7,7 +7,9 @@ namespace MoneyStats.DAL.Models
     public class Tag : EntityBase
     {
         public string Title { get; set; }
+
         public string Description { get; set; }
+
 
         public virtual ICollection<TransactionTagConn> TransactionTagConn { get; set; }
 

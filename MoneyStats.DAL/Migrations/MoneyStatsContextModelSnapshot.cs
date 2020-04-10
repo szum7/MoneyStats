@@ -19,6 +19,69 @@ namespace MoneyStats.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("MoneyStats.DAL.Models.BankRow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Account")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AccountName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("AccountingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("BankType")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CreateBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PartnerAccount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PartnerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Sum")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("TransactionGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BankRow");
+                });
+
             modelBuilder.Entity("MoneyStats.DAL.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -59,14 +122,8 @@ namespace MoneyStats.DAL.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Account")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AccountName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("AccountingDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int?>("BankTransactionId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("CreateBy")
                         .HasColumnType("int");
@@ -74,14 +131,17 @@ namespace MoneyStats.DAL.Migrations
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Currency")
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsCustom")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsGroup")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
@@ -89,28 +149,18 @@ namespace MoneyStats.DAL.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("OriginalContentId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PartnerAccount")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PartnerName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("State")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Sum")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Sum")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TransactionId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
+                    b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BankTransactionId");
 
                     b.ToTable("Transaction");
                 });
@@ -150,6 +200,13 @@ namespace MoneyStats.DAL.Migrations
                     b.HasIndex("TransactionId");
 
                     b.ToTable("TransactionTagConn");
+                });
+
+            modelBuilder.Entity("MoneyStats.DAL.Models.Transaction", b =>
+                {
+                    b.HasOne("MoneyStats.DAL.Models.BankRow", "BankTransaction")
+                        .WithMany()
+                        .HasForeignKey("BankTransactionId");
                 });
 
             modelBuilder.Entity("MoneyStats.DAL.Models.TransactionTagConn", b =>

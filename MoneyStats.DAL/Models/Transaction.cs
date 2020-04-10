@@ -24,6 +24,7 @@ namespace MoneyStats.DAL.Models
         /// This is for performance purposes, could just check if the Id exists 
         /// in the connection table (TransactionBankRowConn).
         /// If true, BankTransactionId MUST BE null! (Otherwise -> circular reference)
+        /// NOTE! defaultValue: false
         /// </summary>
         public bool IsGroup { get; set; }
 
@@ -31,12 +32,14 @@ namespace MoneyStats.DAL.Models
         /// We can create transactions without bank exported transaction reference.
         /// E.g.: Create an IsCutom=true transaction for transactions payed with cash,
         /// where there's no record.
+        /// NOTE! defaultValue: false
         /// </summary>
         public bool IsCustom { get; set; }
 
         /// <summary>
         /// Reference.
         /// </summary>
+        [ForeignKey("BankRow")]
         public int? BankTransactionId { get; set; }
 
 

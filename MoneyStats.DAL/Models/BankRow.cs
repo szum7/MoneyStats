@@ -27,7 +27,8 @@ namespace MoneyStats.DAL.Models
         /// multiple groups would mean counting it multiple 
         /// times, messing up charts/results/etc.
         /// </summary>
-        public int TransactionGroupId { get; set; }
+        [ForeignKey("Transaction")]
+        public int? TransactionGroupId { get; set; }
 
 
         #region K&H Bank columns
