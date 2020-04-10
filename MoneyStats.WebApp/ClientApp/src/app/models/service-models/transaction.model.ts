@@ -1,4 +1,4 @@
-export class Transaction {
+export class BankRow {
 
     AccountingDate: string;
     TransactionId: string;

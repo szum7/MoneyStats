@@ -3,6 +3,7 @@ import { PropertyMapRow } from "./property-map-row";
 
 export class ExcelTransactionMapper {
 
+    // This is K&H Bank specific. Create a different one for each banks. #FEATURE
     public propertyMaps: Array<PropertyMapRow> = [
         new PropertyMapRow("A1", null, "100px", "AccountingDate", this.getJsDateFromExcel),
         new PropertyMapRow("B1", null, "150px", "TransactionId", null),
@@ -19,7 +20,7 @@ export class ExcelTransactionMapper {
     constructor() {
     }
 
-    public getPropertyValue(obj: NewTransaction, key: string): any {
+    getPropertyValue(obj: NewTransaction, key: string): any {
         // Custom rules
         if (key == "AccountingDate") {
             return this.formatDate(obj[key]);
@@ -28,20 +29,20 @@ export class ExcelTransactionMapper {
         return obj[key];
     }
 
-    public isPropertyMapUnset(): boolean {
+    isPropertyMapUnset(): boolean {
         if (this.propertyMaps == null || this.propertyMaps.length == 0)
             return true;
         return this.propertyMaps[0].literal == null || this.propertyMaps[0].literal == "";
     }
 
-    public setPropertyMapLiterals(worksheet: any): void {
+    setPropertyMapLiterals(worksheet: any): void {
         for (let i = 0; i < this.propertyMaps.length; i++) {
             let propertyMap = this.propertyMaps[i];
             propertyMap.literal = worksheet[propertyMap.cell].v;
         }
     }
 
-    public mapTransactions(list: Array<any>): Array<NewTransaction> {
+    mapTransactions(list: Array<any>): Array<NewTransaction> {
         let ms: Array<NewTransaction> = [];
         for (let i = 0; i < list.length; i++) {
             ms.push(this.mapTransaction(list[i]));

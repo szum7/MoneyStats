@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MoneyStats.BL.Mocks
 {
-    class TransactionMockRepository : ITransactionRepository
+    class BankRowMockRepository : IBankRowRepository
     {
         public bool Delete(int id)
         {

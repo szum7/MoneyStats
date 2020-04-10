@@ -53,19 +53,9 @@ namespace MoneyStats.Tests
         [TestMethod]
         public void TestRepository()
         {
-            ITransactionRepository repo = new TransactionRepository();
+            IBankRowRepository repo = new BankRowRepository();
             var transactions = repo.Get().ToList<BankRow>();
             //repo.ExtraMethod();
-
-            Assert.AreEqual(1, 1);
-        }
-
-        [TestMethod]
-        public void Test2()
-        {
-            TransactionRepository repo = new TransactionRepository();
-            var tr1 = repo.LazyLoading();
-            var tr2 = repo.EagerLoading();
 
             Assert.AreEqual(1, 1);
         }

@@ -1,6 +1,6 @@
-import { Transaction } from "src/app/models/service-models/transaction.model";
+import { BankRow } from "src/app/models/service-models/transaction.model";
 
-export class NewTransaction extends Transaction {
+export class NewTransaction extends BankRow {
     
     isExcluded: boolean;
     inputMessage: string;

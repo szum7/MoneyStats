@@ -6,7 +6,7 @@ import { ExcelReader } from '../../models/component-models/excel-reader';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { ExcelTransactionMapper } from '../../models/component-models/excel-transaction-mapper';
 import { PropertyMapRow } from '../../models/component-models/property-map-row';
-import { Transaction } from 'src/app/models/service-models/transaction.model';
+import { BankRow } from 'src/app/models/service-models/transaction.model';
 import { DbTransaction } from '../../models/component-models/db-transaction';
 
 @Component({

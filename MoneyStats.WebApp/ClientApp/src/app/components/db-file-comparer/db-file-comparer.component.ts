@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FileFileResult } from 'src/app/models/component-models/file-file-result';
-import { TransactionService } from 'src/app/services/transaction-service/transaction.service';
+import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
 import { DbTransaction } from '../../models/component-models/db-transaction';
-import { Transaction } from '../../models/service-models/transaction.model';
+import { BankRow } from '../../models/service-models/transaction.model';
 import { LoadingScreenService } from '../../services/loading-screen-service/loading-screen.service';
 import { RuleTransaction } from 'src/app/models/component-models/rule-transaction';
 
@@ -25,7 +25,7 @@ export class DbFileComparerComponent implements OnInit {
 
     constructor(
         private loadingScreen: LoadingScreenService,
-        private transactionService: TransactionService) {        
+        private transactionService: BankRowService) {        
     }
 
     ngOnInit(): void {
@@ -70,7 +70,7 @@ export class DbFileComparerComponent implements OnInit {
         });
     }
 
-    private getTransactionsFromDb(callback: (response: Array<Transaction>) => void) {
+    private getTransactionsFromDb(callback: (response: Array<BankRow>) => void) {
         this.transactionService.get().subscribe(response => {
             console.log(response);
             callback(response);
@@ -80,9 +80,9 @@ export class DbFileComparerComponent implements OnInit {
         })
     }
 
-    private compareDbToFileRows(dbList: Array<Transaction>) {
+    private compareDbToFileRows(dbList: Array<BankRow>) {
         for (let i = 0; i < dbList.length; i++) {
-            let dbRow: Transaction = dbList[i];
+            let dbRow: BankRow = dbList[i];
             for (let j = 0; j < this.fileList.length; j++) {
                 let fileRow: DbTransaction = this.fileList[j];
 

@@ -25,7 +25,7 @@ import { LoadingScreenService } from './services/loading-screen-service/loading-
 import { RouterService } from './services/router-service/router.service';
 import { TestTableService } from './services/test-table-service/test-table.service';
 import { BaseHttpService } from './services/base-http.service';
-import { TransactionService } from './services/transaction-service/transaction.service';
+import { BankRowService } from './services/bank-row-service/bank-row.service';
 
 @NgModule({
   declarations: [
@@ -58,7 +58,7 @@ import { TransactionService } from './services/transaction-service/transaction.s
     RouterService,
     BaseHttpService,
     TestTableService,
-    TransactionService
+    BankRowService
   ],
   bootstrap: [AppComponent]
 })

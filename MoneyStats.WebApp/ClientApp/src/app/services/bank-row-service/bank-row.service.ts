@@ -3,21 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { BaseHttpService } from '../base-http.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Transaction } from '../../models/service-models/transaction.model';
+import { BankRow } from '../../models/service-models/transaction.model';
 
-class TransactionServiceMap {
+class BankRowServiceMap {
 
     protected dummyMap(response: any): any {
         return response;
     }    
 }
 
-class TransactionServiceLogic extends TransactionServiceMap {
+class BankRowServiceLogic extends BankRowServiceMap {
 
 }
 
 @Injectable()
-export class TransactionService extends TransactionServiceLogic {
+export class BankRowService extends BankRowServiceLogic {
 
     constructor(
         @Inject('BASE_URL') private baseUrl: string,
@@ -28,7 +28,7 @@ export class TransactionService extends TransactionServiceLogic {
         this.base.set('transaction', this.baseUrl, 'api/transaction/');
     }
 
-    get(): Observable<Transaction[]> {
+    get(): Observable<BankRow[]> {
         if (this.base.isMocked()) {
             return this.getMock().pipe(map(this.dummyMap));
         }
@@ -37,15 +37,15 @@ export class TransactionService extends TransactionServiceLogic {
             .pipe(map(this.dummyMap));
     }
 
-    private getMock(): Observable<Transaction[]> {
+    private getMock(): Observable<BankRow[]> {
         return new Observable((observer) => {
-            let res: Transaction[] = [];
+            let res: BankRow[] = [];
 
-            res.push(new Transaction());
-            res.push(new Transaction());
-            res.push(new Transaction());
-            res.push(new Transaction());
-            res.push(new Transaction());
+            res.push(new BankRow());
+            res.push(new BankRow());
+            res.push(new BankRow());
+            res.push(new BankRow());
+            res.push(new BankRow());
             
             res[0].set('Mon Feb 02 2015 01:00:00 GMT+0100 (Central European Standard Time)', 'ó kamat', 'Kamat', '10401945223571949481012', 'TÉTE BERTALAN', undefined, undefined, '456', 'HUF', '35HUF');
             res[1].set('2000-01-02 11:00:00', '', '', '', '', '', '', '', '', '');

@@ -17,7 +17,7 @@ namespace MoneyStats.Tests
         public void InsertRange_Get_DestroyRangeTest()
         {
             // Arrange
-            TransactionRepository repo = new TransactionRepository();
+            BankRowRepository repo = new BankRowRepository();
             List<BankRow> inserts = new List<BankRow>();
             int state = RND.Next(-2000, -1);
             int length = 10;
