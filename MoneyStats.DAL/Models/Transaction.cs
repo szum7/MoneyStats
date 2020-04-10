@@ -38,6 +38,23 @@ namespace MoneyStats.DAL.Models
         [Rulable]
         public string Message { get; set; }
 
+        /// <summary>
+        /// This is a foreign key in the same table where the reference is.
+        /// 
+        /// Ezzel lehet összesíteni tranzakciókat, pl élelmiszerre költött kiadásokat.
+        /// 
+        /// A hivatkozott tranzakció egy összegzett Sum értékkel és hóvégi dátummal.
+        /// A további propertyk ajánlatot tesz majd a program, de valószínűleg
+        /// gyakran át fogják írni.
+        /// 
+        /// Összesítéseknél/kimutatásoknál vagy a hivatkozott, vagy azokat a tranzakciókat 
+        /// használjuk, melyeknél ez a property nem null.
+        /// 
+        /// Rule kiértékelésnél a hivatkozott sor alatt egymás után listázzuk a hivatkozókat.
+        /// (null értékű alatt a nem null értékűek.)
+        /// </summary>
+        public int TransactionGroupParentId { get; set; }
+
         public string OriginalContentId { get; set; }
 
         /// <summary>

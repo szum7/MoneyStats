@@ -17,6 +17,12 @@ namespace MoneyStats.BL.Repositories
         Contain // String.Contains
     }
 
+    public enum RuleActionType
+    {
+        AddTags,
+        AggregateToMonth
+    }
+
     // Examples:
     // AccountingDate < 2014-01-01 00:00:00
     // TransactionId.ToLower().Contains("banki")
@@ -39,16 +45,76 @@ namespace MoneyStats.BL.Repositories
         public string Arguments { get; set; }
     }
 
+    public class TagToBeAttached
+    {
+        public Tag Tag { get; set; } // Only the Id and Name are not null
+        public bool IsValid { get; set; }
+        public string Message { get; set; }
+        public string Self => $"[Tag with id:{Tag?.Id} and title '{Tag?.Title}']";
+    }
+
     public class RuleRepository
     {
+        private List<Tag> _tags { get; set; }
+        private List<Tag> _Tags
+        {
+            get
+            {
+                if (_tags == null)
+                {
+                    var repo = new TagRepository();
+                    _tags = repo.Get().ToList();
+                }
+                return _tags;
+            }
+        }
+
         public RuleRepository()
         {
 
         }
 
-        void HandleExceptions()
+        public List<TagToBeAttached> ConvertToModel(string rule)
         {
+            // TODO...
+            return null;
+        }
 
+        public void AddTagsToTransaction(Transaction transaction, List<TagToBeAttached> tagToBeAttacheds)
+        {
+            // Check if tag ids exist
+            var repo = new TagRepository();
+            foreach (var tagToBeAttached in tagToBeAttacheds)
+            {
+                var ruleTag = tagToBeAttached.Tag;
+                var tag = _Tags.SingleOrDefault(x => x.Id == ruleTag.Id || x.Title == ruleTag.Title);
+                tagToBeAttached.IsValid = tag != null && tag.Id == ruleTag.Id && tag.Title == ruleTag.Title;
+
+                if (!tagToBeAttached.IsValid)
+                {
+                    if (tag.Id != ruleTag.Id)
+                    {
+                        tagToBeAttached.Message = $"{tagToBeAttached.Self} found with a different id: {tag.Id}. Tag-transaction assossiation skipped.";
+                    }
+                    else if (tag.Title != ruleTag.Title)
+                    {
+                        tagToBeAttached.Message = $"{tagToBeAttached.Self} has a different title now: '{tag.Title}'. Tag-transaction assossiation skipped.";
+                    }
+                } 
+                else
+                {
+                    tagToBeAttached.Message = $"{tagToBeAttached.Self} doesn't exists. Tag-transaction assossiation skipped.";
+                }
+            }
+
+            // Create transaction-tag connection
+            foreach (var tagToBeAttached in tagToBeAttacheds)
+            {
+                if (!tagToBeAttached.IsValid)
+                    continue;
+
+                // TODO...
+            }
         }
 
         public static bool Compare(string op, IComparable left, IComparable right)
@@ -65,7 +131,14 @@ namespace MoneyStats.BL.Repositories
             }
         }
 
-        void Test(string rule, List<Transaction> transactions)
+        // TODO this is for one rule but there are more than one rules!
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rule">"compare;AccountingDate;2010-10-10 00:00:00;<="</param>
+        /// <param name="transactions"></param>
+        void Test(string rule, string ruleAction, List<Transaction> transactions)
         {
             foreach (Transaction transaction in transactions)
             {
@@ -119,35 +192,37 @@ namespace MoneyStats.BL.Repositories
                     {
                         // => one part of the OR rules validates
                         // => current transaction validates
+                        // => TODO evaluate ruleAction
+                        transaction.EvaluatedRule = rule;
                         oneORRuleValidates = true;
                     }
                 }
             }
 
 
-            var rulableProperties = (from property in typeof(Transaction).GetProperties()
-                                     where property.CustomAttributes.Any(customAttribute => customAttribute.AttributeType == typeof(Rulable))
-                                     select property).ToList();
+            //var rulableProperties = (from property in typeof(Transaction).GetProperties()
+            //                         where property.CustomAttributes.Any(customAttribute => customAttribute.AttributeType == typeof(Rulable))
+            //                         select property).ToList();
 
-            foreach (PropertyInfo property in rulableProperties)
-            {
-                var actualPropertyName = "AccountDate";
-                var actualPropertyValue = DateTime.Now;
-                var actualOperand = -1;
+            //foreach (PropertyInfo property in rulableProperties)
+            //{
+            //    var actualPropertyName = "AccountDate";
+            //    var actualPropertyValue = DateTime.Now;
+            //    var actualOperand = -1;
 
-                var actualInstance = new Transaction();
+            //    var actualInstance = new Transaction();
 
-                if (property.Name == "AccountingDate")
-                {
-                    if (typeof(IComparable).IsAssignableFrom(property.PropertyType))
-                    {
-                        if ((property.GetValue(actualInstance) as IComparable).CompareTo(actualPropertyValue) == actualOperand)
-                        {
-                            // => Megfelel a szabálynak
-                        }
-                    }
-                }
-            }
+            //    if (property.Name == "AccountingDate")
+            //    {
+            //        if (typeof(IComparable).IsAssignableFrom(property.PropertyType))
+            //        {
+            //            if ((property.GetValue(actualInstance) as IComparable).CompareTo(actualPropertyValue) == actualOperand)
+            //            {
+            //                // => Megfelel a szabálynak
+            //            }
+            //        }
+            //    }
+            //}
         }
     }
 }

@@ -10,5 +10,8 @@ namespace MoneyStats.DAL.Models
 
         [NotMapped]
         public List<Tag> Tags { get; set; }
+
+        [NotMapped]
+        public string EvaluatedRule { get; set; }
     }
 }

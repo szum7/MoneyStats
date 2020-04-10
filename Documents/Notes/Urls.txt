@@ -1,0 +1,4 @@
+﻿
+SQL database design, MoneyStats:
+https://app.sqldbm.com/SQLServer/Edit/p105204/#
+

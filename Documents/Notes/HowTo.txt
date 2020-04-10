@@ -1,3 +1,16 @@
 ﻿
 // Create DB with Entity Framework Core, Code first
 ...TODO
+
+
+---------------------
+Update database model 
+---------------------
+(Package Manager Console commands)
+
+> add-migration <MigrationName>
+
+-- Remove migration
+> remove-migration
+
+> update-database
