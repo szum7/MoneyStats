@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace MoneyStats.BL.Repositories
 {
-    public class TransactionRepository : EntityBaseRepository<Transaction>, ITransactionRepository
+    public class TransactionRepository : EntityBaseRepository<BankRow>, ITransactionRepository
     {
-        public new int Insert(Transaction transaction)
+        public new int Insert(BankRow transaction)
         {
             using (var context = new MoneyStatsContext())
             {
@@ -31,7 +31,7 @@ namespace MoneyStats.BL.Repositories
             }
         }
 
-        public List<Transaction> LazyLoading()
+        public List<BankRow> LazyLoading()
         {
             using (var context = new MoneyStatsContext())
             {
@@ -39,12 +39,12 @@ namespace MoneyStats.BL.Repositories
             }
         }
 
-        public List<Transaction> EagerLoading()
+        public List<BankRow> EagerLoading()
         {
             using (var context = new MoneyStatsContext())
             {
                 return (from e in context.Transactions
-                        select new Transaction()
+                        select new BankRow()
                         {
                             Id = e.Id,
                             State = e.State,

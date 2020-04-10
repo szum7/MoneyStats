@@ -80,7 +80,7 @@ namespace MoneyStats.BL.Repositories
             return null;
         }
 
-        public void AddTagsToTransaction(Transaction transaction, List<TagToBeAttached> tagToBeAttacheds)
+        public void AddTagsToTransaction(BankRow transaction, List<TagToBeAttached> tagToBeAttacheds)
         {
             // Check if tag ids exist
             var repo = new TagRepository();
@@ -138,9 +138,9 @@ namespace MoneyStats.BL.Repositories
         /// </summary>
         /// <param name="rule">"compare;AccountingDate;2010-10-10 00:00:00;<="</param>
         /// <param name="transactions"></param>
-        void Test(string rule, string ruleAction, List<Transaction> transactions)
+        void Test(string rule, string ruleAction, List<BankRow> transactions)
         {
-            foreach (Transaction transaction in transactions)
+            foreach (BankRow transaction in transactions)
             {
                 var orRuleParts = rule.Split("||").ToList();
                 var oneORRuleValidates = false;
@@ -169,7 +169,7 @@ namespace MoneyStats.BL.Repositories
 
                         if (currentRule.Type == "Contains")
                         {
-                            var currentValue = typeof(Transaction).GetProperty(currentRule.PropertyName).GetValue(transaction).ToString();
+                            var currentValue = typeof(BankRow).GetProperty(currentRule.PropertyName).GetValue(transaction).ToString();
                             // TODO escape special characters
                             allANDRuleValidates = currentValue.Contains(currentRule.Value.ToString());
                         } 
@@ -182,7 +182,7 @@ namespace MoneyStats.BL.Repositories
                             // => where 25 <= 50
                             // => Misc.Compare(<=, 50, 25) => true
 
-                            var currentValue = (IComparable)typeof(Transaction).GetProperty(currentRule.PropertyName).GetValue(transaction);
+                            var currentValue = (IComparable)typeof(BankRow).GetProperty(currentRule.PropertyName).GetValue(transaction);
                             allANDRuleValidates = !RuleRepository.Compare(currentRule.Arguments, currentRule.Value as IComparable, currentValue);
                         }
 

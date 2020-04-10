@@ -5,7 +5,7 @@ namespace MoneyStats.DAL
 {
     public class MoneyStatsContext : DbContext
     {
-        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<BankRow> Transactions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

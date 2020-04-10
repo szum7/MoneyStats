@@ -18,12 +18,12 @@ namespace MoneyStats.Tests
         {
             // Arrange
             TransactionRepository repo = new TransactionRepository();
-            List<Transaction> inserts = new List<Transaction>();
+            List<BankRow> inserts = new List<BankRow>();
             int state = RND.Next(-2000, -1);
             int length = 10;
 
             for (int i = 0; i < length; i++)
-                inserts.Add(new Transaction() { Message = $"UnitTest{i + 1}", State = state });
+                inserts.Add(new BankRow() { Message = $"UnitTest{i + 1}", State = state });
 
             // Act
             var originalGetResult = repo.ForceGet().ToList().Count;

@@ -33,32 +33,32 @@ namespace MoneyStats.BL.Mocks
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Transaction> ForceGet()
+        public IEnumerable<BankRow> ForceGet()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Transaction> Get()
+        public IEnumerable<BankRow> Get()
         {
             throw new NotImplementedException();
         }
 
-        public int Insert(Transaction transaction)
+        public int Insert(BankRow transaction)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<int> InsertRange(IEnumerable<Transaction> entities)
+        public IEnumerable<int> InsertRange(IEnumerable<BankRow> entities)
         {
             throw new NotImplementedException();
         }
 
-        public Transaction Select(int id)
+        public BankRow Select(int id)
         {
             throw new NotImplementedException();
         }
 
-        public bool Update(Transaction transaction)
+        public bool Update(BankRow transaction)
         {
             return true;
         }
