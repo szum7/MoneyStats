@@ -192,9 +192,10 @@ namespace MoneyStats.BL.Repositories
                     {
                         // => one part of the OR rules validates
                         // => current transaction validates
-                        // => TODO evaluate ruleAction
-                        transaction.EvaluatedRule = rule;
-                        oneORRuleValidates = true;
+
+                        // => TODO apply ruleAction to transaction!
+
+                        oneORRuleValidates = true; // we can stop iteration OR parts of the rule. One OR part passed, and that's enough for us.
                     }
                 }
             }

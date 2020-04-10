@@ -4,18 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoneyStats.DAL.Models
 {
-    public enum BankType
-    {
-        KH,
-        CIB,
-        BudapestBank,
-        ERSTE,
-        ING,
-        MKB,
-        OTP,
-        Raiffeisen
-    }
-
     /// <summary>
     /// This is a table for unmodified bank transactions.
     /// The content of this table is strictly for reference purposes. We do not even
@@ -29,9 +17,18 @@ namespace MoneyStats.DAL.Models
     /// Example: if it's a K&H bank transaction, D, E, F columns will definitely be null.
     /// </summary>
     [Table("BankRow")]
-    public partial class BankRow : EntityBase // (K&H exported transactions)
+    public partial class BankRow : EntityBase
     {
         public BankType BankType { get; set; }
+
+        /// <summary>
+        /// For aggregated transactions. E.g.: monthly food.
+        /// One transaction can only be in one group! Being in 
+        /// multiple groups would mean counting it multiple 
+        /// times, messing up charts/results/etc.
+        /// </summary>
+        public int TransactionGroupId { get; set; }
+
 
         #region K&H Bank columns
         [Rulable]
@@ -63,6 +60,10 @@ namespace MoneyStats.DAL.Models
 
         [Rulable]
         public string Message { get; set; }
+        #endregion
+
+
+        #region OTP Bank columns
         #endregion
     }
 }
