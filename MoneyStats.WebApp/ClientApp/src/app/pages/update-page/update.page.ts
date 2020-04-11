@@ -29,8 +29,8 @@ export class UpdatePage {
         this.stage = StageType.fileFileCompare;
     }
 
-    change_fileFileOutput(output: Array<ReadBankRowForInsertion>): void {
-        this.fileFileResult.bankRowList = output;
+    change_fileFileOutput(output: FileFileResult): void {
+        this.fileFileResult = output;
         this.stage = StageType.dbFileCompare;
     }
 

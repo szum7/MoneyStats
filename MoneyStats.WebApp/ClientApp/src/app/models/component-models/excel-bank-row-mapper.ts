@@ -1,24 +1,36 @@
 import { ReadInBankRow } from "./read-in-bank-row";
 import { PropertyMapRow } from "./property-map-row";
 import { BankRow } from "../service-models/bank-row.model";
+import { BankType } from "../service-models/bank-type.enum";
+
+type EnumDictionary<T extends string | symbol | number, U> = {
+    [K in T]?: U;
+};
 
 export class ExcelBankRowMapper {
 
-    // This is K&H Bank specific. Create a different one for each banks. #FEATURE
-    public propertyMaps: Array<PropertyMapRow> = [
-        new PropertyMapRow("A1", null, "100px", "AccountingDate", this.getJsDateFromExcel),
-        new PropertyMapRow("B1", null, "150px", "TransactionId", null),
-        new PropertyMapRow("C1", null, "210px", "Type", null),
-        new PropertyMapRow("D1", null, "210px", "Account", null),
-        new PropertyMapRow("E1", null, "120px", "AccountName", null),
-        new PropertyMapRow("F1", null, "210px", "PartnerAccount", null),
-        new PropertyMapRow("G1", null, "130px", "PartnerName", null),
-        new PropertyMapRow("H1", "text-right", "80px", "Sum", null),
-        new PropertyMapRow("I1", null, "100px", "Currency", null),
-        new PropertyMapRow("J1", null, "auto", "Message", null)
-    ];
+    private readonly bankPropertyMaps: EnumDictionary<BankType, Array<PropertyMapRow>> = {
+        [BankType.KH]: [
+            new PropertyMapRow("A1", null, "100px", "AccountingDate", this.getJsDateFromExcel),
+            new PropertyMapRow("B1", null, "150px", "TransactionId", null),
+            new PropertyMapRow("C1", null, "210px", "Type", null),
+            new PropertyMapRow("D1", null, "210px", "Account", null),
+            new PropertyMapRow("E1", null, "120px", "AccountName", null),
+            new PropertyMapRow("F1", null, "210px", "PartnerAccount", null),
+            new PropertyMapRow("G1", null, "130px", "PartnerName", null),
+            new PropertyMapRow("H1", "text-right", "80px", "Sum", null),
+            new PropertyMapRow("I1", null, "100px", "Currency", null),
+            new PropertyMapRow("J1", null, "auto", "Message", null)
+        ],
+        [BankType.BudapestBank]: [],
+        [BankType.CIB]: [],
+        [BankType.OTP]: []
+    };
 
-    constructor() {
+    public propertyMaps: Array<PropertyMapRow>;
+
+    constructor(bankType: BankType) {
+        this.propertyMaps = this.bankPropertyMaps[bankType];
     }
 
     getPropertyValue(obj: ReadInBankRow, key: string): any {

@@ -5,6 +5,9 @@ import { ReadBankRowForInsertion } from '../../models/component-models/read-bank
 import { BankRow } from '../../models/service-models/bank-row.model';
 import { LoadingScreenService } from '../../services/loading-screen-service/loading-screen.service';
 import { RuleTransaction } from 'src/app/models/component-models/rule-transaction';
+import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
+import { BankType } from 'src/app/models/service-models/bank-type.enum';
+import { PropertyMapRow } from 'src/app/models/component-models/property-map-row';
 
 @Component({
   selector: 'app-db-file-comparer-component',
@@ -22,15 +25,24 @@ export class DbFileComparerComponent implements OnInit {
   
     @Input() params: FileFileResult;
     @Output() nextStepChange = new EventEmitter();
+    public get mapper(): ExcelBankRowMapper { return this.params.mapper; }
     public get fileList(): Array<ReadBankRowForInsertion> { return this.params.bankRowList; }
 
     constructor(
         private loadingScreen: LoadingScreenService,
-        private bankRowService: BankRowService) {        
+        private bankRowService: BankRowService) {     
     }
 
     ngOnInit(): void {
         this.program();
+    }
+
+    click_toggleColumnVisibility(propertyMap: PropertyMapRow): void {
+        propertyMap.isOpen = !propertyMap.isOpen;
+    }
+
+    click_toggleRowExclusion(row: ReadBankRowForInsertion): void {
+        row.isExcluded = !row.isExcluded;
     }
 
     click_sout() {
@@ -51,7 +63,7 @@ export class DbFileComparerComponent implements OnInit {
         this.nextStepChange.emit(copy);
     }
 
-    program() {
+    private program() {
         let _this = this;
         _this.loadingScreen.start();
         _this.getBankRowsFromDb(function (dbList) {
@@ -78,6 +90,11 @@ export class DbFileComparerComponent implements OnInit {
 
                 if (dbRow.getContentId() === fileRow.bankRow.getContentId()) {
                     fileRow.compareResults.isSameContent = true;
+                    fileRow.isExcluded = true;
+                }
+                if (false) { // TODO some validation could be here
+                    fileRow.compareResults.isInvalid = true;
+                    fileRow.isExcluded = true;
                 }
             }
         }

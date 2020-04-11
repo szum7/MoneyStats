@@ -8,6 +8,8 @@ import { ExcelBankRowMapper } from '../../models/component-models/excel-bank-row
 import { PropertyMapRow } from '../../models/component-models/property-map-row';
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { ReadBankRowForInsertion } from '../../models/component-models/read-bank-row-for-insertion';
+import { BankType } from 'src/app/models/service-models/bank-type.enum';
+import { FileFileResult } from 'src/app/models/component-models/file-file-result';
 
 @Component({
   selector: 'app-file-file-comparer-component',
@@ -31,11 +33,16 @@ export class FileFileComparerComponent implements OnInit {
     
     constructor(private loadingScreen: LoadingScreenService) {
         this.readInBankRows = [];
-        this.mapper = new ExcelBankRowMapper();
+        this.mapper = new ExcelBankRowMapper(this.getBankType());
         this.reader = new ExcelReader(this.mapper);
     }
 
     ngOnInit(): void { }
+
+    private getBankType(): BankType {
+        // TODO ask user to provide us with this value or realize it based on the file
+        return BankType.KH;
+    }
 
     click_toggleColumnVisibility(propertyMap: PropertyMapRow): void {
         propertyMap.isOpen = !propertyMap.isOpen;
@@ -93,16 +100,20 @@ export class FileFileComparerComponent implements OnInit {
     }
 
     click_next(): void {
-        // Output transaction list
-        let copy: Array<ReadBankRowForInsertion> = [];
+
+        let output: FileFileResult = new FileFileResult();
+
+        output.mapper = this.mapper;
+
         for (let i = 0; i < this.readInBankRows.length; i++) {
             const el = this.readInBankRows[i];
             if (!el.isExcluded) {
                 let tr: ReadBankRowForInsertion = new ReadBankRowForInsertion();
                 tr.bankRow = el.bankRow;
-                copy.push(tr);
+                output.bankRowList.push(tr);
             }
         }
-        this.nextStepChange.emit(copy);
+        
+        this.nextStepChange.emit(output);
     }
 }
