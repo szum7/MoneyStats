@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BaseHttpService } from '../base-http.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BankRow } from '../../models/service-models/transaction.model';
+import { BankRow } from '../../models/service-models/bank-row.model';
 
 class BankRowServiceMap {
 
@@ -25,7 +25,7 @@ export class BankRowService extends BankRowServiceLogic {
         private http: HttpClient) {
 
         super();
-        this.base.set('transaction', this.baseUrl, 'api/transaction/');
+        this.base.set('bankRow', this.baseUrl, 'api/bankrow/');
     }
 
     get(): Observable<BankRow[]> {

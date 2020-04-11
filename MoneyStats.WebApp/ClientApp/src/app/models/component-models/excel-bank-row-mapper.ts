@@ -1,7 +1,8 @@
-import { NewTransaction } from "./new-transaction";
+import { ReadInBankRow } from "./read-in-bank-row";
 import { PropertyMapRow } from "./property-map-row";
+import { BankRow } from "../service-models/bank-row.model";
 
-export class ExcelTransactionMapper {
+export class ExcelBankRowMapper {
 
     // This is K&H Bank specific. Create a different one for each banks. #FEATURE
     public propertyMaps: Array<PropertyMapRow> = [
@@ -20,7 +21,7 @@ export class ExcelTransactionMapper {
     constructor() {
     }
 
-    getPropertyValue(obj: NewTransaction, key: string): any {
+    getPropertyValue(obj: ReadInBankRow, key: string): any {
         // Custom rules
         if (key == "AccountingDate") {
             return this.formatDate(obj[key]);
@@ -42,37 +43,39 @@ export class ExcelTransactionMapper {
         }
     }
 
-    mapTransactions(list: Array<any>): Array<NewTransaction> {
-        let ms: Array<NewTransaction> = [];
+    mapBankRows(list: Array<any>): Array<ReadInBankRow> {
+        let array: Array<ReadInBankRow> = [];
         for (let i = 0; i < list.length; i++) {
-            ms.push(this.mapTransaction(list[i]));
+            let item = new ReadInBankRow();
+            item.bankRow = this.mapBankRow(list[i]);
+            array.push(item);
         }
-        return ms;
+        return array;
     }
 
     private formatDate(date: string): string {
         return (new Date(date)).toISOString().substring(0, 10);
     }
 
-    private mapTransaction(tr: any): NewTransaction {
-        let m: NewTransaction = new NewTransaction();
+    private mapBankRow(obj: any): BankRow {
+        let cast: BankRow = new BankRow();
 
         for (let i = 0; i < this.propertyMaps.length; i++) {
             const propertyMap = this.propertyMaps[i];
-            let value = tr[propertyMap.literal];
+            let value = obj[propertyMap.literal];
             if (propertyMap.parser != null) {
                 value = propertyMap.parser(value);
             }
-            m[propertyMap.property] = value;
+            cast[propertyMap.property] = value;
         }
 
-        m = this.setAdditionalProperties(m);
+        cast = this.setAdditionalProperties(cast);
 
-        return m;
+        return cast;
     }
 
-    private setAdditionalProperties(m: NewTransaction): NewTransaction {
-        m.OriginalContentId = m.getContentId();
+    private setAdditionalProperties(m: BankRow): BankRow {
+        //m.OriginalContentId = m.getContentId();
         return m;
     }
 

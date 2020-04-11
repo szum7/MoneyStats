@@ -1,5 +1,7 @@
-import { BankRow } from "../service-models/transaction.model";
+import { BankRow } from "../service-models/bank-row.model";
 
-export class RuleTransaction extends BankRow {
-    
+export class RuleTransaction {
+
+    public bankRow: BankRow;
+
 }

@@ -11,30 +11,30 @@
   <li *ngFor="let fileName of reader.inputFileNames">{{fileName}}</li>
 </ul>
 
-<div class="mapped-transactions" *ngIf="transactionList != null && transactionList.length > 0">
+<div class="mapped-transactions" *ngIf="readInBankRows != null && readInBankRows.length > 0">
 
   <!-- Header -->
-  <div class="transaction header">
+  <div class="bank-row header">
     <span class="tr-row {{propertyMap.customClass}}"
           *ngFor="let propertyMap of mapper.propertyMaps"
           [ngClass]="{'isClosed': !propertyMap.isOpen}" 
           [ngStyle]="{'width': propertyMap.width}"
-          (click)="toggleColumnVisibility(propertyMap)">
+          (click)="click_toggleColumnVisibility(propertyMap)">
           {{propertyMap.literal}}
     </span>
   </div>
   <!-- TODO legyen a táblázat fixed headerrel, mindig lássuk mi micsoda -->
 
   <!-- Body -->
-  <div class="transaction" 
-       *ngFor="let tr of sortBy(transactionList, 'AccountingDate')" 
+  <div class="bank-row" 
+       *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')" 
        [ngClass]="{'excluded': tr.isExcluded}">
     <button type="button" (click)="click_toggleRowExclusion(tr)">{{tr.isExcluded ? "-" : "+"}}</button>        
     <span class="tr-row {{propertyMap.customClass}}"
           *ngFor="let propertyMap of mapper.propertyMaps"
           [ngClass]="{'isClosed': !propertyMap.isOpen}" 
           [ngStyle]="{'min-width': propertyMap.width}">
-          {{mapper.getPropertyValue(tr, propertyMap.property)}}
+          {{mapper.getPropertyValue(tr.bankRow, propertyMap.property)}}
     </span>    
   </div>
 

@@ -1,12 +1,10 @@
 export class CompareResults {
 
     isSameContent: boolean;
-    isSameOriginalContent: boolean;
 
-    get isNew(): boolean { return !this.isSameContent && !this.isSameOriginalContent; }
+    get isNew(): boolean { return !this.isSameContent }
 
     constructor() {
         this.isSameContent = false;
-        this.isSameOriginalContent = false;
     }
 }

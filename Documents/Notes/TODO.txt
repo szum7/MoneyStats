@@ -7,3 +7,4 @@
 - felmerül a probléma, hogy ha a szabályokat egybefolyó string-ként tároljuk (és nem külön oszlopokban), akkor property név változásnál azokat is frissíteni kéne
 	- (?) szabályellenőrző metódus létrehozása, ajánljuk fel, hogy az elavult szabályokat kitöröljük
 - mivel a Transaction-ben lemásolódnak adatok a BankTransaction-ből, inkonzisztencia léphet fel. Legyen egy ellenőrző mechanizmus, ami végigfut a sorokon, tényleg egyeznek-e a lemásolt értékek. (transaction.Sum ?= transaction.bankTransactionRef.Sum)
+- kliens oldal - contentId/originalContentId-t javítai (original nincs)

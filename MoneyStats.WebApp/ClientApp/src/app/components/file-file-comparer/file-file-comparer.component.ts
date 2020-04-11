@@ -1,13 +1,13 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { NewTransactionMerger } from '../../models/component-models/new-transaction-merger';
-import { NewTransaction } from '../../models/component-models/new-transaction';
+import { ReadInBankRowsMerger } from '../../models/component-models/read-in-bank-rows-merger';
+import { ReadInBankRow } from '../../models/component-models/read-in-bank-row';
 import { map } from 'rxjs/operators';
 import { ExcelReader } from '../../models/component-models/excel-reader';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
-import { ExcelTransactionMapper } from '../../models/component-models/excel-transaction-mapper';
+import { ExcelBankRowMapper } from '../../models/component-models/excel-bank-row-mapper';
 import { PropertyMapRow } from '../../models/component-models/property-map-row';
-import { BankRow } from 'src/app/models/service-models/transaction.model';
-import { DbTransaction } from '../../models/component-models/db-transaction';
+import { BankRow } from 'src/app/models/service-models/bank-row.model';
+import { ReadBankRowForInsertion } from '../../models/component-models/read-bank-row-for-insertion';
 
 @Component({
   selector: 'app-file-file-comparer-component',
@@ -16,47 +16,48 @@ import { DbTransaction } from '../../models/component-models/db-transaction';
 })
 export class FileFileComparerComponent implements OnInit {
 
-    // New transactions page
+    // New bank rows page
     // 1. file merge stage (exclude duplicates between xml rows from multiple files)
     // 2. db merge stage (exclude duplicates between db rows and xml rows)
     // 3. eval rule and edit stage (evaluate rules and allow edition to rows)
 
-    // Edit transactions page
-    // 1. list transactions from db for edition    
+    // Edit bank rows page
+    // 1. list bank rows from db for edition    
 
     reader: ExcelReader;
-    mapper: ExcelTransactionMapper;
-    transactionList: Array<NewTransaction>;
+    mapper: ExcelBankRowMapper;
+    readInBankRows: Array<ReadInBankRow>;
     @Output() nextStepChange = new EventEmitter();
     
     constructor(private loadingScreen: LoadingScreenService) {
-        this.mapper = new ExcelTransactionMapper();
+        this.readInBankRows = [];
+        this.mapper = new ExcelBankRowMapper();
         this.reader = new ExcelReader(this.mapper);
-        this.transactionList = [];
     }
 
     ngOnInit(): void { }
 
-    toggleColumnVisibility(propertyMap: PropertyMapRow): void {
+    click_toggleColumnVisibility(propertyMap: PropertyMapRow): void {
         propertyMap.isOpen = !propertyMap.isOpen;
     }
 
-    dateComparer(a, b){
+    sortBy_bankRows(arr: Array<any>, property: string) {
+        return arr.sort((a, b) => this.dateComparer(a.bankRow[property], b.bankRow[property]));
+    }
+
+    private dateComparer(a, b){
         let d1 = (new Date(a)).getTime();
         let d2 = (new Date(b)).getTime();
-        return d1 > d2 ? 1 : d1 === d2 ? 0 : -1
+        return d1 > d2 ? 1 : d1 === d2 ? 0 : -1;
     }
 
-    sortBy(arr: Array<any>, property: string) {
-        return arr.sort((a, b) => this.dateComparer(a[property], b[property]));
-    }
-
-    click_toggleRowExclusion(row: NewTransaction): void {
+    click_toggleRowExclusion(row: ReadInBankRow): void {
         row.isExcluded = !row.isExcluded;
     }
 
     change_filesSelected(event) {
 
+        // Get the selected files
         let files = event.target.files;
 
         // Read files
@@ -64,16 +65,16 @@ export class FileFileComparerComponent implements OnInit {
             console.log("No files uploaded.");
             return;
         }
-        let mappedExcelMatrix: Array<Array<NewTransaction>> = this.reader.getTransactionMatrix(files);
+        let mappedExcelMatrix: Array<Array<ReadInBankRow>> = this.reader.getBankRowMatrix(files);
         console.log(mappedExcelMatrix);
 
         this.loadingScreen.start();
         
         // Wait for reader to read files
-        var _this = this;
+        var self = this;
         var finishedReadingInterval = setInterval(function() {
             
-            if (_this.reader.isReadingFinished()) {
+            if (self.reader.isReadingFinished()) {
                 clearInterval(finishedReadingInterval);
                 
                 // Evaluate read files
@@ -82,33 +83,23 @@ export class FileFileComparerComponent implements OnInit {
                     return;
                 }
                 
-                let merger: NewTransactionMerger = new NewTransactionMerger();
-                merger.setExclusion(mappedExcelMatrix);
-                _this.transactionList = [].concat.apply([], mappedExcelMatrix);
+                let merger: ReadInBankRowsMerger = new ReadInBankRowsMerger();
+                merger.searchForDuplicates(mappedExcelMatrix);
+                self.readInBankRows = [].concat.apply([], mappedExcelMatrix); // join the matrix's rows into one array
 
-                _this.loadingScreen.stop();
+                self.loadingScreen.stop();
             }
         }, 10);        
     }
 
     click_next(): void {
         // Output transaction list
-        let copy: Array<DbTransaction> = [];
-        for (let i = 0; i < this.transactionList.length; i++) {
-            const el = this.transactionList[i];
+        let copy: Array<ReadBankRowForInsertion> = [];
+        for (let i = 0; i < this.readInBankRows.length; i++) {
+            const el = this.readInBankRows[i];
             if (!el.isExcluded) {
-                let tr: DbTransaction = new DbTransaction();
-                tr.AccountingDate = el.AccountingDate;
-                tr.Account = el.Account;
-                tr.TransactionId = el.TransactionId;
-                tr.Type = el.Type;
-                tr.AccountName = el.AccountName;
-                tr.PartnerAccount = el.PartnerAccount;
-                tr.PartnerName = el.PartnerName;
-                tr.Sum = el.Sum;
-                tr.Currency = el.Currency;
-                tr.Message = el.Message;
-                tr.OriginalContentId = el.OriginalContentId;
+                let tr: ReadBankRowForInsertion = new ReadBankRowForInsertion();
+                tr.bankRow = el.bankRow;
                 copy.push(tr);
             }
         }

@@ -13,7 +13,7 @@ export class RuleEvaluatorComponent implements OnInit {
     
     @Input() params: DbFileResult;
     @Output() nextStepChange = new EventEmitter();
-    public get fileList(): Array<RuleTransaction> { return this.params.transactionList; }
+    public get fileList(): Array<RuleTransaction> { return this.params.bankRowList; }
     
     constructor(private loadingScreen: LoadingScreenService) {
     }
