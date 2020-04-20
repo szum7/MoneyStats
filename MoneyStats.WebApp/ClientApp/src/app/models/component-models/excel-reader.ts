@@ -1,14 +1,14 @@
-import { NewTransaction } from "./new-transaction";
-import { ExcelTransactionMapper } from "./excel-transaction-mapper";
+import { ReadInBankRow } from "./read-in-bank-row";
+import { ExcelBankRowMapper } from "./excel-bank-row-mapper";
 import * as XLSX from 'xlsx';
 
 export class ExcelReader {
     
     public inputFileNames: Array<string>;
     private isFinishedArray: Array<boolean>;
-    private mapper: ExcelTransactionMapper;
+    private mapper: ExcelBankRowMapper;
 
-    constructor(mapper: ExcelTransactionMapper) {
+    constructor(mapper: ExcelBankRowMapper) {
         this.inputFileNames = [];
         this.mapper = mapper;
     }
@@ -24,10 +24,10 @@ export class ExcelReader {
         return true;
     }
 
-    public getTransactionMatrix(inputFiles: Array<any>): Array<Array<NewTransaction>> {
+    public getBankRowMatrix(inputFiles: Array<any>): Array<Array<ReadInBankRow>> {
         
         let self = this;
-        let mappedExcelMatrix: Array<Array<NewTransaction>> = [];
+        let mappedExcelMatrix: Array<Array<ReadInBankRow>> = []; // One row is one document.
         this.inputFileNames = [];
 
         this.initFinishedArray(inputFiles.length);
@@ -40,8 +40,8 @@ export class ExcelReader {
             this.inputFileNames.push(file.name);
 
             // Read file
-            self.readFile(file, function(unmappedArray) {
-                mappedExcelMatrix.push(self.mapper.mapTransactions(unmappedArray));
+            self.readFile(file, function(unmappedArray) { // this is an async function
+                mappedExcelMatrix.push(self.mapper.mapBankRows(unmappedArray));
                 self.isFinishedArray[i] = true;
             });
         }

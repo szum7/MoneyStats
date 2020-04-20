@@ -10,13 +10,13 @@ namespace MoneyStats.WebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TransactionController : ControllerBase
+    public class BankRowController : ControllerBase
     {
-        ITransactionRepository _repo;
+        IBankRowRepository _repo;
 
-        public TransactionController()
+        public BankRowController(IBankRowRepository repo)
         {
-            _repo = new TransactionRepository(); // TODO use injection
+            _repo = repo;
         }
 
         [HttpGet("get")]

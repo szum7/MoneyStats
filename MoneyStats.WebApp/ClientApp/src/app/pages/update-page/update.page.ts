@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DbTransaction } from 'src/app/models/component-models/db-transaction';
+import { ReadBankRowForInsertion } from 'src/app/models/component-models/read-bank-row-for-insertion';
 import { StageType } from '../../models/component-models/stage-type.enum';
 import { FileFileResult } from '../../models/component-models/file-file-result';
 import { DbFileResult } from 'src/app/models/component-models/db-file-result';
@@ -29,13 +29,13 @@ export class UpdatePage {
         this.stage = StageType.fileFileCompare;
     }
 
-    change_fileFileOutput(output: Array<DbTransaction>): void {
-        this.fileFileResult.transactionList = output;
+    change_fileFileOutput(output: FileFileResult): void {
+        this.fileFileResult = output;
         this.stage = StageType.dbFileCompare;
     }
 
     change_dbFileOutput(output: Array<RuleTransaction>): void {
-        this.dbFileResult.transactionList = output;
+        this.dbFileResult.bankRowList = output;
         this.stage = StageType.evaluateRules;
     }
 

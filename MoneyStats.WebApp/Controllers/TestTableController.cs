@@ -17,7 +17,7 @@ namespace MoneyStats.WebApp.Controllers
         [HttpGet("get")]
         public ActionResult Get()
         {
-            var repo = new TransactionRepository();
+            var repo = new BankRowRepository();
             return Ok(repo.Get());
         }
     }

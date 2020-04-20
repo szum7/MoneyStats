@@ -1,9 +1,9 @@
-import { NewTransaction } from "./new-transaction";
+import { ReadInBankRow } from "./read-in-bank-row";
 import { InputMessages } from "src/app/utilities/input-messages.static";
 
-export class NewTransactionMerger {
+export class ReadInBankRowsMerger {
 
-    public setExclusion(matrix: Array<Array<NewTransaction>>) {
+    public searchForDuplicates(matrix: Array<Array<ReadInBankRow>>) {
         for (let i = 0; i < matrix.length; i++) {
             let sheet = matrix[i];
             for (let j = 0; j < sheet.length; j++) {
@@ -18,7 +18,7 @@ export class NewTransactionMerger {
                         while (l < foreignSheet.length && !tr.isExcluded) {
                             let foreignRow = foreignSheet[l];
                             if (!foreignRow.isExcluded &&  // Only exclude one row per duplication(s)
-                                tr.OriginalContentId === foreignRow.OriginalContentId) {
+                                tr.bankRow.getContentId() === foreignRow.bankRow.getContentId()) {
                                 this.setRowForExclusion(tr);
                             }
                             l++;
@@ -30,7 +30,7 @@ export class NewTransactionMerger {
         }
     }
 
-    private setRowForExclusion(row: NewTransaction): void {
+    private setRowForExclusion(row: ReadInBankRow): void {
         row.isExcluded = true;
         row.inputMessage = InputMessages.READ_FILES_DUPLICATION;
     }

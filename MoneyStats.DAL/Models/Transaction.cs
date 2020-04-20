@@ -1,69 +1,51 @@
-﻿using MoneyStats.DAL.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoneyStats.DAL.Models
 {
     [Table("Transaction")]
-    public partial class Transaction : EntityBase // (K&H exported transactions)
+    public class Transaction : EntityBase
     {
-        [Rulable]
-        public DateTime AccountingDate { get; set; }
-
-        [Rulable]
-        public string TransactionId { get; set; }
-
-        [Rulable]
-        public string Type { get; set; }
-
-        [Rulable]
-        public string Account { get; set; }
-
-        [Rulable]
-        public string AccountName { get; set; }
-
-        [Rulable]
-        public string PartnerAccount { get; set; }
-
-        [Rulable]
-        public string PartnerName { get; set; }
-
-        [Rulable]
-        public decimal? Sum { get; set; }
-
-        [Rulable]
-        public string Currency { get; set; }
-
-        [Rulable]
-        public string Message { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
-        /// This is a foreign key in the same table where the reference is.
-        /// 
-        /// Ezzel lehet összesíteni tranzakciókat, pl élelmiszerre költött kiadásokat.
-        /// 
-        /// A hivatkozott tranzakció egy összegzett Sum értékkel és hóvégi dátummal.
-        /// A további propertyk ajánlatot tesz majd a program, de valószínűleg
-        /// gyakran át fogják írni.
-        /// 
-        /// Összesítéseknél/kimutatásoknál vagy a hivatkozott, vagy azokat a tranzakciókat 
-        /// használjuk, melyeknél ez a property nem null.
-        /// 
-        /// Rule kiértékelésnél a hivatkozott sor alatt egymás után listázzuk a hivatkozókat.
-        /// (null értékű alatt a nem null értékűek.)
+        /// Title explained. Useful for IsCustom=true transactions.
         /// </summary>
-        public int TransactionGroupParentId { get; set; }
+        public string Description { get; set; }
 
-        public string OriginalContentId { get; set; }
+        public DateTime Date { get; set; }
+
+        public int Sum { get; set; }
 
         /// <summary>
-        /// User can set an id. Useful when user wants to add a transaction by hand, 
-        /// not read from an excel file.
+        /// This means there are more than one bank transaction associated with this.
+        /// E.g.: a monthly sum of transactions relating food.
+        /// This is for performance purposes, could just check if the Id exists 
+        /// in the connection table (TransactionBankRowConn).
+        /// If true, BankTransactionId MUST BE null! (Otherwise -> circular reference)
+        /// NOTE! defaultValue: false
         /// </summary>
-        public string CustomId { get; set; }
+        public bool IsGroup { get; set; }
 
+        /// <summary>
+        /// We can create transactions without bank exported transaction reference.
+        /// E.g.: Create an IsCutom=true transaction for transactions payed with cash,
+        /// where there's no record.
+        /// NOTE! defaultValue: false
+        /// </summary>
+        public bool IsCustom { get; set; }
+
+        /// <summary>
+        /// Reference.
+        /// </summary>
+        [ForeignKey("BankRow")]
+        public int? BankTransactionId { get; set; }
+
+
+        public virtual BankRow BankTransaction { get; set; }
         public virtual ICollection<TransactionTagConn> TransactionTagConn { get; set; }
+
 
         public Transaction()
         {
