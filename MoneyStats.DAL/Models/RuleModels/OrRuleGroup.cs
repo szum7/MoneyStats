@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace MoneyStats.DAL.Models
 {
-    [Table("Ruleset")]
-    public class Ruleset : EntityBase
+    [Table("OrRuleGroup")]
+    public class OrRuleGroup : EntityBase
     {
-        public string Title { get; set; }
         public int RuleGroupId { get; set; }
 
         public virtual RuleGroup RuleGroup { get; set; }
+
+        [NotMapped]
+        public List<AndRuleGroup> AndRuleGroups { get; set; }
     }
 }

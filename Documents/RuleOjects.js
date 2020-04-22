@@ -8,6 +8,7 @@
 /// Types:
 /// - True rule (apply to every transaction)
 /// - Has value of property
+/// - Property's value contians a string
 /// - Value of property is not null
 /// - Value of property is null
 /// 
@@ -20,7 +21,7 @@
 /// Types:
 /// - Omit
 /// - Add tags
-/// - Set property to value
+/// - Set value of property
 /// - Aggregate to a single transaction (additional actions apply to this transaction!)
 
 

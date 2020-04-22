@@ -5,16 +5,16 @@ using System.Text;
 
 namespace MoneyStats.DAL.Models
 {
-    public enum RuleType
-    {
-
-    }
-
+    /// <summary>
+    /// User created.
+    /// </summary>
     [Table("Rule")]
     public class Rule : EntityBase
     {
         public RuleType Type { get; set; }
         public string Property { get; set; }
         public object Value { get; set; }
+
+        public int AndRuleGroupId { get; set; }
     }
 }

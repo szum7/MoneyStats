@@ -40,7 +40,7 @@ namespace MoneyStats.DAL.Models
         /// Reference.
         /// </summary>
         [ForeignKey("BankRow")]
-        public int? BankTransactionId { get; set; }
+        public int? BankRowId { get; set; }
 
 
         public virtual BankRow BankTransaction { get; set; }
