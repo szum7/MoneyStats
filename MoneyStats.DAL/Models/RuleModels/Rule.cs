@@ -11,10 +11,11 @@ namespace MoneyStats.DAL.Models
     [Table("Rule")]
     public class Rule : EntityBase
     {
-        public RuleType Type { get; set; }
         public string Property { get; set; }
         public object Value { get; set; }
-
+        public int RuleTypeId { get; set; }
         public int AndRuleGroupId { get; set; }
+
+        public virtual RuleType RuleType { get; set; }
     }
 }

@@ -11,15 +11,16 @@ namespace MoneyStats.DAL.Models
     public class RuleAction : EntityBase
     {
         public string Title { get; set; }
-        public RuleActionType Type { get; set; }
+        public int RuleActionTypeId { get; set; }
         public string Property { get; set; }
         public object Value { get; set; }
         public int RuleGroupId { get; set; }
 
         public virtual RuleGroup RuleGroup { get; set; }
+        public virtual RuleActionType RuleActionType { get; set; }
 
         /// <summary>
-        /// For AddTags type of action
+        /// For "AddTags" type of action
         /// </summary>
         [NotMapped]
         public List<Tag> TagsToBeApplied { get; set; }
