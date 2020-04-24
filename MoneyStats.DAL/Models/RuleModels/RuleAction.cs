@@ -8,7 +8,7 @@ namespace MoneyStats.DAL.Models
     /// to exactly one RuleGroup.
     /// </summary>
     [Table("RuleGroup")]
-    public class RuleAction : EntityBase
+    public partial class RuleAction : EntityBase
     {
         public string Title { get; set; }
         public int RuleActionTypeId { get; set; }
@@ -18,7 +18,10 @@ namespace MoneyStats.DAL.Models
 
         public virtual RuleGroup RuleGroup { get; set; }
         public virtual RuleActionType RuleActionType { get; set; }
+    }
 
+    public partial class RuleAction
+    {
         /// <summary>
         /// For "AddTags" type of action
         /// </summary>

@@ -45,6 +45,7 @@ namespace MoneyStats.DAL.Models
 
         public virtual BankRow BankTransaction { get; set; }
         public virtual ICollection<TransactionTagConn> TransactionTagConn { get; set; }
+        public virtual ICollection<TransactionCreatedWithRule> TransactionCreatedWithRule { get; set; }
 
 
         public Transaction()

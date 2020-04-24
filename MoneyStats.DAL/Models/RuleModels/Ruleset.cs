@@ -12,5 +12,7 @@ namespace MoneyStats.DAL.Models
     public class Ruleset : EntityBase
     {
         public string Title { get; set; }
+
+        public virtual ICollection<RulesetRuleGroupConn> RulesetRuleGroupConn { get; set; }
     }
 }

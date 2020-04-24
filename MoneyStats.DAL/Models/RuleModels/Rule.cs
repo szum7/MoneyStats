@@ -7,6 +7,8 @@ namespace MoneyStats.DAL.Models
 {
     /// <summary>
     /// User created.
+    /// Example 1: transaction.property == value
+    /// Example 2: transaction.property.Contains(value)
     /// </summary>
     [Table("Rule")]
     public class Rule : EntityBase
@@ -17,5 +19,6 @@ namespace MoneyStats.DAL.Models
         public int AndRuleGroupId { get; set; }
 
         public virtual RuleType RuleType { get; set; }
+        public virtual AndRuleGroup AndRuleGroup { get; set; }
     }
 }
