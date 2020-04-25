@@ -7,22 +7,83 @@ using MoneyStats.DAL.Common;
 
 namespace MoneyStats.BL.Repositories
 {
-    /// <summary>
-    /// This is not yet useful as operands are created on client side and stored as string.
-    /// Using this enum would mean extra conversions.
-    /// </summary>
-    public enum RuleType
+    public class RuleRepository
     {
-        Compare, // Operator
-        Contain // String.Contains
+        public void Test(List<RuleGroup> ruleGroups, List<Transaction> transactions)
+        {
+            var o = 0;
+            while (o < transactions.Count)
+            {
+                var tr = transactions[o];
+                foreach (RuleGroup ruleGroup in ruleGroups) // item = (a & b & c) || d || (e & f) => action
+                {
+                    // Check if RuleGroup validates
+                    var i = 0;
+                    var oneOrRuleValidates = false;
+                    while (i < ruleGroup.AndRuleGroups.Count && !oneOrRuleValidates)
+                    {                        
+                        var andRule = ruleGroup.AndRuleGroups[i];  // = (a & b & c)
+                        var allAndRuleValidates = true;
+                        var j = 0;
+                        while (j < andRule.Rules.Count && allAndRuleValidates)
+                        {
+                            var rule = andRule.Rules[j]; // = a
+                            
+                            if (rule.RuleTypeId == (int)RuleTypeEnum.TrueRule)
+                            {
+                                // Do nothing
+                            }
+                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsGreaterThan)
+                            {
+                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(tr);
+                                allAndRuleValidates = !RuleRepositoryV1.Compare("<", rule.Value as IComparable, value);
+                            }
+                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsLesserThan)
+                            {
+                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(tr);
+                                allAndRuleValidates = !RuleRepositoryV1.Compare("<", rule.Value as IComparable, value);
+                            }
+                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsEqualTo)
+                            {
+                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(tr);
+                                allAndRuleValidates = value == (IComparable)rule.Value;
+                            }
+
+                            j++;
+                        }
+
+                        if (allAndRuleValidates)
+                        {
+                            oneOrRuleValidates = true;
+                        }
+
+                        i++;
+                    }
+
+                    // Apply RuleAction if RuleGroup validated
+                    if (oneOrRuleValidates)
+                    {
+                        foreach (RuleAction action in ruleGroup.RuleActions)
+                        {
+                            if (action.RuleActionTypeId == (int)RuleActionTypeEnum.Omit)
+                            {
+                                transactions.Remove(tr);
+                                o--; // The next iteration is now at the index where this item was removed.
+                            } 
+                            else if (action.RuleActionTypeId == (int)RuleActionTypeEnum.SetValueOfProperty)
+                            {
+                                // TODO convert to type of property
+                                typeof(BankRow).GetProperty(action.Property).SetValue(tr, action.Value);
+                            }
+                        }
+                    }
+                }
+                o++;
+            }
+        }
     }
 
-    public enum RuleActionType
-    {
-        AddTags,
-        AggregateToMonth
-    }
-
+    #region Version 1
     // Examples:
     // AccountingDate < 2014-01-01 00:00:00
     // TransactionId.ToLower().Contains("banki")
@@ -37,7 +98,7 @@ namespace MoneyStats.BL.Repositories
     // contains;TransactionId;Hello&44 my friend!;caseSensitive&&contains;Message;15HUF;caseInsensitive
     // contains;TransactionId;Hello&44 my friend!;caseInsensitive
 
-    public class Rule
+    public class RuleV1
     {
         public string Type { get; set; }
         public string PropertyName { get; set; }
@@ -53,7 +114,7 @@ namespace MoneyStats.BL.Repositories
         public string Self => $"[Tag with id:{Tag?.Id} and title '{Tag?.Title}']";
     }
 
-    public class RuleRepository
+    public class RuleRepositoryV1
     {
         private List<Tag> _tags { get; set; }
         private List<Tag> _Tags
@@ -67,11 +128,6 @@ namespace MoneyStats.BL.Repositories
                 }
                 return _tags;
             }
-        }
-
-        public RuleRepository()
-        {
-
         }
 
         public List<TagToBeAttached> ConvertToModel(string rule)
@@ -158,7 +214,7 @@ namespace MoneyStats.BL.Repositories
                         // andRule = "compare;AccountingDate;2010-10-10 00:00:00;<="
 
                         var andRuleArray = andRuleParts[j].Split(',').ToList();
-                        var currentRule = new Rule()
+                        var currentRule = new RuleV1()
                         {
                             Type = andRuleArray[0],
                             PropertyName = andRuleArray[1],
@@ -183,7 +239,7 @@ namespace MoneyStats.BL.Repositories
                             // => Misc.Compare(<=, 50, 25) => true
 
                             var currentValue = (IComparable)typeof(BankRow).GetProperty(currentRule.PropertyName).GetValue(transaction);
-                            allANDRuleValidates = !RuleRepository.Compare(currentRule.Arguments, currentRule.Value as IComparable, currentValue);
+                            allANDRuleValidates = !RuleRepositoryV1.Compare(currentRule.Arguments, currentRule.Value as IComparable, currentValue);
                         }
 
                         j++;
@@ -226,4 +282,5 @@ namespace MoneyStats.BL.Repositories
             //}
         }
     }
+    #endregion
 }

@@ -11,9 +11,9 @@ namespace MoneyStats.DAL.Models
     [Table("AndRuleGroup")]
     public partial class AndRuleGroup : EntityBase
     {
-        public int OrRuleGroupId { get; set; }
+        public int RuleGroupId { get; set; }
 
-        public virtual OrRuleGroup OrRuleGroup { get; set; }
+        public virtual RuleGroup OrRuleGroup { get; set; }
     }
 
     public partial class AndRuleGroup

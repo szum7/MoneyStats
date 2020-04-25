@@ -9,3 +9,5 @@
 - mivel a Transaction-ben lemásolódnak adatok a BankTransaction-ből, inkonzisztencia léphet fel. Legyen egy ellenőrző mechanizmus, ami végigfut a sorokon, tényleg egyeznek-e a lemásolt értékek. (transaction.Sum ?= transaction.bankTransactionRef.Sum)
 o kliens oldal - contentId/originalContentId-t javítai (original nincs)
 - bankType-ot helyre rakni kliens oldalon is
+- rule kiértékelő metódusban eltárolni hogy mely szabály érvényesült a tranzakcióra
+- RuleType lehet nem db-ben kéne tárolni, hanem programban enumban, és db-ben csak int típus legyen, ami megfelel a programban az enum számának.

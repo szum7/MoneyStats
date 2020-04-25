@@ -22,10 +22,23 @@ namespace MoneyStats.DAL.Models
         public BankType BankType { get; set; }
 
         /// <summary>
+        /// The workflow is:
+        /// 1. read bank exported excel transactions
+        /// 2. save bank rows
+        /// 3. list newly inserted bank rows and create transactions based on them (use rules if desired)
+        /// Connection could be lost, page refreshed or other disruptive action done
+        /// to discontinue the workflow. This bool tells us if the current bank row 
+        /// has undergone the 3th step.
+        /// </summary>
+        public bool IsTransactionCreated { get; set; }
+
+        /// <summary>
         /// For aggregated transactions. E.g.: monthly food.
         /// One transaction can only be in one group! Being in 
         /// multiple groups would mean counting it multiple 
         /// times, messing up charts/results/etc.
+        /// Many bank rows references one transaction.
+        /// Aggregated bank rows generate only one transaction.
         /// </summary>
         [ForeignKey("Transaction")]
         public int? TransactionGroupId { get; set; }

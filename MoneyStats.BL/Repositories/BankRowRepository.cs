@@ -13,7 +13,7 @@ namespace MoneyStats.BL.Repositories
             using (var context = new MoneyStatsContext())
             {
                 var transactions = this.Get();
-                if (transactions.Any(x => x.ContentId == transaction.ContentId))
+                if (transactions.Any(x => x.ContentId == transaction.ContentId)) // TODO not-bank-specific
                 {
                     return 0;
                 }

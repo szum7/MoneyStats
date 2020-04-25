@@ -75,5 +75,65 @@ namespace MoneyStats.Tests
             // d1.CompareTo(d2) > 0 -> d1 nagyobb, késõbbi dátum mint d2
             // d1.CompareTo(d2) = 0 -> d1 = d2
         }
+
+        //[TestMethod]
+        public void RemoveTestWithForeach()
+        {
+            var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
+            var result = "124578";
+            var actual = "";
+
+            // Act
+            foreach (int item in list) // System.InvalidOperationException: 'Collection was modified; enumeration operation may not execute.'
+            {
+                if (item == 2)
+                {
+                    list.Remove(6);
+                }
+                else if (item == 3)
+                {
+                    list.Remove(3);
+                }
+                else
+                {
+                    result += item;
+                }
+            }
+
+            Assert.AreEqual(result, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTestWithWhile()
+        {
+            var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
+            var result = "124578";
+            var actual = "";
+            var i = 0;
+            // Act
+            while (i < list.Count)
+            {
+                var item = list[i];
+
+                if (item == 2)
+                {
+                    list.Remove(6);
+                    actual += item;
+                }
+                else if (item == 3)
+                {
+                    list.Remove(3);
+                    i--;
+                }
+                else
+                {
+                    actual += item;
+                }
+
+                i++;
+            }
+
+            Assert.AreEqual(result, actual);
+        }
     }
 }

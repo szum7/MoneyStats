@@ -20,9 +20,15 @@ namespace MoneyStats.DAL.Models
     public partial class RuleGroup
     {
         [NotMapped]
-        public List<OrRuleGroup> OrRuleGroups { get; set; }
+        public List<AndRuleGroup> AndRuleGroups { get; set; }
 
         [NotMapped]
         public List<RuleAction> RuleActions { get; set; }
+
+        public override string ToString()
+        {
+            // TODO write something like: (a & b) || c
+            return base.ToString();
+        }
     }
 }
