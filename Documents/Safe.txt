@@ -1,4 +1,103 @@
-﻿using System.Collections.Generic;
+﻿
+        /// <summary>
+        /// BankRow list goes in, Transaction and TransactionTagConn list goes out.
+        /// </summary>
+        /// <param name="ruleGroups"></param>
+        /// <param name="transactions"></param>
+        public void Test(List<RuleGroup> ruleGroups, List<Transaction> transactions)
+        {
+            var o = 0;
+            while (o < transactions.Count)
+            {
+                var tr = transactions[o];
+                foreach (RuleGroup ruleGroup in ruleGroups) // item = (a & b & c) || d || (e & f) => action
+                {
+                    // Check if RuleGroup validates
+                    var i = 0;
+                    var oneOrRuleValidates = false;
+                    while (i < ruleGroup.AndRuleGroups.Count && !oneOrRuleValidates)
+                    {                        
+                        var andRule = ruleGroup.AndRuleGroups[i];  // = (a & b & c)
+                        var allAndRuleValidates = true;
+                        var j = 0;
+                        while (j < andRule.Rules.Count && allAndRuleValidates)
+                        {
+                            var rule = andRule.Rules[j]; // = a
+                            
+                            if (rule.RuleTypeId == (int)RuleTypeEnum.TrueRule)
+                            {
+                                // Do nothing
+                            }
+                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsGreaterThan)
+                            {
+                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(tr);
+                                allAndRuleValidates = !RuleRepositoryV1.Compare("<", rule.Value as IComparable, value);
+                            }
+                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsLesserThan)
+                            {
+                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(tr);
+                                allAndRuleValidates = !RuleRepositoryV1.Compare("<", rule.Value as IComparable, value);
+                            }
+                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsEqualTo)
+                            {
+                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(tr);
+                                allAndRuleValidates = value == (IComparable)rule.Value;
+                            }
+
+                            j++;
+                        }
+
+                        if (allAndRuleValidates)
+                        {
+                            oneOrRuleValidates = true;
+                        }
+
+                        i++;
+                    }
+
+                    // Apply RuleAction if RuleGroup validated
+                    if (oneOrRuleValidates)
+                    {
+                        foreach (RuleAction action in ruleGroup.RuleActions)
+                        {
+                            switch (action.RuleActionTypeId)
+                            {
+                                case (int)RuleActionTypeEnum.Omit:
+
+                                    transactions.Remove(tr);
+                                    o--; // The next iteration is now at the index where this item was removed.
+
+                                    break;
+                                case (int)RuleActionTypeEnum.SetValueOfProperty:
+
+                                    tr.SetPropertyValueFromString(action.Property, action.Value?.ToString());
+
+                                    break;
+                                case (int)RuleActionTypeEnum.AddTags:
+
+
+
+                                    break;
+                                default:
+                                    // Log not found ruleAction type error
+                                    break;
+                            }
+                        }
+                    }
+                }
+                o++;
+            }
+        }
+
+
+
+
+
+
+
+
+
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoneyStats.DAL.Models

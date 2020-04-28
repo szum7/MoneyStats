@@ -42,6 +42,7 @@ namespace MoneyStats.DAL.Models
         /// </summary>
         [ForeignKey("Transaction")]
         public int? TransactionGroupId { get; set; }
+        public virtual Transaction TransactionGroup { get; set; }
 
 
         #region K&H Bank columns

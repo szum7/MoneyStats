@@ -4,17 +4,29 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using MoneyStats.DAL.Common;
+using MoneyStats.BL.Common;
 
 namespace MoneyStats.BL.Repositories
 {
     public class RuleRepository
     {
-        public void Test(List<RuleGroup> ruleGroups, List<Transaction> transactions)
+        /// <summary>
+        /// BankRow list goes in, Transaction and TransactionTagConn list goes out.
+        /// 1. 
+        /// x. save Transactions
+        /// y. create TransactionTagConn models based on Transactions now with ids and Tag ids from the tr.s' Tags lists.
+        /// z. save TransactionTagConns
+        /// </summary>
+        /// <param name="ruleGroups"></param>
+        /// <param name="transactions"></param>
+        public void Test(List<RuleGroup> ruleGroups, List<BankRow> bankRows)
         {
-            var o = 0;
-            while (o < transactions.Count)
+            var transactions = new List<Transaction>();
+            var aggregatedTransactions = new Dictionary<DateTime, Transaction>();
+            var transactionTagConns = new List<TransactionTagConn>(); // TODO lehet nem fog kelleni és jobb ha a tr.Tags-be pakolok
+
+            foreach (var br in bankRows)
             {
-                var tr = transactions[o];
                 foreach (RuleGroup ruleGroup in ruleGroups) // item = (a & b & c) || d || (e & f) => action
                 {
                     // Check if RuleGroup validates
@@ -35,17 +47,17 @@ namespace MoneyStats.BL.Repositories
                             }
                             else if (rule.RuleTypeId == (int)RuleTypeEnum.IsGreaterThan)
                             {
-                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(tr);
+                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(br);
                                 allAndRuleValidates = !RuleRepositoryV1.Compare("<", rule.Value as IComparable, value);
                             }
                             else if (rule.RuleTypeId == (int)RuleTypeEnum.IsLesserThan)
                             {
-                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(tr);
+                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(br);
                                 allAndRuleValidates = !RuleRepositoryV1.Compare("<", rule.Value as IComparable, value);
                             }
                             else if (rule.RuleTypeId == (int)RuleTypeEnum.IsEqualTo)
                             {
-                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(tr);
+                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(br);
                                 allAndRuleValidates = value == (IComparable)rule.Value;
                             }
 
@@ -60,25 +72,91 @@ namespace MoneyStats.BL.Repositories
                         i++;
                     }
 
+                    // Create Transaction based on BankRow (TODO)
+                    var tr = new Transaction()
+                    {
+                        BankRowId = br.Id,
+                        Date = br.AccountingDate,
+                        Sum = br.Sum,
+                        CreateDate = DateTime.Now,
+                        State = 1
+                    };
+                    transactions.Add(tr);
+
                     // Apply RuleAction if RuleGroup validated
                     if (oneOrRuleValidates)
                     {
+                        var ruleTr = tr;
+
+                        // We need to evaluate the AggregateToATransaction 
+                        // type FIRST and use the aggr.ed Transaction to 
+                        // apply the rest of the actions to.
+                        int checkBit = 0;
                         foreach (RuleAction action in ruleGroup.RuleActions)
                         {
-                            if (action.RuleActionTypeId == (int)RuleActionTypeEnum.Omit)
+                            if (action.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToATransaction)
                             {
+                                if (checkBit++ > 0)
+                                    throw new Exception("You can't have more than one aggregating action applied to a Transaction!");
+
+                                var month = new DateTime(br.AccountingDate.Value.Year, br.AccountingDate.Value.Month, 1);
+                                Transaction monthlyTr = null;
+                                if (!aggregatedTransactions.TryGetValue(month, out monthlyTr))
+                                {
+                                    monthlyTr = new Transaction()
+                                    {
+                                        Date = month.AddMonths(1).AddDays(-1),
+                                        Sum = 0
+                                    };
+
+                                    aggregatedTransactions.Add(month, monthlyTr); // have a separate list for better performance
+                                    transactions.Add(monthlyTr);
+                                }
+                                monthlyTr.Sum += tr.Sum.Value;
+
+                                // Remove the BankRow created Transaction
                                 transactions.Remove(tr);
-                                o--; // The next iteration is now at the index where this item was removed.
-                            } 
-                            else if (action.RuleActionTypeId == (int)RuleActionTypeEnum.SetValueOfProperty)
+                                // Bring out the aggregated Transaction
+                                ruleTr = monthlyTr;
+
+                                // TODO!!! trg.Id must be saved but there are no tr.Ids yet. May need to run this whole AggregateToATransaction type BEFORE other individual transaction saves. 
+                                // It would be better though if this reference stayed the same and could modify the BankRows after the aggregated Transactions were saved.
+                                br.TransactionGroup = monthlyTr; 
+                            }
+                        }
+
+                        foreach (RuleAction action in ruleGroup.RuleActions)
+                        {
+                            if (action.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToATransaction)
+                                continue;
+
+                            switch (action.RuleActionTypeId)
                             {
-                                // TODO convert to type of property
-                                typeof(BankRow).GetProperty(action.Property).SetValue(tr, action.Value);
+                                case (int)RuleActionTypeEnum.Omit: // Terminating rule. No other action should be applied to the Transaction
+
+                                    transactions.Remove(ruleTr);
+
+                                    break;
+                                case (int)RuleActionTypeEnum.SetValueOfProperty:
+
+                                    ruleTr.SetPropertyValueFromString(action.Property, action.Value?.ToString());
+
+                                    break;
+                                case (int)RuleActionTypeEnum.AddTags:
+
+                                    if (action.TagsToBeApplied.Count == 0)
+                                    {
+                                        throw new Exception($"{RuleActionTypeEnum.AddTags.ToString()} type action has no tags to be applied!");
+                                    }
+                                    ruleTr.Tags = action.TagsToBeApplied;
+
+                                    break;
+                                default:
+                                    throw new Exception($"RuleActionTypeId '{action.RuleActionTypeId}' is not recognized!");
                             }
                         }
                     }
                 }
-                o++;
             }
         }
     }

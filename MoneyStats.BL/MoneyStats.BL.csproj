@@ -8,8 +8,4 @@
     <ProjectReference Include="..\MoneyStats.DAL\MoneyStats.DAL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
-
 </Project>

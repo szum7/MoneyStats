@@ -27,5 +27,10 @@ namespace MoneyStats.DAL.Models
         /// </summary>
         [NotMapped]
         public List<Tag> TagsToBeApplied { get; set; }
+
+        public RuleAction()
+        {
+            TagsToBeApplied = new List<Tag>();
+        }
     }
 }

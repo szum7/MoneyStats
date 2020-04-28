@@ -4,10 +4,47 @@ using MoneyStats.BL.Repositories;
 using MoneyStats.DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 
 namespace MoneyStats.Tests
 {
+    public static class Extensions
+    {
+        /// <summary>
+        /// Sets a value in an object, used to hide all the logic that goes into
+        /// handling this sort of thing, so that is works elegantly in a single line.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="propertyName"></param>
+        /// <param name="propertyValue"></param>
+        public static void SetPropertyValueFromString(this object target, string propertyName, string propertyValue)
+        {
+            PropertyInfo oProp = target.GetType().GetProperty(propertyName);
+            Type tProp = oProp.PropertyType;
+
+            //Nullable properties have to be treated differently, since we 
+            //  use their underlying property to set the value in the object
+            if (tProp.IsGenericType
+                && tProp.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
+            {
+                //if it's null, just set the value from the reserved word null, and return
+                if (propertyValue == null)
+                {
+                    oProp.SetValue(target, null, null);
+                    return;
+                }
+
+                //Get the underlying type property instead of the nullable generic
+                tProp = new NullableConverter(oProp.PropertyType).UnderlyingType;
+            }
+
+            //use the converter to get the correct value
+            oProp.SetValue(target, Convert.ChangeType(propertyValue, tProp), null);
+        }
+    }
+
     [TestClass]
     public class Misc
     {
@@ -106,10 +143,12 @@ namespace MoneyStats.Tests
         [TestMethod]
         public void RemoveTestWithWhile()
         {
+            // Arrange
             var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
             var result = "124578";
             var actual = "";
             var i = 0;
+
             // Act
             while (i < list.Count)
             {
@@ -133,7 +172,39 @@ namespace MoneyStats.Tests
                 i++;
             }
 
+            // Assert
             Assert.AreEqual(result, actual);
+        }
+
+        
+
+        public class TestTransaction
+        {
+            public string StringProperty { get; set; }
+            public int IntProperty { get; set; }
+            public float? FloatNullProperty { get; set; }
+            public float? NullProperty { get; set; }
+        }
+
+        [TestMethod]
+        public void TestSetValueOfProperty()
+        {
+            // Arrange
+            var dict = new Dictionary<string, object>();
+            dict.Add("StringProperty", "string1");
+            dict.Add("IntProperty", 7);
+            dict.Add("FloatNullProperty", -1.3f);
+            dict.Add("NullProperty", null);
+            var instance = new TestTransaction();
+
+            // Act
+            foreach (var item in dict)
+            {
+                instance.SetPropertyValueFromString(item.Key, item.Value?.ToString());
+            }
+
+            // Assert
+            Assert.AreEqual(1, 1);
         }
     }
 }

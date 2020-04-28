@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MoneyStats.DAL.Models
 {
     [Table("Transaction")]
-    public class Transaction : EntityBase
+    public partial class Transaction : EntityBase
     {
         public string Title { get; set; }
 
@@ -14,9 +14,9 @@ namespace MoneyStats.DAL.Models
         /// </summary>
         public string Description { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
-        public int Sum { get; set; }
+        public decimal? Sum { get; set; }
 
         /// <summary>
         /// This means there are more than one bank transaction associated with this.
@@ -46,10 +46,17 @@ namespace MoneyStats.DAL.Models
         public virtual BankRow BankTransaction { get; set; }
         public virtual ICollection<TransactionTagConn> TransactionTagConn { get; set; }
         public virtual ICollection<TransactionCreatedWithRule> TransactionCreatedWithRule { get; set; }
+    }
 
+    public partial class Transaction
+    {
+        [NotMapped]
+        public List<Tag> Tags { get; set; }
 
         public Transaction()
         {
+            Tags = new List<Tag>();
+            TransactionCreatedWithRule = new HashSet<TransactionCreatedWithRule>();
             TransactionTagConn = new HashSet<TransactionTagConn>();
         }
     }
