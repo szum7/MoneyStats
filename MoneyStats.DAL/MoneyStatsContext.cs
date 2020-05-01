@@ -8,6 +8,13 @@ namespace MoneyStats.DAL
         public DbSet<Tag> Tags { get; set; }
         public DbSet<BankRow> BankRows { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<RuleGroup> RuleGroups { get; set; }
+        public DbSet<RuleAction> RuleActions { get; set; }
+        public DbSet<AndRuleGroup> AndRuleGroups { get; set; }
+        public DbSet<Rule> Rules { get; set; }
+        public DbSet<TransactionCreatedWithRule> TransactionCreatedWithRules { get; set; }
+        public DbSet<RuleActionTagConn> RuleActionTagConns { get; set; }
+        public DbSet<TransactionTagConn> TransactionTagConns { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

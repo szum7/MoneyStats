@@ -13,12 +13,15 @@ namespace MoneyStats.DAL.Models
     {
         public int RuleGroupId { get; set; }
 
-        public virtual RuleGroup OrRuleGroup { get; set; }
+        public virtual RuleGroup RuleGroup { get; set; }
+        public virtual ICollection<Rule> Rules { get; set; }
     }
 
     public partial class AndRuleGroup
     {
-        [NotMapped]
-        public List<Rule> Rules { get; set; }
+        public AndRuleGroup()
+        {
+            this.Rules = new List<Rule>();
+        }
     }
 }

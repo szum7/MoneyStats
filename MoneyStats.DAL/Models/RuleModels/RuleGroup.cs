@@ -13,17 +13,23 @@ namespace MoneyStats.DAL.Models
     {
         public string Title { get; set; }
 
+        public virtual ICollection<AndRuleGroup> AndRuleGroups { get; set; }
+        public virtual ICollection<RuleAction> RuleActions { get; set; }
         public virtual ICollection<RulesetRuleGroupConn> RulesetRuleGroupConn { get; set; }
         public virtual ICollection<TransactionCreatedWithRule> TransactionCreatedWithRule { get; set; }
     }
 
     public partial class RuleGroup
     {
-        [NotMapped]
-        public List<AndRuleGroup> AndRuleGroups { get; set; }
 
-        [NotMapped]
-        public List<RuleAction> RuleActions { get; set; }
+        public RuleGroup()
+        {
+            this.RulesetRuleGroupConn = new List<RulesetRuleGroupConn>();
+            this.TransactionCreatedWithRule = new List<TransactionCreatedWithRule>();
+            this.AndRuleGroups = new List<AndRuleGroup>();
+            this.RuleActions = new List<RuleAction>();
+
+        }
 
         public override string ToString()
         {

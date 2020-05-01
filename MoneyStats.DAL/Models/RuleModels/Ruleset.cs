@@ -18,13 +18,18 @@ namespace MoneyStats.DAL.Models
     {
         public string Title { get; set; }
 
+        [NotMapped]
+        [Obsolete("Do not use Rulesets only as a list of RuleGroups!", false)] // TODO delete when Rulesets are implemented
+        public virtual ICollection<RuleGroup> RuleGroups { get; set; }
         public virtual ICollection<RulesetRuleGroupConn> RulesetRuleGroupConn { get; set; }
     }
 
     public partial class Ruleset
     {
-        [NotMapped]
-        [Obsolete("Do not use Rulesets only as a list of RuleGroups!", false)] // TODO delete when Rulesets are implemented
-        public List<RuleGroup> RuleGroups { get; set; }
+        public Ruleset()
+        {
+            //this.RuleGroups = new List<RuleGroup>();
+            this.RulesetRuleGroupConn = new List<RulesetRuleGroupConn>();
+        }
     }
 }

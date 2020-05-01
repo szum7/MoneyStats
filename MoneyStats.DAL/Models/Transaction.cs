@@ -44,6 +44,7 @@ namespace MoneyStats.DAL.Models
 
 
         public virtual BankRow BankTransaction { get; set; }
+        public virtual ICollection<BankRow> BankRows { get; set; }
         public virtual ICollection<TransactionTagConn> TransactionTagConn { get; set; }
         public virtual ICollection<TransactionCreatedWithRule> TransactionCreatedWithRule { get; set; }
     }
@@ -55,9 +56,10 @@ namespace MoneyStats.DAL.Models
 
         public Transaction()
         {
-            Tags = new List<Tag>();
-            TransactionCreatedWithRule = new HashSet<TransactionCreatedWithRule>();
-            TransactionTagConn = new HashSet<TransactionTagConn>();
+            this.Tags = new List<Tag>();
+            this.BankRows = new List<BankRow>();
+            this.TransactionCreatedWithRule = new List<TransactionCreatedWithRule>();
+            this.TransactionTagConn = new List<TransactionTagConn>();
         }
     }
 }
