@@ -21,7 +21,8 @@ namespace MoneyStats.BL.Repositories
         /// </summary>
         /// <param name="ruleGroups"></param>
         /// <param name="transactions"></param>
-        public void TMP_CreateTransactionUsingRules(List<RuleGroup> ruleGroups, List<BankRow> bankRows)
+        [Obsolete("Spaghetti code for easier debugging. Do not use it!", false)]
+        public void CreateTransactionUsingRulesFlattened(List<RuleGroup> ruleGroups, List<BankRow> bankRows)
         {
             var transactions = new List<Transaction>();
             var aggregatedTransactions = new Dictionary<DateTime, Transaction>();

@@ -39,3 +39,9 @@ public List<Transaction> EagerLoading() {
                 }).ToList();
     }
 }
+
+
+Az ajánlás a következő (EntityFramework):
+public virtual ICollection<BankRow> BankRows { get; set; }
+ctor:
+BankRows = new HashSet<BankRow>();
