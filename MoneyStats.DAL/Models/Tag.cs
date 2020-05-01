@@ -11,13 +11,13 @@ namespace MoneyStats.DAL.Models
         public string Description { get; set; }
 
 
-        public virtual ICollection<TransactionTagConn> TransactionTagConns { get; set; }
-        public virtual ICollection<RuleActionTagConn> RuleActionTagConns { get; set; }
+        public virtual List<TransactionTagConn> TransactionTagConns { get; set; }
+        public virtual List<RuleActionTagConn> RuleActionTagConns { get; set; }
 
         public Tag()
         {
-            TransactionTagConns = new HashSet<TransactionTagConn>();
-            RuleActionTagConns = new HashSet<RuleActionTagConn>();
+            TransactionTagConns = new List<TransactionTagConn>();
+            RuleActionTagConns = new List<RuleActionTagConn>();
         }
     }
 }

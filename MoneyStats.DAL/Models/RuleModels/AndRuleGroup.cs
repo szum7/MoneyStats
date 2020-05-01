@@ -14,7 +14,7 @@ namespace MoneyStats.DAL.Models
         public int RuleGroupId { get; set; }
 
         public virtual RuleGroup RuleGroup { get; set; }
-        public virtual ICollection<Rule> Rules { get; set; }
+        public virtual List<Rule> Rules { get; set; }
     }
 
     public partial class AndRuleGroup

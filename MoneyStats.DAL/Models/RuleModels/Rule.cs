@@ -14,7 +14,7 @@ namespace MoneyStats.DAL.Models
     public class Rule : EntityBase
     {
         public string Property { get; set; }
-        public object Value { get; set; }
+        public string Value { get; set; }
         public int RuleTypeId { get; set; }
         public int AndRuleGroupId { get; set; }
 

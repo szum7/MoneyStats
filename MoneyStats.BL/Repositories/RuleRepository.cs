@@ -102,7 +102,7 @@ namespace MoneyStats.BL.Repositories
                             else if (rule.RuleTypeId == (int)RuleTypeEnum.IsEqualTo)
                             {
                                 var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(br);
-                                allAndRuleValidates = value == (IComparable)rule.Value;
+                                allAndRuleValidates = (value == (IComparable)rule.Value);
                             }
 
                             j++;
@@ -173,7 +173,7 @@ namespace MoneyStats.BL.Repositories
                             {
                                 case (int)RuleActionTypeEnum.SetValueOfProperty:
 
-                                    ruleTr.SetPropertyValueFromString(action.Property, action.Value?.ToString());
+                                    ruleTr.SetPropertyValueFromString(action.Property, action.Value);
 
                                     break;
                                 case (int)RuleActionTypeEnum.AddTags:

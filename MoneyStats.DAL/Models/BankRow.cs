@@ -1,5 +1,6 @@
 ﻿using MoneyStats.DAL.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoneyStats.DAL.Models
@@ -41,8 +42,9 @@ namespace MoneyStats.DAL.Models
         /// Aggregated bank rows generate only one transaction.
         /// </summary>
         [ForeignKey("Transaction")]
-        public int? TransactionGroupId { get; set; }
-        public virtual Transaction TransactionGroup { get; set; }
+        //[Column("TransactionGroupId")]
+        public int? TransactionId { get; set; }
+        public virtual Transaction Transaction { get; set; }
 
 
         #region K&H Bank columns
@@ -50,7 +52,7 @@ namespace MoneyStats.DAL.Models
         public DateTime? AccountingDate { get; set; }
 
         [Rulable]
-        public string TransactionId { get; set; }
+        public string BankTransactionId { get; set; } // TODO végigvezetni a változást TransactionId -> BankTransactionId
 
         [Rulable]
         public string Type { get; set; }
@@ -80,5 +82,31 @@ namespace MoneyStats.DAL.Models
 
         #region OTP Bank columns
         #endregion
+    }
+
+    public partial class BankRow
+    {
+        [NotMapped]
+        public string ContentId => $"{AccountingDate.ToString()}{BankTransactionId}{Type}{Account}{AccountName}{PartnerAccount}{PartnerName}{Sum?.ToString()}{Currency}{Message}";
+
+        [NotMapped]
+        public int? TransactionGroupId
+        {
+            get => TransactionId;
+            set
+            {
+                TransactionId = value;
+            }
+        }
+
+        [NotMapped]
+        public Transaction TransactionGroup
+        {
+            get => Transaction;
+            set
+            {
+                Transaction = value;
+            }
+        }
     }
 }

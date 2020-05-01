@@ -1,7 +1,18 @@
-﻿
+﻿--------
+Workflow
+--------
 SQL database design, MoneyStats:
 https://app.sqldbm.com/SQLServer/Edit/p105204/#
 
 
-Useful:
+---------
+Questions
+---------
+Unable to determine the relationship error
+https://stackoverflow.com/questions/48048668/circular-reference-in-ef-code-first
+
+
+------
+Useful
+------
 https://stackoverflow.com/questions/7616177/convert-to-a-type-on-the-fly-in-c-net

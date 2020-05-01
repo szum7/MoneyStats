@@ -13,10 +13,10 @@ namespace MoneyStats.DAL.Models
     {
         public string Title { get; set; }
 
-        public virtual ICollection<AndRuleGroup> AndRuleGroups { get; set; }
-        public virtual ICollection<RuleAction> RuleActions { get; set; }
-        public virtual ICollection<RulesetRuleGroupConn> RulesetRuleGroupConn { get; set; }
-        public virtual ICollection<TransactionCreatedWithRule> TransactionCreatedWithRule { get; set; }
+        public virtual List<AndRuleGroup> AndRuleGroups { get; set; }
+        public virtual List<RuleAction> RuleActions { get; set; }
+        public virtual List<RulesetRuleGroupConn> RulesetRuleGroupConn { get; set; }
+        public virtual List<TransactionCreatedWithRule> TransactionCreatedWithRule { get; set; }
     }
 
     public partial class RuleGroup

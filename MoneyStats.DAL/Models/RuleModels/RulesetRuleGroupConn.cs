@@ -3,7 +3,7 @@
 namespace MoneyStats.DAL.Models
 {
     [Table("RulesetRuleGroupConn")]
-    public class RulesetRuleGroupConn
+    public class RulesetRuleGroupConn : EntityBase
     {
         [ForeignKey("Ruleset")]
         public int RulesetId { get; set; }

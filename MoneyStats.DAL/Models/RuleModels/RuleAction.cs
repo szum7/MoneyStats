@@ -8,18 +8,20 @@ namespace MoneyStats.DAL.Models
     /// RuleActions are not stored to be used multiple types. They belong
     /// to exactly one RuleGroup.
     /// </summary>
-    [Table("RuleGroup")]
+    [Table("RuleAction")]
     public partial class RuleAction : EntityBase
     {
         public string Title { get; set; }
+        [ForeignKey("RuleActionType")]
         public int RuleActionTypeId { get; set; }
         public string Property { get; set; }
-        public object Value { get; set; }
+        public string Value { get; set; }
+        [ForeignKey("RuleGroup")]
         public int RuleGroupId { get; set; }
 
         public virtual RuleGroup RuleGroup { get; set; }
         public virtual RuleActionType RuleActionType { get; set; }
-        public virtual ICollection<RuleActionTagConn> RuleActionTagConns { get; set; }
+        public virtual List<RuleActionTagConn> RuleActionTagConns { get; set; }
     }
 
     public partial class RuleAction
