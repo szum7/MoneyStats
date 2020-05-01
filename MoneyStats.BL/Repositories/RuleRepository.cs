@@ -13,20 +13,63 @@ namespace MoneyStats.BL.Repositories
         /// <summary>
         /// BankRow list goes in, Transaction and TransactionTagConn list goes out.
         /// 1. 
+        /// ...
         /// x. save Transactions
         /// y. create TransactionTagConn models based on Transactions now with ids and Tag ids from the tr.s' Tags lists.
         /// z. save TransactionTagConns
+        /// ...
         /// </summary>
         /// <param name="ruleGroups"></param>
         /// <param name="transactions"></param>
-        public void Test(List<RuleGroup> ruleGroups, List<BankRow> bankRows)
+        public void TMP_CreateTransactionUsingRules(List<RuleGroup> ruleGroups, List<BankRow> bankRows)
         {
             var transactions = new List<Transaction>();
             var aggregatedTransactions = new Dictionary<DateTime, Transaction>();
             var transactionTagConns = new List<TransactionTagConn>(); // TODO lehet nem fog kelleni és jobb ha a tr.Tags-be pakolok
+            var transactionCreatedWithRules = new List<TransactionCreatedWithRule>();
+
+            #region Sort ruleGroups
+            // Sort ruleGroups based on Omit actions. 
+            // Rules with Omit actions need to run first (break from iteration)
+            int start = 0;
+            int end = ruleGroups.Count - 1;
+            var sortedArray = new RuleGroup[ruleGroups.Count];
+            foreach (var rule in ruleGroups)
+            {
+                if (rule.RuleActions.Any(action => action.RuleActionTypeId == (int)RuleActionTypeEnum.Omit))
+                {
+                    if (rule.RuleActions.Count > 1)
+                    {
+                        throw new Exception("Invalid rule! Rules with an Omit action must not have other actions to perform!");
+                    }
+
+                    sortedArray[start] = rule;
+                    start++;
+                } 
+                else
+                {
+                    sortedArray[end] = rule;
+                    end--;
+                }
+            }
+            ruleGroups = sortedArray.ToList();
+            #endregion
 
             foreach (var br in bankRows)
             {
+                #region Add transaction
+                // Create Transaction based on BankRow (TODO)
+                var tr = new Transaction()
+                {
+                    BankRowId = br.Id,
+                    Date = br.AccountingDate,
+                    Sum = br.Sum,
+                    CreateDate = DateTime.Now,
+                    State = 1
+                };
+                transactions.Add(tr);
+                #endregion
+
                 foreach (RuleGroup ruleGroup in ruleGroups) // item = (a & b & c) || d || (e & f) => action
                 {
                     // Check if RuleGroup validates
@@ -72,33 +115,28 @@ namespace MoneyStats.BL.Repositories
                         i++;
                     }
 
-                    // Create Transaction based on BankRow (TODO)
-                    var tr = new Transaction()
-                    {
-                        BankRowId = br.Id,
-                        Date = br.AccountingDate,
-                        Sum = br.Sum,
-                        CreateDate = DateTime.Now,
-                        State = 1
-                    };
-                    transactions.Add(tr);
-
                     // Apply RuleAction if RuleGroup validated
                     if (oneOrRuleValidates)
                     {
-                        var ruleTr = tr;
+                        Transaction ruleTr = tr;
+
+                        if (ruleGroup.RuleActions.Any(rule => rule.RuleActionTypeId == (int)RuleActionTypeEnum.Omit))
+                        {
+                            transactions.Remove(ruleTr);
+                            break;
+                        }
+                        if (ruleGroup.RuleActions.Count(rule => rule.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToATransaction) > 1)
+                        {
+                            throw new Exception("You can't have more than one aggregating action applied to a Transaction!");
+                        }
 
                         // We need to evaluate the AggregateToATransaction 
                         // type FIRST and use the aggr.ed Transaction to 
                         // apply the rest of the actions to.
-                        int checkBit = 0;
                         foreach (RuleAction action in ruleGroup.RuleActions)
                         {
                             if (action.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToATransaction)
                             {
-                                if (checkBit++ > 0)
-                                    throw new Exception("You can't have more than one aggregating action applied to a Transaction!");
-
                                 var month = new DateTime(br.AccountingDate.Value.Year, br.AccountingDate.Value.Month, 1);
                                 Transaction monthlyTr = null;
                                 if (!aggregatedTransactions.TryGetValue(month, out monthlyTr))
@@ -121,7 +159,7 @@ namespace MoneyStats.BL.Repositories
 
                                 // TODO!!! trg.Id must be saved but there are no tr.Ids yet. May need to run this whole AggregateToATransaction type BEFORE other individual transaction saves. 
                                 // It would be better though if this reference stayed the same and could modify the BankRows after the aggregated Transactions were saved.
-                                br.TransactionGroup = monthlyTr; 
+                                br.TransactionGroup = monthlyTr; // no transaction.Id yet
                             }
                         }
 
@@ -132,11 +170,6 @@ namespace MoneyStats.BL.Repositories
 
                             switch (action.RuleActionTypeId)
                             {
-                                case (int)RuleActionTypeEnum.Omit: // Terminating rule. No other action should be applied to the Transaction
-
-                                    transactions.Remove(ruleTr);
-
-                                    break;
                                 case (int)RuleActionTypeEnum.SetValueOfProperty:
 
                                     ruleTr.SetPropertyValueFromString(action.Property, action.Value?.ToString());
@@ -155,9 +188,24 @@ namespace MoneyStats.BL.Repositories
                                     throw new Exception($"RuleActionTypeId '{action.RuleActionTypeId}' is not recognized!");
                             }
                         }
+
+                        // Save the ruleGroup as reference
+                        transactionCreatedWithRules.Add(new TransactionCreatedWithRule()
+                        {
+                            RuleGroupId = ruleGroup.Id,
+                            Transaction = ruleTr // no transaction.Id yet.
+                        });
                     }
                 }
             }
+
+            // save transactions
+
+            // save transactionCreatedWithRule
+
+            // update bankrows (TransactionGroupId)
+
+            // save transactionTagConns
         }
     }
 
