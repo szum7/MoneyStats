@@ -16,3 +16,5 @@ https://stackoverflow.com/questions/48048668/circular-reference-in-ef-code-first
 Useful
 ------
 https://stackoverflow.com/questions/7616177/convert-to-a-type-on-the-fly-in-c-net
+-- Dynamic DbContext Set
+https://stackoverflow.com/questions/21533506/find-a-specified-generic-dbset-in-a-dbcontext-dynamically-when-i-have-an-entity

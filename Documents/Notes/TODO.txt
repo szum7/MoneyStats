@@ -11,3 +11,4 @@ o kliens oldal - contentId/originalContentId-t javítai (original nincs)
 - bankType-ot helyre rakni kliens oldalon is
 - rule kiértékelő metódusban eltárolni hogy mely szabály érvényesült a tranzakcióra
 - RuleType lehet nem db-ben kéne tárolni, hanem programban enumban, és db-ben csak int típus legyen, ami megfelel a programban az enum számának.
+- leellenőrizni a _RuleModule migration eredményét. Főleg a BankRow.TransactionGroupId részt, van-e idegen kulcs kapcsolat

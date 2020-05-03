@@ -42,9 +42,9 @@ namespace MoneyStats.DAL.Models
         /// Aggregated bank rows generate only one transaction.
         /// </summary>
         [ForeignKey("Transaction")]
-        //[Column("TransactionGroupId")]
-        public int? TransactionId { get; set; }
-        public virtual Transaction Transaction { get; set; }
+        public int? TransactionGroupId { get; set; }
+        [NotMapped]
+        public virtual Transaction TransactionGroup { get; set; }
 
 
         #region K&H Bank columns
@@ -89,24 +89,24 @@ namespace MoneyStats.DAL.Models
         [NotMapped]
         public string ContentId => $"{AccountingDate.ToString()}{BankTransactionId}{Type}{Account}{AccountName}{PartnerAccount}{PartnerName}{Sum?.ToString()}{Currency}{Message}";
 
-        [NotMapped]
-        public int? TransactionGroupId
-        {
-            get => TransactionId;
-            set
-            {
-                TransactionId = value;
-            }
-        }
+        //[NotMapped]
+        //public int? TransactionGroupId
+        //{
+        //    get => TransactionGroupId;
+        //    set
+        //    {
+        //        TransactionGroupId = value;
+        //    }
+        //}
 
-        [NotMapped]
-        public Transaction TransactionGroup
-        {
-            get => Transaction;
-            set
-            {
-                Transaction = value;
-            }
-        }
+        //[NotMapped]
+        //public Transaction TransactionGroup
+        //{
+        //    get => Transaction;
+        //    set
+        //    {
+        //        Transaction = value;
+        //    }
+        //}
     }
 }

@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyStats.Tests", "MoneySt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyStats.WebApp", "MoneyStats.WebApp\MoneyStats.WebApp.csproj", "{89DEFD7C-D8D9-4AC8-B1CB-EC2B2A56CC3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyStats.ExampleData", "MoneyStats.ExampleData\MoneyStats.ExampleData.csproj", "{A40101EC-14C4-4F6E-8CB8-9B7907AE7CC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{89DEFD7C-D8D9-4AC8-B1CB-EC2B2A56CC3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89DEFD7C-D8D9-4AC8-B1CB-EC2B2A56CC3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89DEFD7C-D8D9-4AC8-B1CB-EC2B2A56CC3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A40101EC-14C4-4F6E-8CB8-9B7907AE7CC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A40101EC-14C4-4F6E-8CB8-9B7907AE7CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A40101EC-14C4-4F6E-8CB8-9B7907AE7CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A40101EC-14C4-4F6E-8CB8-9B7907AE7CC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
