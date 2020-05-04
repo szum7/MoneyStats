@@ -6,6 +6,7 @@ using MoneyStats.DAL;
 using MoneyStats.DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
@@ -54,8 +55,28 @@ namespace MoneyStats.ExampleData
     /// Order of the value lists matter! Item at index 0 will be 
     /// inserted first, and item at length - 1 will be inserted last.
     /// </summary>
-    public static class ValueSets
+    public static class DataControl
     {
+        public static readonly List<string> TableDependencyOrder = new List<string>()
+        {
+            nameof(RuleGroup),
+            nameof(AndRuleGroup),
+            nameof(Rule),
+            nameof(RuleType),
+            nameof(RulesetRuleGroupConn),
+            nameof(Ruleset),
+            nameof(TransactionCreatedWithRule),
+            nameof(TransactionTagConn),
+            nameof(RuleActionTagConn),
+            nameof(Tag),
+            nameof(RuleAction),
+            nameof(RuleActionType),
+            nameof(Transaction),
+            nameof(BankRow)
+            // The deletion of Transaction and BankRow is unique! 
+            // TODO If the migration did not create the foreign key constraint, then they're not unique.
+        };
+
         public static readonly List<ModelValue> BasicValues = new List<ModelValue>()
         {
             new ModelValue()
@@ -83,6 +104,16 @@ namespace MoneyStats.ExampleData
         };
     }
 
+    public class Something
+    {
+        public DbSet<RuleType> RuleTypes { get => this.db.RuleTypes; }
+        public MoneyStatsContext db { get; set; }
+        public Something(MoneyStatsContext db)
+        {
+            this.db = db;
+        }
+    }
+
     public class Global
     {
         Dictionary<string, Func<DbContext, IQueryable>> myDictionary = new Dictionary<string, Func<DbContext, IQueryable>>()
@@ -95,34 +126,43 @@ namespace MoneyStats.ExampleData
 
         }
 
-        void Test()
+        //DbSet<object> Akarmi(MoneyStatsContext db)
+        //{
+
+        //}
+
+        public void Test()
         {
             using (var db = new MoneyStatsContext())
             {
-                foreach (var modelValue in ValueSets.BasicValues)
+                var s = new Something(db);
+                foreach (var modelValue in DataControl.BasicValues)
                 {
                     if (!modelValue.IsActive)
                         continue;
 
                     using (var transaction = db.Database.BeginTransaction())
                     {
+                        
                         var data = new RuleType { Id = 222, Title = "Test:CreatedWithIdentityInsertOn 2", State = 1 };
-                        db.Set<RuleType>().Add(data);
+                        //db.Set<RuleType>().Add(data);
                         //db.Set<modelValue.TypeOfModelSet>().AddRange(modelValue.Entities);
-                        var type = modelValue.TypeOfModelSet;
+                        //var type = modelValue.TypeOfModelSet;
                         //db.Set<typeof(RuleType)>().AddRange(modelValue.Entities);
-                        var dbSet = myDictionary[modelValue.TableName].Invoke(db);
-
+                        //var dbSet = (DbSet<object>)myDictionary[modelValue.TableName].Invoke(db);
+                        //var dbSet = (DbSet<object>)s.GetType().GetProperty("RuleTypes").GetValue(s);
+                        var dbSet = (s.GetType().GetProperty("RuleTypes").GetValue(s) as IListSource).GetList();
+                        dbSet.Add(data);
                         // TODO does not work, no dynamic dbcontext set in EF Core 3.0
                         //db.Set2(modelValue.TypeOfModelSet).Add(data);
-                        
+
 
                         db.Database.ExecuteSqlCommand($"SET IDENTITY_INSERT [dbo].[" + modelValue.TableName + "] ON;");
-                        db.SaveChanges();
                         db.Database.ExecuteSqlCommand($"SET IDENTITY_INSERT [dbo].[" + modelValue.TableName + "] OFF;");
                         transaction.Commit();
                     }
                 }
+                db.SaveChanges();
             }
         }
 
@@ -132,6 +172,17 @@ namespace MoneyStats.ExampleData
         /// be cleaned (foreign key dependencies).
         /// </summary>
         public void CleanDatabase()
+        {
+            using (var db = new MoneyStatsContext())
+            {
+                foreach (var tableName in DataControl.TableDependencyOrder)
+                {
+                    db.Database.ExecuteSqlCommand("TRUNCATE TABLE [" + tableName + "]");
+                }
+            }
+        }
+
+        void NeutralizeBankRowTable()
         {
 
         }
@@ -251,8 +302,8 @@ namespace MoneyStats.ExampleData
         static void Main(string[] args)
         {
             var global = new Global();
-
-            (new RuleTypeExample()).Insert();
+            global.Test();
+            //(new RuleTypeExample()).Insert();
 
 #if false
             global.InsertAllExamples();
