@@ -83,10 +83,15 @@ namespace MoneyStats.ExampleData
         {
             using (var db = new MoneyStatsContext())
             {
-                new TagRepository().InsertRange(db, (List<Tag>)DataControl.BasicValues[nameof(Tag)]);
-                new RuleTypeRepository().InsertRange(db, (List<RuleType>)DataControl.BasicValues[nameof(RuleType)]);
+                this.AttachInsert(new TagRepository(), db);
+                this.AttachInsert(new RuleTypeRepository(), db);
                 // ...
             }
+        }
+
+        void AttachInsert<TEntity>(EntityBaseRepository<TEntity> repository, DbContext db) where TEntity : EntityBase
+        {
+            repository.InsertRange(db, (List<TEntity>)DataControl.BasicValues[nameof(TEntity)]);
         }
 
         void NeutralizeBankRowTable()
