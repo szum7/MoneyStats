@@ -18,3 +18,5 @@ Useful
 https://stackoverflow.com/questions/7616177/convert-to-a-type-on-the-fly-in-c-net
 -- Dynamic DbContext Set
 https://stackoverflow.com/questions/21533506/find-a-specified-generic-dbset-in-a-dbcontext-dynamically-when-i-have-an-entity
+-- Multiple generic types in one list (generic type still has to be cast)
+https://stackoverflow.com/questions/353126/c-sharp-multiple-generic-types-in-one-list

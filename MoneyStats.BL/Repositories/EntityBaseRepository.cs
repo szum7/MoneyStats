@@ -1,4 +1,5 @@
-﻿using MoneyStats.BL.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using MoneyStats.BL.Interfaces;
 using MoneyStats.DAL;
 using MoneyStats.DAL.Models;
 using System;
@@ -152,5 +153,18 @@ namespace MoneyStats.BL.Repositories
                 return false;
             }
         }
+
+        #region For example inserts
+        public void InsertRange(DbContext context, IEnumerable<TEntity> entities)
+        {
+            using (var transaction = context.Database.BeginTransaction())
+            {
+                context.Set<TEntity>().AddRange(entities);
+                context.Database.ExecuteSqlCommand($"SET IDENTITY_INSERT [dbo].[" + nameof(TEntity) + "] ON;");
+                context.Database.ExecuteSqlCommand($"SET IDENTITY_INSERT [dbo].[" + nameof(TEntity) + "] OFF;");
+                transaction.Commit();
+            }
+        }
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using MoneyStats.DAL.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using MoneyStats.DAL.Models;
 using System.Collections.Generic;
 
 namespace MoneyStats.BL.Interfaces
@@ -26,5 +27,7 @@ namespace MoneyStats.BL.Interfaces
         bool Destroy(int id);
 
         bool DestroyRange(IEnumerable<int> ids);
+
+        void InsertRange(DbContext context, IEnumerable<TEntity> entities);
     }
 }

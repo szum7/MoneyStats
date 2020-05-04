@@ -12,6 +12,16 @@ using System.Reflection;
 
 namespace MoneyStats.ExampleData
 {
+    public abstract class Metadata
+    {
+    }
+
+    // extend abstract Metadata class
+    public class Metadata<DataType> : Metadata where DataType : struct
+    {
+        private DataType mDataType;
+    }
+
     public static class Extensions
     {
         public static IQueryable Set2(this DbContext context, Type T)
@@ -37,18 +47,26 @@ namespace MoneyStats.ExampleData
         }
     }
 
-    public class ModelValue
+    public abstract class ModelValue
     {
-        public bool IsActive { get; set; }
         public object Entities { get; set; }
+        public bool IsActive { get; set; }
         public EntityBase ModelClass { private get; set; }
         public string TableName => this.ModelClass?.GetType().Name;
         public Type TypeOfModelSet => this.ModelClass?.GetType();
+    }
 
-        public ModelValue()
-        {
+    public class ModelValue<TEntity> : ModelValue where TEntity : EntityBase
+    {
+        public IEntityBaseRepository<TEntity> Repo { get; set; }
 
-        }
+        //public ModelValue()
+        //{
+        //    List<Metadata> metadataObjects = new List<Metadata>();
+        //    metadataObjects.Add(new Metadata<int>());
+        //    metadataObjects.Add(new Metadata<bool>());
+        //    metadataObjects.Add(new Metadata<double>());
+        //}
     }
 
     /// <summary>
@@ -79,7 +97,7 @@ namespace MoneyStats.ExampleData
 
         public static readonly List<ModelValue> BasicValues = new List<ModelValue>()
         {
-            new ModelValue()
+            new ModelValue<RuleType>()
             {
                 ModelClass = new RuleType(),
                 IsActive = true,
@@ -88,9 +106,10 @@ namespace MoneyStats.ExampleData
                     new RuleType() { Id = 1, Title = "", State = 1 },
                     new RuleType() { Id = 2, Title = "", State = 1 },
                     new RuleType() { Id = 3, Title = "", State = 1 }
-                }
+                },
+                Repo = new RuleTypeRepository()
             },
-            new ModelValue()
+            new ModelValue<Tag>()
             {
                 ModelClass = new Tag(),
                 IsActive = true,
@@ -99,7 +118,8 @@ namespace MoneyStats.ExampleData
                     new Tag() { Id = 1, Description = "", Title = "", State = 1 },
                     new Tag() { Id = 2, Description = "", Title = "", State = 1 },
                     new Tag() { Id = 3, Description = "", Title = "", State = 1 }
-                }
+                },
+                Repo = new TagRepository()
             }
         };
     }
@@ -126,10 +146,22 @@ namespace MoneyStats.ExampleData
 
         }
 
-        //DbSet<object> Akarmi(MoneyStatsContext db)
-        //{
 
-        //}
+        public void Test2()
+        {
+            using (var db = new MoneyStatsContext())
+            {
+                var s = new Something(db);
+                foreach (var modelValue in DataControl.BasicValues)
+                {
+                    if (!modelValue.IsActive)
+                        continue;
+
+                    
+                }
+                db.SaveChanges();
+            }
+        }
 
         public void Test()
         {
