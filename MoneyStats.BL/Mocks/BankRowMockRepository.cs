@@ -1,4 +1,5 @@
-﻿using MoneyStats.BL.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using MoneyStats.BL.Interfaces;
 using MoneyStats.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,11 @@ namespace MoneyStats.BL.Mocks
         }
 
         public IEnumerable<int> InsertRange(IEnumerable<BankRow> entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InsertRange(DbContext context, IEnumerable<BankRow> entities)
         {
             throw new NotImplementedException();
         }

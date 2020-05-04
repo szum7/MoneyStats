@@ -160,8 +160,9 @@ namespace MoneyStats.BL.Repositories
             using (var transaction = context.Database.BeginTransaction())
             {
                 context.Set<TEntity>().AddRange(entities);
-                context.Database.ExecuteSqlCommand($"SET IDENTITY_INSERT [dbo].[" + nameof(TEntity) + "] ON;");
-                context.Database.ExecuteSqlCommand($"SET IDENTITY_INSERT [dbo].[" + nameof(TEntity) + "] OFF;");
+                context.Database.ExecuteSqlCommand($"SET IDENTITY_INSERT [dbo].[" + typeof(TEntity).Name + "] ON;");
+                context.SaveChanges();
+                context.Database.ExecuteSqlCommand($"SET IDENTITY_INSERT [dbo].[" + typeof(TEntity).Name + "] OFF;");
                 transaction.Commit();
             }
         }
