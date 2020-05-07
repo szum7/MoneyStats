@@ -5,7 +5,7 @@ namespace MoneyStats.DAL.Models
     public enum RuleActionTypeEnum
     {
         Omit,
-        AddTags,
+        AddTag,
         SetValueOfProperty,
         AggregateToATransaction
     }

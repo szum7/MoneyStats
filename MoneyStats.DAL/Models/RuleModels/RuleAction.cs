@@ -12,47 +12,28 @@ namespace MoneyStats.DAL.Models
     public partial class RuleAction : EntityBase
     {
         public string Title { get; set; }
+
         [ForeignKey("RuleActionType")]
         public int RuleActionTypeId { get; set; }
+
         public string Property { get; set; }
+
         public string Value { get; set; }
+
         [ForeignKey("RuleGroup")]
         public int RuleGroupId { get; set; }
 
-        public virtual RuleGroup RuleGroup { get; set; }
-        public virtual RuleActionType RuleActionType { get; set; }
-        public virtual List<RuleActionTagConn> RuleActionTagConns { get; set; }
-    }
-
-    public partial class RuleAction
-    {
         /// <summary>
-        /// For "AddTags" type of action
+        /// For AddTag RuleAction type.
         /// </summary>
-        [NotMapped]
-        public List<Tag> TagsToBeApplied
-        {
-            get
-            {
-                if (_tagsToBeApplied.Count != RuleActionTagConns.Count)
-                {
-                    foreach (var conn in RuleActionTagConns)
-                    {
-                        if (conn.Tag == null)
-                            continue;
+        [ForeignKey("Tag")]
+        public int TagId { get; set; }
 
-                        _tagsToBeApplied.Add(conn.Tag);
-                    }
-                }
-                return _tagsToBeApplied;
-            }
-        }
-        private List<Tag> _tagsToBeApplied;
 
-        public RuleAction()
-        {
-            this._tagsToBeApplied = new List<Tag>();
-            this.RuleActionTagConns = new List<RuleActionTagConn>();
-        }
+        public virtual RuleGroup RuleGroup { get; set; }
+
+        public virtual RuleActionType RuleActionType { get; set; }
+
+        public virtual Tag Tag { get; set; }
     }
 }

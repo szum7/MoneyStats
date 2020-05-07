@@ -176,13 +176,9 @@ namespace MoneyStats.BL.Repositories
                                     ruleTr.SetPropertyValueFromString(action.Property, action.Value);
 
                                     break;
-                                case (int)RuleActionTypeEnum.AddTags:
+                                case (int)RuleActionTypeEnum.AddTag:
 
-                                    if (action.TagsToBeApplied.Count == 0)
-                                    {
-                                        throw new Exception($"{RuleActionTypeEnum.AddTags.ToString()} type action has no tags to be applied!");
-                                    }
-                                    ruleTr.Tags = action.TagsToBeApplied;
+                                    ruleTr.Tags.Add(action.Tag);
 
                                     break;
                                 default:

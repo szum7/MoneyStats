@@ -19,7 +19,6 @@ namespace MoneyStats.ExampleData
             nameof(Ruleset),
             nameof(TransactionCreatedWithRule),
             nameof(TransactionTagConn),
-            nameof(RuleActionTagConn),
             nameof(Tag),
             nameof(RuleAction),
             nameof(RuleActionType),
@@ -60,7 +59,7 @@ namespace MoneyStats.ExampleData
                 new List<RuleActionType>
                 {
                     new RuleActionType() { Id = 1, Title = "Omit", State = 1 },
-                    new RuleActionType() { Id = 2, Title = "AddTags", State = 1 },
+                    new RuleActionType() { Id = 2, Title = "AddTag", State = 1 },
                     new RuleActionType() { Id = 3, Title = "SetValueOfProperty", State = 1 },
                     new RuleActionType() { Id = 4, Title = "AggregateToATransaction", State = 1 },
                 }
@@ -71,6 +70,7 @@ namespace MoneyStats.ExampleData
                 {
                     // Rule#1 : Típus == "Kamat" => addTags("K&H", "Kamat")
                     new RuleGroup() { Id = 1, Title = "K&H kamat", State = 1 },
+                    // Rule#2
                 }
             },
             {
@@ -79,6 +79,7 @@ namespace MoneyStats.ExampleData
                 {
                     // Rule#1
                     new AndRuleGroup() { Id = 1, RuleGroupId = 1, State = 1 },
+                    // Rule#2
                 }
             },
             {
@@ -87,6 +88,7 @@ namespace MoneyStats.ExampleData
                 {
                     // Rule#1
                     new Rule() { Id = 1, RuleTypeId = 2, AndRuleGroupId = 1, Property = "Type", Value = "Kamat", State = 1 },
+                    // Rule#2
                 }
             },
             {
@@ -94,16 +96,9 @@ namespace MoneyStats.ExampleData
                 new List<RuleAction>
                 {
                     // Rule#1
-                    new RuleAction() { Id = 1, RuleActionTypeId = 2, RuleGroupId = 1, Property = null, Value = null, State = 1 },
-                }
-            },
-            {
-                nameof(RuleActionTagConn),
-                new List<RuleActionTagConn>
-                {
-                    // Rule#1
-                    new RuleActionTagConn() { Id = 1, RuleActionId = 1, TagId = 1, State = 1 },
-                    new RuleActionTagConn() { Id = 1, RuleActionId = 1, TagId = 2, State = 1 },
+                    new RuleAction() { Id = 1, RuleActionTypeId = 2, RuleGroupId = 1, Property = null, Value = null, TagId = 1, State = 1 },
+                    new RuleAction() { Id = 1, RuleActionTypeId = 2, RuleGroupId = 1, Property = null, Value = null, TagId = 2, State = 1 },
+                    // Rule#2
                 }
             },
         };

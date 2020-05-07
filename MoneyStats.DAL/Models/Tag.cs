@@ -12,12 +12,10 @@ namespace MoneyStats.DAL.Models
 
 
         public virtual List<TransactionTagConn> TransactionTagConns { get; set; }
-        public virtual List<RuleActionTagConn> RuleActionTagConns { get; set; }
 
         public Tag()
         {
             TransactionTagConns = new List<TransactionTagConn>();
-            RuleActionTagConns = new List<RuleActionTagConn>();
         }
     }
 }
