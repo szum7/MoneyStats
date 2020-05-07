@@ -5,10 +5,11 @@ using System.Reflection;
 using System.Linq;
 using MoneyStats.DAL.Common;
 using MoneyStats.BL.Common;
+using MoneyStats.BL.Interfaces;
 
 namespace MoneyStats.BL.Repositories
 {
-    public class RuleRepository
+    public class RuleRepository : EntityBaseRepository<Rule>, IRuleRepository
     {
         /// <summary>
         /// BankRow list goes in, Transaction and TransactionTagConn list goes out.

@@ -33,6 +33,7 @@ namespace MoneyStats.ExampleData
         /// </summary>
         public static readonly Dictionary<string, object> BasicValues = new Dictionary<string, object>
         {
+            // Tag
             {
                 nameof(Tag),
                 new List<Tag>
@@ -41,6 +42,7 @@ namespace MoneyStats.ExampleData
                     new Tag() { Id = 2, Description = "", Title = "Kamat", State = 1 },
                 }
             },
+            // RuleType
             {
                 nameof(RuleType),
                 new List<RuleType>
@@ -54,6 +56,7 @@ namespace MoneyStats.ExampleData
                     new RuleType() { Id = 7, Title = "ContainsValueOfProperty", State = 1 },
                 }
             },
+            // RuleActionType
             {
                 nameof(RuleActionType),
                 new List<RuleActionType>
@@ -64,6 +67,7 @@ namespace MoneyStats.ExampleData
                     new RuleActionType() { Id = 4, Title = "AggregateToATransaction", State = 1 },
                 }
             },
+            // RuleGroup
             {
                 nameof(RuleGroup),
                 new List<RuleGroup>
@@ -73,6 +77,7 @@ namespace MoneyStats.ExampleData
                     // Rule#2
                 }
             },
+            // AndRuleGroup
             {
                 nameof(AndRuleGroup),
                 new List<AndRuleGroup>
@@ -82,6 +87,7 @@ namespace MoneyStats.ExampleData
                     // Rule#2
                 }
             },
+            // Rule
             {
                 nameof(Rule),
                 new List<Rule>
@@ -91,6 +97,7 @@ namespace MoneyStats.ExampleData
                     // Rule#2
                 }
             },
+            // RuleAction
             {
                 nameof(RuleAction),
                 new List<RuleAction>
@@ -134,6 +141,11 @@ namespace MoneyStats.ExampleData
             {
                 this.AttachInsert(new TagRepository(), db);
                 this.AttachInsert(new RuleTypeRepository(), db);
+                this.AttachInsert(new RuleActionTypeRepository(), db);
+                this.AttachInsert(new RuleGroupRepository(), db);
+                this.AttachInsert(new AndRuleGroupRepository(), db);
+                this.AttachInsert(new RuleRepository(), db);
+                this.AttachInsert(new RuleActionRepository(), db);
                 // ...
             }
         }
@@ -156,11 +168,11 @@ namespace MoneyStats.ExampleData
             var global = new Global();
 
 #if true
-            global.InsertAllExamples();
+            global.CleanDatabase();
 #endif
 
-#if true
-            global.CleanDatabase();
+#if false
+            global.InsertAllExamples();            
 #endif
 
             Console.WriteLine("Program ended.");
