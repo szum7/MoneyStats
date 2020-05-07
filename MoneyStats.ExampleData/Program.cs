@@ -35,23 +35,77 @@ namespace MoneyStats.ExampleData
         public static readonly Dictionary<string, object> BasicValues = new Dictionary<string, object>
         {
             {
-                nameof(RuleType),
-                new List<RuleType>
+                nameof(Tag),
+                new List<Tag>
                 {
-                    new RuleType() { Id = 1, Title = "a", State = 1 },
-                    new RuleType() { Id = 2, Title = "b", State = 1 },
-                    new RuleType() { Id = 3, Title = "c", State = 1 }
+                    new Tag() { Id = 1, Description = "", Title = "K&H", State = 1 },
+                    new Tag() { Id = 2, Description = "", Title = "Kamat", State = 1 },
                 }
             },
             {
-                nameof(Tag), 
-                new List<Tag>
+                nameof(RuleType),
+                new List<RuleType>
                 {
-                    new Tag() { Id = 1, Description = "", Title = "d", State = 1 },
-                    new Tag() { Id = 2, Description = "", Title = "e", State = 1 },
-                    new Tag() { Id = 3, Description = "", Title = "f", State = 1 }
-                } 
-            }
+                    new RuleType() { Id = 1, Title = "TrueRule", State = 1 },
+                    new RuleType() { Id = 2, Title = "IsEqualTo", State = 1 },
+                    new RuleType() { Id = 3, Title = "IsGreaterThan", State = 1 },
+                    new RuleType() { Id = 4, Title = "IsLesserThan", State = 1 },
+                    new RuleType() { Id = 5, Title = "IsPropertyNull", State = 1 },
+                    new RuleType() { Id = 6, Title = "IsPropertyNotNull", State = 1 },
+                    new RuleType() { Id = 7, Title = "ContainsValueOfProperty", State = 1 },
+                }
+            },
+            {
+                nameof(RuleActionType),
+                new List<RuleActionType>
+                {
+                    new RuleActionType() { Id = 1, Title = "Omit", State = 1 },
+                    new RuleActionType() { Id = 2, Title = "AddTags", State = 1 },
+                    new RuleActionType() { Id = 3, Title = "SetValueOfProperty", State = 1 },
+                    new RuleActionType() { Id = 4, Title = "AggregateToATransaction", State = 1 },
+                }
+            },
+            {
+                nameof(RuleGroup),
+                new List<RuleGroup>
+                {
+                    // Rule#1 : Típus == "Kamat" => addTags("K&H", "Kamat")
+                    new RuleGroup() { Id = 1, Title = "K&H kamat", State = 1 },
+                }
+            },
+            {
+                nameof(AndRuleGroup),
+                new List<AndRuleGroup>
+                {
+                    // Rule#1
+                    new AndRuleGroup() { Id = 1, RuleGroupId = 1, State = 1 },
+                }
+            },
+            {
+                nameof(Rule),
+                new List<Rule>
+                {
+                    // Rule#1
+                    new Rule() { Id = 1, RuleTypeId = 2, AndRuleGroupId = 1, Property = "Type", Value = "Kamat", State = 1 },
+                }
+            },
+            {
+                nameof(RuleAction),
+                new List<RuleAction>
+                {
+                    // Rule#1
+                    new RuleAction() { Id = 1, RuleActionTypeId = 2, RuleGroupId = 1, Property = null, Value = null, State = 1 },
+                }
+            },
+            {
+                nameof(RuleActionTagConn),
+                new List<RuleActionTagConn>
+                {
+                    // Rule#1
+                    new RuleActionTagConn() { Id = 1, RuleActionId = 1, TagId = 1, State = 1 },
+                    new RuleActionTagConn() { Id = 1, RuleActionId = 1, TagId = 2, State = 1 },
+                }
+            },
         };
     }
 

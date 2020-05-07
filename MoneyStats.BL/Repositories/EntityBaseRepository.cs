@@ -159,11 +159,14 @@ namespace MoneyStats.BL.Repositories
         {
             using (var transaction = context.Database.BeginTransaction())
             {
+                var entityName = typeof(TEntity).Name;
                 context.Set<TEntity>().AddRange(entities);
-                context.Database.ExecuteSqlCommand($"SET IDENTITY_INSERT [dbo].[" + typeof(TEntity).Name + "] ON;");
+                context.Database.ExecuteSqlCommand($"SET IDENTITY_INSERT [dbo].[" + entityName + "] ON;");
                 context.SaveChanges();
-                context.Database.ExecuteSqlCommand($"SET IDENTITY_INSERT [dbo].[" + typeof(TEntity).Name + "] OFF;");
+                context.Database.ExecuteSqlCommand($"SET IDENTITY_INSERT [dbo].[" + entityName + "] OFF;");
                 transaction.Commit();
+
+                Console.WriteLine($"InsertRange for [{entityName}] finished.");
             }
         }
         #endregion
