@@ -1,4 +1,7 @@
-﻿DELETE FROM [TransactionTagConn];
+﻿-- [Deprecated] Use ConsoleApp instead!
+QUIT;
+
+DELETE FROM [TransactionTagConn];
 DELETE FROM [Transaction];
 DELETE FROM [Tag];
 DELETE FROM [BankRow];

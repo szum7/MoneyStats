@@ -1,4 +1,7 @@
-﻿-- Tags
+﻿-- [Deprecated] Use ConsoleApp instead!
+QUIT;
+
+-- Tags
 SET IDENTITY_INSERT [Tag] ON;
 INSERT INTO [Tag] ([Id], [Title], [State]) VALUES (1, 'Food', 1);
 INSERT INTO [Tag] ([Id], [Title], [State]) VALUES (2, 'Work', 1);

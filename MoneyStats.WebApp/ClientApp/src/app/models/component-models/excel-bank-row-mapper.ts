@@ -12,7 +12,7 @@ export class ExcelBankRowMapper {
     private readonly bankPropertyMaps: EnumDictionary<BankType, Array<PropertyMapRow>> = {
         [BankType.KH]: [
             new PropertyMapRow("A1", null, "100px", "AccountingDate", this.getJsDateFromExcel),
-            new PropertyMapRow("B1", null, "150px", "TransactionId", null),
+            new PropertyMapRow("B1", null, "150px", "BankTransactionId", null),
             new PropertyMapRow("C1", null, "210px", "Type", null),
             new PropertyMapRow("D1", null, "210px", "Account", null),
             new PropertyMapRow("E1", null, "120px", "AccountName", null),

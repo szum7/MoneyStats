@@ -7,7 +7,7 @@ export class BankRow {
 
     //#region K&H Bank columns
     AccountingDate: string;
-    TransactionId: string;
+    BankTransactionId: string;
     Type: string;
     Account: string;
     AccountName: string;
@@ -18,9 +18,9 @@ export class BankRow {
     Message: string;
     //#endregion
 
-    set(ad: string, ti: string, ty: string, ac: string, acn: string, pa: string, pn: string, sum: string, curr: string, msg: string): void {
+    set(ad: string, bti: string, ty: string, ac: string, acn: string, pa: string, pn: string, sum: string, curr: string, msg: string): void {
         this.AccountingDate = ad;
-        this.TransactionId = ti;
+        this.BankTransactionId = bti;
         this.Type = ty;
         this.Account = ac;
         this.AccountName = acn;
@@ -33,7 +33,7 @@ export class BankRow {
 
     public getContentId(): string {
         return this.AccountingDate 
-        + this.TransactionId 
+        + this.BankTransactionId 
         + this.Type 
         + this.Account 
         + this.AccountName 

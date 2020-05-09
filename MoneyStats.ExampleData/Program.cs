@@ -12,17 +12,17 @@ namespace MoneyStats.ExampleData
     {
         public static readonly List<string> TableDependencyOrder = new List<string>()
         {
-            nameof(RuleGroup),
-            nameof(AndRuleGroup),
-            nameof(Rule),
-            nameof(RuleType),
-            nameof(RulesetRuleGroupConn),
-            nameof(Ruleset),
-            nameof(TransactionCreatedWithRule),
-            nameof(TransactionTagConn),
-            nameof(Tag),
             nameof(RuleAction),
             nameof(RuleActionType),
+            nameof(TransactionTagConn),
+            nameof(Tag),
+            nameof(TransactionCreatedWithRule),
+            nameof(Rule),
+            nameof(RuleType),
+            nameof(AndRuleGroup),
+            nameof(RulesetRuleGroupConn),
+            nameof(Ruleset),
+            nameof(RuleGroup),
             nameof(Transaction),
             nameof(BankRow)
             // The deletion of Transaction and BankRow is unique! 
@@ -109,6 +109,18 @@ namespace MoneyStats.ExampleData
                     // Rule#2
                 }
             },
+            // BankRow
+            {
+                nameof(BankRow),
+                new List<BankRow>
+                {
+                    // Circular reference example
+                    // Rule#1 valid
+                    new BankRow() { Id = 1, BankType = BankType.KH, IsTransactionCreated = true, TransactionGroupId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "099960527H402381", Type = "Állandó átutalás elekt bankon k", Account = "104019457157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = "HU68120527050013209800100008", PartnerName = "Generali Biztosító Zrt.", Sum = -11880, Currency = "HUF", Message = "225534585, rendszeres díj", State = 1 },
+                    new BankRow() { Id = 1, BankType = BankType.KH, IsTransactionCreated = true, TransactionGroupId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "440602******4503", Type = "Készpénzfelvét K&H ATM-ből", Account = "104040657157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = null, PartnerName = "SZENTMIHALYI UT 131.", Sum = -20000, Currency = "HUF", Message = null, State = 1 },
+                    new BankRow() { Id = 1, BankType = BankType.KH, IsTransactionCreated = true, TransactionGroupId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "099960527H402381", Type = "Állandó átut jutaléka-elektronikus", Account = "104019457157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = null, PartnerName = null, Sum = -90, Currency = "HUF", Message = null, State = 1 },
+                }
+            }
         };
     }
 
@@ -166,6 +178,25 @@ namespace MoneyStats.ExampleData
             }
         }
 
+        public void DropAllTables()
+        {
+            using (var db = new MoneyStatsContext())
+            {
+                // Drop tables
+                foreach (var tableName in DataControl.TableDependencyOrder)
+                {
+                    db.Database.ExecuteSqlCommand("DROP TABLE [" + tableName + "];");
+
+                    Console.WriteLine($"[{tableName}] was dropped.");
+                }
+
+                // Drop meta tables
+                var migrationHistoryTableName = "__EFMigrationsHistory";
+                db.Database.ExecuteSqlCommand("DROP TABLE [" + migrationHistoryTableName + "];");
+                Console.WriteLine($"[{migrationHistoryTableName}] was dropped.");
+            }
+        }
+
         void PrintCount<TEntity>(EntityBaseRepository<TEntity> repository) where TEntity : EntityBase
         {
             Console.WriteLine($"[{typeof(TEntity).Name}] has {repository.ForceGet().ToList().Count} rows.");
@@ -189,11 +220,12 @@ namespace MoneyStats.ExampleData
             var global = new Global();
 
 #if true
-            global.InsertAllExamples();            
-            global.ReadRowCounts();
+            global.DropAllTables();
 #endif
 
 #if false
+            global.InsertAllExamples();            
+            global.ReadRowCounts();
             global.CleanDatabase();
 #endif
 

@@ -20,6 +20,10 @@ namespace MoneyStats.DAL.Models
     [Table("BankRow")]
     public partial class BankRow : EntityBase
     {
+        /// <summary>
+        /// Not yet in use.
+        /// </summary>
+        [NotMapped]
         public BankType BankType { get; set; }
 
         /// <summary>
@@ -33,14 +37,14 @@ namespace MoneyStats.DAL.Models
         /// </summary>
         public bool IsTransactionCreated { get; set; }
 
-        /// <summary>
-        /// For aggregated transactions. E.g.: monthly food.
-        /// One transaction can only be in one group! Being in 
-        /// multiple groups would mean counting it multiple 
-        /// times, messing up charts/results/etc.
-        /// Many bank rows references one transaction.
-        /// Aggregated bank rows generate only one transaction.
-        /// </summary>
+        ///// <summary>
+        ///// For aggregated transactions. E.g.: monthly food.
+        ///// One transaction can only be in one group! Being in 
+        ///// multiple groups would mean counting it multiple 
+        ///// times, messing up charts/results/etc.
+        ///// Many bank rows references one transaction.
+        ///// Aggregated bank rows generate only one transaction.
+        ///// </summary>
         [ForeignKey("Transaction")]
         public int? TransactionGroupId { get; set; }
         [NotMapped]
@@ -87,7 +91,7 @@ namespace MoneyStats.DAL.Models
     public partial class BankRow
     {
         [NotMapped]
-        public string ContentId => $"{AccountingDate.ToString()}{BankTransactionId}{Type}{Account}{AccountName}{PartnerAccount}{PartnerName}{Sum?.ToString()}{Currency}{Message}";
+        public string ContentId => $"{AccountingDate}{BankTransactionId}{Type}{Account}{AccountName}{PartnerAccount}{PartnerName}{Sum?.ToString()}{Currency}{Message}";
 
         //[NotMapped]
         //public int? TransactionGroupId

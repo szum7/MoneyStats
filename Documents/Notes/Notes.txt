@@ -45,3 +45,13 @@ Az ajánlás a következő (EntityFramework):
 public virtual ICollection<BankRow> BankRows { get; set; }
 ctor:
 BankRows = new HashSet<BankRow>();
+
+
+[Serializable()] 
+public partial class MyClass {
+    private System.Nullable<int> _Age;
+    [global::System.Runtime.Serialization.DataMemberAttribute(Order = 4)] 
+    public System.Nullable<int> Age {
+            ...
+    }
+}
