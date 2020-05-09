@@ -37,7 +37,7 @@ namespace MoneyStats.DAL.Models
         public bool IsCustom { get; set; }
 
         /// <summary>
-        /// Reference.
+        /// Reference from which the Transaction was created from.
         /// </summary>
         [ForeignKey("BankRow")]
         public int? BankRowId { get; set; }

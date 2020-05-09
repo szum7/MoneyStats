@@ -79,6 +79,9 @@ namespace MoneyStats.DAL.Migrations
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("GroupedTransactionId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsTransactionCreated")
                         .HasColumnType("bit");
 
@@ -102,9 +105,6 @@ namespace MoneyStats.DAL.Migrations
 
                     b.Property<decimal?>("Sum")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("TransactionGroupId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
@@ -587,7 +587,7 @@ namespace MoneyStats.DAL.Migrations
             modelBuilder.Entity("MoneyStats.DAL.Models.Transaction", b =>
                 {
                     b.HasOne("MoneyStats.DAL.Models.BankRow", "BankRow")
-                        .WithOne("TransactionGroup")
+                        .WithOne("GroupedTransaction")
                         .HasForeignKey("MoneyStats.DAL.Models.Transaction", "BankRowId");
                 });
 

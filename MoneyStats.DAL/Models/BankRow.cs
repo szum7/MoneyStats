@@ -49,8 +49,8 @@ namespace MoneyStats.DAL.Models
         /// Not a foreign key because EF Core Code First is shit
         /// and can't make sence of circular references.
         /// </summary>
-        public int? TransactionGroupId { get; set; }
-        public virtual Transaction TransactionGroup { get; set; }
+        public int? GroupedTransactionId { get; set; }
+        public virtual Transaction GroupedTransaction { get; set; }
 
 
         #region K&H Bank columns

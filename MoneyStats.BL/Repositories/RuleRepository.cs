@@ -161,7 +161,7 @@ namespace MoneyStats.BL.Repositories
 
                                 // TODO!!! trg.Id must be saved but there are no tr.Ids yet. May need to run this whole AggregateToATransaction type BEFORE other individual transaction saves. 
                                 // It would be better though if this reference stayed the same and could modify the BankRows after the aggregated Transactions were saved.
-                                br.TransactionGroup = monthlyTr; // no transaction.Id yet
+                                br.GroupedTransaction = monthlyTr; // no transaction.Id yet
                             }
                         }
 

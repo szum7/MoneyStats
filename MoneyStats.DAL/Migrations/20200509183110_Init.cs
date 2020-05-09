@@ -19,7 +19,7 @@ namespace MoneyStats.DAL.Migrations
                     CreateDate = table.Column<DateTime>(nullable: true),
                     State = table.Column<int>(nullable: false),
                     IsTransactionCreated = table.Column<bool>(nullable: false),
-                    TransactionGroupId = table.Column<int>(nullable: true),
+                    GroupedTransactionId = table.Column<int>(nullable: true),
                     AccountingDate = table.Column<DateTime>(nullable: true),
                     BankTransactionId = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: true),
