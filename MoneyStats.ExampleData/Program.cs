@@ -4,6 +4,7 @@ using MoneyStats.DAL;
 using MoneyStats.DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MoneyStats.ExampleData
 {
@@ -104,7 +105,7 @@ namespace MoneyStats.ExampleData
                 {
                     // Rule#1
                     new RuleAction() { Id = 1, RuleActionTypeId = 2, RuleGroupId = 1, Property = null, Value = null, TagId = 1, State = 1 },
-                    new RuleAction() { Id = 1, RuleActionTypeId = 2, RuleGroupId = 1, Property = null, Value = null, TagId = 2, State = 1 },
+                    new RuleAction() { Id = 2, RuleActionTypeId = 2, RuleGroupId = 1, Property = null, Value = null, TagId = 2, State = 1 },
                     // Rule#2
                 }
             },
@@ -113,21 +114,15 @@ namespace MoneyStats.ExampleData
 
     public class Global
     {
-        /// <summary>
-        /// Deletes all records from every tables.
-        /// Handles the order of which tables can 
-        /// be cleaned (foreign key dependencies).
-        /// </summary>
-        public void CleanDatabase()
+        public void ReadRowCounts()
         {
-            using (var db = new MoneyStatsContext())
-            {
-                foreach (var tableName in DataControl.TableDependencyOrder)
-                {
-                    // TODO doesn't work. Even though tables are empty, foreign contraint still throws an exception
-                    db.Database.ExecuteSqlCommand("TRUNCATE TABLE [" + tableName + "]");
-                }
-            }
+            this.PrintCount(new TagRepository());
+            this.PrintCount(new RuleTypeRepository());
+            this.PrintCount(new RuleActionTypeRepository());
+            this.PrintCount(new RuleGroupRepository());
+            this.PrintCount(new AndRuleGroupRepository());
+            this.PrintCount(new RuleRepository());
+            this.PrintCount(new RuleActionRepository());
         }
 
         /// <summary>
@@ -150,9 +145,35 @@ namespace MoneyStats.ExampleData
             }
         }
 
+        /// <summary>
+        /// Deletes all records from every tables.
+        /// Handles the order of which tables can 
+        /// be cleaned (foreign key dependencies).
+        /// </summary>
+        public void CleanDatabase()
+        {
+            using (var db = new MoneyStatsContext())
+            {
+                foreach (var tableName in DataControl.TableDependencyOrder)
+                {
+                    // TODO doesn't work. Even though tables are empty, foreign contraint still throws an exception
+                    //db.Database.ExecuteSqlCommand("TRUNCATE TABLE [" + tableName + "]");
+                    db.Database.ExecuteSqlCommand("DELETE FROM [" + tableName + "]");
+                    db.Database.ExecuteSqlCommand("DBCC CHECKIDENT([" + tableName + "], RESEED, 0)");
+
+                    Console.WriteLine($"[{tableName}] DELETE and RESEED finished.");
+                }
+            }
+        }
+
+        void PrintCount<TEntity>(EntityBaseRepository<TEntity> repository) where TEntity : EntityBase
+        {
+            Console.WriteLine($"[{typeof(TEntity).Name}] has {repository.ForceGet().ToList().Count} rows.");
+        }
+
         void AttachInsert<TEntity>(EntityBaseRepository<TEntity> repository, DbContext db) where TEntity : EntityBase
         {
-            repository.InsertRange(db, (List<TEntity>)DataControl.BasicValues[nameof(TEntity)]);
+            repository.InsertRange(db, (List<TEntity>)DataControl.BasicValues[typeof(TEntity).Name]);
         }
 
         void NeutralizeBankRowTable()
@@ -168,11 +189,12 @@ namespace MoneyStats.ExampleData
             var global = new Global();
 
 #if true
-            global.CleanDatabase();
+            global.InsertAllExamples();            
+            global.ReadRowCounts();
 #endif
 
 #if false
-            global.InsertAllExamples();            
+            global.CleanDatabase();
 #endif
 
             Console.WriteLine("Program ended.");
