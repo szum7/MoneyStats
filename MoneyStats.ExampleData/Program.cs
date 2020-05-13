@@ -25,8 +25,6 @@ namespace MoneyStats.ExampleData
             nameof(RuleGroup),
             nameof(Transaction),
             nameof(BankRow)
-            // The deletion of Transaction and BankRow is unique! 
-            // TODO If the migration did not create the foreign key constraint, then they're not unique.
         };
 
         /// <summary>
@@ -115,12 +113,32 @@ namespace MoneyStats.ExampleData
                 new List<BankRow>
                 {
                     // Circular reference example
+                    new BankRow() { Id = 1, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Circular1", State = 1 },
+                    new BankRow() { Id = 2, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Circular2", State = 1 },
+                    // Grouped example
+                    new BankRow() { Id = 3, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = 3, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Group1", State = 1 },
+                    new BankRow() { Id = 4, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = 3, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Group1", State = 1 },
+                    new BankRow() { Id = 5, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = 3, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Group1", State = 1 },
+                    new BankRow() { Id = 6, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = 4, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Group2", State = 1 },
                     // Rule#1 valid
-                    new BankRow() { Id = 1, BankType = BankType.KH, IsTransactionCreated = true, TransactionGroupId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "099960527H402381", Type = "Állandó átutalás elekt bankon k", Account = "104019457157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = "HU68120527050013209800100008", PartnerName = "Generali Biztosító Zrt.", Sum = -11880, Currency = "HUF", Message = "225534585, rendszeres díj", State = 1 },
-                    new BankRow() { Id = 1, BankType = BankType.KH, IsTransactionCreated = true, TransactionGroupId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "440602******4503", Type = "Készpénzfelvét K&H ATM-ből", Account = "104040657157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = null, PartnerName = "SZENTMIHALYI UT 131.", Sum = -20000, Currency = "HUF", Message = null, State = 1 },
-                    new BankRow() { Id = 1, BankType = BankType.KH, IsTransactionCreated = true, TransactionGroupId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "099960527H402381", Type = "Állandó átut jutaléka-elektronikus", Account = "104019457157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = null, PartnerName = null, Sum = -90, Currency = "HUF", Message = null, State = 1 },
+                    new BankRow() { Id = 7, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "099960527H402381", Type = "Állandó átutalás elekt bankon k", Account = "104019457157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = "HU68120527050013209800100008", PartnerName = "Generali Biztosító Zrt.", Sum = -11880, Currency = "HUF", Message = "225534585, rendszeres díj", State = 1 },
+                    new BankRow() { Id = 8, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "440602******4503", Type = "Készpénzfelvét K&H ATM-ből", Account = "104040657157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = null, PartnerName = "SZENTMIHALYI UT 131.", Sum = -20000, Currency = "HUF", Message = null, State = 1 },
+                    new BankRow() { Id = 9, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "099960527H402381", Type = "Állandó átut jutaléka-elektronikus", Account = "104019457157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = null, PartnerName = null, Sum = -90, Currency = "HUF", Message = null, State = 1 },
                 }
-            }
+            },
+            // Transaction
+            {
+                nameof(Transaction),
+                new List<Transaction>
+                {
+                    // Circular reference example
+                    new Transaction() { Id = 1, Title = "", Description = "", Date = new DateTime(1999, 1, 1), Sum = 0, IsGroup = false, IsCustom = false, BankRowId = 1, State = 1 },
+                    new Transaction() { Id = 2, Title = "", Description = "", Date = new DateTime(1999, 1, 1), Sum = 0, IsGroup = false, IsCustom = false, BankRowId = 2, State = 1 },
+                    // Rule#1 valid
+                    new Transaction() { Id = 3, Title = "", Description = "", Date = new DateTime(1999, 1, 1), Sum = 0, IsGroup = true, IsCustom = false, BankRowId = null, State = 1 },
+                    new Transaction() { Id = 4, Title = "", Description = "", Date = new DateTime(1999, 1, 1), Sum = 0, IsGroup = true, IsCustom = false, BankRowId = null, State = 1 },
+                }
+            },
         };
     }
 
@@ -135,6 +153,9 @@ namespace MoneyStats.ExampleData
             this.PrintCount(new AndRuleGroupRepository());
             this.PrintCount(new RuleRepository());
             this.PrintCount(new RuleActionRepository());
+            this.PrintCount(new BankRowRepository());
+            this.PrintCount(new TransactionRepository());
+            LineBreak();
         }
 
         /// <summary>
@@ -153,8 +174,11 @@ namespace MoneyStats.ExampleData
                 this.AttachInsert(new AndRuleGroupRepository(), db);
                 this.AttachInsert(new RuleRepository(), db);
                 this.AttachInsert(new RuleActionRepository(), db);
+                this.AttachInsert(new BankRowRepository(), db);
+                this.AttachInsert(new TransactionRepository(), db);
                 // ...
             }
+            LineBreak();
         }
 
         /// <summary>
@@ -162,31 +186,37 @@ namespace MoneyStats.ExampleData
         /// Handles the order of which tables can 
         /// be cleaned (foreign key dependencies).
         /// </summary>
-        public void CleanDatabase()
+        public void DeleteAllFromDatabase()
         {
             using (var db = new MoneyStatsContext())
             {
                 foreach (var tableName in DataControl.TableDependencyOrder)
                 {
-                    // TODO doesn't work. Even though tables are empty, foreign contraint still throws an exception
-                    //db.Database.ExecuteSqlCommand("TRUNCATE TABLE [" + tableName + "]");
                     db.Database.ExecuteSqlCommand("DELETE FROM [" + tableName + "]");
                     db.Database.ExecuteSqlCommand("DBCC CHECKIDENT([" + tableName + "], RESEED, 0)");
 
                     Console.WriteLine($"[{tableName}] DELETE and RESEED finished.");
                 }
             }
+            LineBreak();
         }
 
         public void DropAllTables()
         {
+            Console.WriteLine("Are you sure about DROPPING ALL TABLES?");
+            var response = Console.ReadKey();
+            if (response.Key != ConsoleKey.Y)
+            {
+                Console.WriteLine("\nAborted.");
+                return;
+            }
+
             using (var db = new MoneyStatsContext())
             {
                 // Drop tables
                 foreach (var tableName in DataControl.TableDependencyOrder)
                 {
                     db.Database.ExecuteSqlCommand("DROP TABLE [" + tableName + "];");
-
                     Console.WriteLine($"[{tableName}] was dropped.");
                 }
 
@@ -195,6 +225,12 @@ namespace MoneyStats.ExampleData
                 db.Database.ExecuteSqlCommand("DROP TABLE [" + migrationHistoryTableName + "];");
                 Console.WriteLine($"[{migrationHistoryTableName}] was dropped.");
             }
+            LineBreak();
+        }
+
+        void LineBreak()
+        {
+            Console.WriteLine("");
         }
 
         void PrintCount<TEntity>(EntityBaseRepository<TEntity> repository) where TEntity : EntityBase
@@ -206,11 +242,6 @@ namespace MoneyStats.ExampleData
         {
             repository.InsertRange(db, (List<TEntity>)DataControl.BasicValues[typeof(TEntity).Name]);
         }
-
-        void NeutralizeBankRowTable()
-        {
-
-        }
     }
 
     class Program
@@ -220,13 +251,14 @@ namespace MoneyStats.ExampleData
             var global = new Global();
 
 #if true
-            global.DropAllTables();
+            global.ReadRowCounts(); // READ
 #endif
 
 #if false
-            global.InsertAllExamples();            
-            global.ReadRowCounts();
-            global.CleanDatabase();
+            global.DropAllTables(); // DROP
+            global.DeleteAllFromDatabase(); // DELETE
+            global.InsertAllExamples(); // INSERT        
+            global.ReadRowCounts(); // READ
 #endif
 
             Console.WriteLine("Program ended.");

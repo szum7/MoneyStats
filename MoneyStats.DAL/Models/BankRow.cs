@@ -37,18 +37,20 @@ namespace MoneyStats.DAL.Models
         /// </summary>
         public bool IsTransactionCreated { get; set; }
 
-        ///// <summary>
-        ///// For aggregated transactions. E.g.: monthly food.
-        ///// One transaction can only be in one group! Being in 
-        ///// multiple groups would mean counting it multiple 
-        ///// times, messing up charts/results/etc.
-        ///// Many bank rows references one transaction.
-        ///// Aggregated bank rows generate only one transaction.
-        ///// </summary>
-        [ForeignKey("Transaction")]
-        public int? TransactionGroupId { get; set; }
-        [NotMapped]
-        public virtual Transaction TransactionGroup { get; set; }
+        /// <summary>
+        /// For aggregated transactions. E.g.: monthly food.
+        /// One transaction can only be in one group! Being in 
+        /// multiple groups would mean counting it multiple 
+        /// times, messing up charts/results/etc.
+        /// Many bank rows references one transaction.
+        /// Aggregated bank rows generate only one transaction.
+        /// 
+        /// Note:
+        /// Not a foreign key because EF Core Code First is shit
+        /// and can't make sence of circular references.
+        /// </summary>
+        public int? GroupedTransactionId { get; set; }
+        public virtual Transaction GroupedTransaction { get; set; }
 
 
         #region K&H Bank columns
@@ -56,7 +58,7 @@ namespace MoneyStats.DAL.Models
         public DateTime? AccountingDate { get; set; }
 
         [Rulable]
-        public string BankTransactionId { get; set; } // TODO végigvezetni a változást TransactionId -> BankTransactionId
+        public string BankTransactionId { get; set; }
 
         [Rulable]
         public string Type { get; set; }
@@ -92,25 +94,5 @@ namespace MoneyStats.DAL.Models
     {
         [NotMapped]
         public string ContentId => $"{AccountingDate}{BankTransactionId}{Type}{Account}{AccountName}{PartnerAccount}{PartnerName}{Sum?.ToString()}{Currency}{Message}";
-
-        //[NotMapped]
-        //public int? TransactionGroupId
-        //{
-        //    get => TransactionGroupId;
-        //    set
-        //    {
-        //        TransactionGroupId = value;
-        //    }
-        //}
-
-        //[NotMapped]
-        //public Transaction TransactionGroup
-        //{
-        //    get => Transaction;
-        //    set
-        //    {
-        //        Transaction = value;
-        //    }
-        //}
     }
 }

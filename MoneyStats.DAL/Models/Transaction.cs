@@ -37,14 +37,13 @@ namespace MoneyStats.DAL.Models
         public bool IsCustom { get; set; }
 
         /// <summary>
-        /// Reference.
+        /// Reference from which the Transaction was created from.
         /// </summary>
         [ForeignKey("BankRow")]
         public int? BankRowId { get; set; }
 
 
-        public virtual BankRow BankTransaction { get; set; }
-        public virtual List<BankRow> BankRows { get; set; }
+        public virtual BankRow BankRow { get; set; }
         public virtual List<TransactionTagConn> TransactionTagConn { get; set; }
         public virtual List<TransactionCreatedWithRule> TransactionCreatedWithRule { get; set; }
     }
@@ -54,10 +53,17 @@ namespace MoneyStats.DAL.Models
         [NotMapped]
         public List<Tag> Tags { get; set; }
 
+        /// <summary>
+        /// For aggregated BankRows.
+        /// If it has elements, BankRow should be null.
+        /// </summary>
+        [NotMapped]
+        public List<BankRow> AggregatedReferences { get; set; }
+
         public Transaction()
         {
             this.Tags = new List<Tag>();
-            this.BankRows = new List<BankRow>();
+            this.AggregatedReferences = new List<BankRow>();
             this.TransactionCreatedWithRule = new List<TransactionCreatedWithRule>();
             this.TransactionTagConn = new List<TransactionTagConn>();
         }
