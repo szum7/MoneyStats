@@ -1,4 +1,10 @@
 ﻿
+                    // TODO doesn't work. Even though tables are empty, foreign contraint still throws an exception
+                    //db.Database.ExecuteSqlCommand("TRUNCATE TABLE [" + tableName + "]");
+
+
+
+
         /// <summary>
         /// BankRow list goes in, Transaction and TransactionTagConn list goes out.
         /// </summary>
