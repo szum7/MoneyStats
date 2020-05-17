@@ -28,6 +28,6 @@ namespace MoneyStats.BL.Interfaces
 
         bool DestroyRange(IEnumerable<int> ids);
 
-        void InsertRange(DbContext context, IEnumerable<TEntity> entities);
+        void InsertWithIdentity(DbContext context, IEnumerable<TEntity> entities);
     }
 }

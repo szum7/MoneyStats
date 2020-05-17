@@ -155,7 +155,7 @@ namespace MoneyStats.BL.Repositories
         }
 
         #region For example inserts
-        public void InsertRange(DbContext context, IEnumerable<TEntity> entities)
+        public void InsertWithIdentity(DbContext context, IEnumerable<TEntity> entities)
         {
             using (var transaction = context.Database.BeginTransaction())
             {

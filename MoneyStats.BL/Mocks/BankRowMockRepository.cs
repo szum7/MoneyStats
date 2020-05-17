@@ -54,7 +54,7 @@ namespace MoneyStats.BL.Mocks
             throw new NotImplementedException();
         }
 
-        public void InsertRange(DbContext context, IEnumerable<BankRow> entities)
+        public void InsertWithIdentity(DbContext context, IEnumerable<BankRow> entities)
         {
             throw new NotImplementedException();
         }
