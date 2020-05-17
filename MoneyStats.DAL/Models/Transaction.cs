@@ -19,16 +19,6 @@ namespace MoneyStats.DAL.Models
         public decimal? Sum { get; set; }
 
         /// <summary>
-        /// This means there are more than one bank transaction associated with this.
-        /// E.g.: a monthly sum of transactions relating food.
-        /// This is for performance purposes, could just check if the Id exists 
-        /// in the connection table (TransactionBankRowConn).
-        /// If true, BankTransactionId MUST BE null! (Otherwise -> circular reference)
-        /// NOTE! defaultValue: false
-        /// </summary>
-        public bool IsGroup { get; set; }
-
-        /// <summary>
         /// We can create transactions without bank exported transaction reference.
         /// E.g.: Create an IsCutom=true transaction for transactions payed with cash,
         /// where there's no record.
@@ -59,6 +49,15 @@ namespace MoneyStats.DAL.Models
         /// </summary>
         [NotMapped]
         public List<BankRow> AggregatedReferences { get; set; }
+
+        /// <summary>
+        /// This means there are more than one bank transaction associated with this.
+        /// E.g.: a monthly sum of transactions relating food.
+        /// If true, BankTransactionId MUST BE null! (Otherwise -> circular reference)
+        /// NOTE! defaultValue: false
+        /// </summary>
+        [NotMapped]
+        public bool IsGroup => !BankRowId.HasValue;
 
         public Transaction()
         {

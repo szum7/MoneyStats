@@ -111,11 +111,11 @@ namespace MoneyStats.ExampleData
                 new List<Transaction>
                 {
                     // Circular reference example
-                    new Transaction() { Id = 1, Title = "", Description = "", Date = new DateTime(1999, 1, 1), Sum = 0, IsGroup = false, IsCustom = false, BankRowId = 1, State = 1 },
-                    new Transaction() { Id = 2, Title = "", Description = "", Date = new DateTime(1999, 1, 1), Sum = 0, IsGroup = false, IsCustom = false, BankRowId = 2, State = 1 },
+                    new Transaction() { Id = 1, Title = "", Description = "", Date = new DateTime(1999, 1, 1), Sum = 0, IsCustom = false, BankRowId = 1, State = 1 },
+                    new Transaction() { Id = 2, Title = "", Description = "", Date = new DateTime(1999, 1, 1), Sum = 0, IsCustom = false, BankRowId = 2, State = 1 },
                     // Rule#1 valid
-                    new Transaction() { Id = 3, Title = "", Description = "", Date = new DateTime(1999, 1, 1), Sum = 0, IsGroup = true, IsCustom = false, BankRowId = null, State = 1 },
-                    new Transaction() { Id = 4, Title = "", Description = "", Date = new DateTime(1999, 1, 1), Sum = 0, IsGroup = true, IsCustom = false, BankRowId = null, State = 1 },
+                    new Transaction() { Id = 3, Title = "", Description = "", Date = new DateTime(1999, 1, 1), Sum = 0, IsCustom = false, BankRowId = null, State = 1 },
+                    new Transaction() { Id = 4, Title = "", Description = "", Date = new DateTime(1999, 1, 1), Sum = 0, IsCustom = false, BankRowId = null, State = 1 },
                 }
             },
         };

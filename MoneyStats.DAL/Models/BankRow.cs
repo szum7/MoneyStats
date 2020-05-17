@@ -94,5 +94,8 @@ namespace MoneyStats.DAL.Models
     {
         [NotMapped]
         public string ContentId => $"{AccountingDate}{BankTransactionId}{Type}{Account}{AccountName}{PartnerAccount}{PartnerName}{Sum?.ToString()}{Currency}{Message}";
+
+        [NotMapped]
+        public bool IsInGroup => GroupedTransactionId.HasValue;
     }
 }
