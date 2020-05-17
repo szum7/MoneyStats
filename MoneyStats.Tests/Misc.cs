@@ -48,6 +48,19 @@ namespace MoneyStats.Tests
     [TestClass]
     public class Misc
     {
+        [TestMethod]
+        public void TestNotForeignKeyedEntityInlcude()
+        {
+            // Arrange
+            var repo = new BankRowRepository();
+
+            // Act
+            var list = repo.GetWithEntities();
+
+            // Assert
+            Assert.AreEqual(1, 1);
+        }
+
         public static bool Compare(string op, IComparable left, IComparable right)
         {
             switch (op)

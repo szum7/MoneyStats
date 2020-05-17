@@ -8,18 +8,19 @@ namespace MoneyStats.BL.Repositories
 {
     public class BankRowRepository : EntityBaseRepository<BankRow>, IBankRowRepository
     {
-        public new int Insert(BankRow transaction)
+        public List<BankRow> GetWithEntities()
         {
             using (var context = new MoneyStatsContext())
             {
-                var transactions = this.Get();
-                if (transactions.Any(x => x.ContentId == transaction.ContentId)) // TODO not-bank-specific
-                {
-                    return 0;
-                }
-                context.BankRows.Add(transaction);
-                context.SaveChanges();
-                return transaction.Id;
+                var list = (from d in context.BankRows.ToList()
+                            join a in context.Transactions on d.GroupedTransactionId equals a.Id
+                            where d.IsActive && d.GroupedTransactionId != null
+                            select new BankRow()
+                            {
+                                GroupedTransaction = a
+                            }).ToList();
+
+                return list;
             }
         }
     }
