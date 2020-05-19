@@ -4,10 +4,10 @@ namespace MoneyStats.DAL.Models
 {
     public enum RuleActionTypeEnum
     {
-        Omit,
-        AddTag,
-        SetValueOfProperty,
-        AggregateToATransaction
+        Omit = 1,
+        AddTag = 2,
+        SetValueOfProperty = 3,
+        AggregateToMonthlyTransaction = 4
     }
 
     [Table("RuleActionType")]

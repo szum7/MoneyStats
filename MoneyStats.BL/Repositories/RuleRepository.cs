@@ -127,17 +127,17 @@ namespace MoneyStats.BL.Repositories
                             transactions.Remove(ruleTr);
                             break;
                         }
-                        if (ruleGroup.RuleActions.Count(rule => rule.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToATransaction) > 1)
+                        if (ruleGroup.RuleActions.Count(rule => rule.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToMonthlyTransaction) > 1)
                         {
                             throw new Exception("You can't have more than one aggregating action applied to a Transaction!");
                         }
 
-                        // We need to evaluate the AggregateToATransaction 
+                        // We need to evaluate the AggregateToMonthlyTransaction 
                         // type FIRST and use the aggr.ed Transaction to 
                         // apply the rest of the actions to.
                         foreach (RuleAction action in ruleGroup.RuleActions)
                         {
-                            if (action.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToATransaction)
+                            if (action.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToMonthlyTransaction)
                             {
                                 var month = new DateTime(br.AccountingDate.Value.Year, br.AccountingDate.Value.Month, 1);
                                 Transaction monthlyTr = null;
@@ -159,7 +159,7 @@ namespace MoneyStats.BL.Repositories
                                 // Bring out the aggregated Transaction
                                 ruleTr = monthlyTr;
 
-                                // TODO!!! trg.Id must be saved but there are no tr.Ids yet. May need to run this whole AggregateToATransaction type BEFORE other individual transaction saves. 
+                                // TODO!!! trg.Id must be saved but there are no tr.Ids yet. May need to run this whole AggregateToMonthlyTransaction type BEFORE other individual transaction saves. 
                                 // It would be better though if this reference stayed the same and could modify the BankRows after the aggregated Transactions were saved.
                                 br.GroupedTransaction = monthlyTr; // no transaction.Id yet
                             }
@@ -167,7 +167,7 @@ namespace MoneyStats.BL.Repositories
 
                         foreach (RuleAction action in ruleGroup.RuleActions)
                         {
-                            if (action.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToATransaction)
+                            if (action.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToMonthlyTransaction)
                                 continue;
 
                             switch (action.RuleActionTypeId)

@@ -27,7 +27,7 @@ namespace MoneyStats.DAL.Models
         /// For AddTag RuleAction type.
         /// </summary>
         [ForeignKey("Tag")]
-        public int TagId { get; set; }
+        public int? TagId { get; set; }
 
 
         public virtual RuleGroup RuleGroup { get; set; }
