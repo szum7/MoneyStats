@@ -10,6 +10,41 @@ using System.Reflection;
 
 namespace MoneyStats.Tests
 {
+    #region Classes
+    public class RuleEvalData
+    {
+        public List<int> RuleIds { get; set; }
+        public List<int> BankRowIds { get; set; }
+    }
+
+    public class TestTransaction
+    {
+        public string StringProperty { get; set; }
+        public int IntProperty { get; set; }
+        public float? FloatNullProperty { get; set; }
+        public float? NullProperty { get; set; }
+    }
+    #endregion
+
+    #region Methods
+    public class TestHelper
+    {
+        public static bool Compare(string op, IComparable left, IComparable right)
+        {
+            switch (op)
+            {
+                case "<": return left.CompareTo(right) < 0;
+                case ">": return left.CompareTo(right) > 0;
+                case "<=": return left.CompareTo(right) <= 0;
+                case ">=": return left.CompareTo(right) >= 0;
+                case "==": return left.Equals(right);
+                case "!=": return !left.Equals(right);
+                default: throw new ArgumentException("Invalid comparison operator: {0}", op);
+            }
+        }
+    }
+    #endregion
+
     public static class Extensions
     {
         /// <summary>
@@ -49,6 +84,29 @@ namespace MoneyStats.Tests
     public class Misc
     {
         [TestMethod]
+        public void TestRuleEvaqluation()
+        {
+            // Arrange
+            var repo = new RuleRepository();
+#if true
+            var data = new RuleEvalData() { RuleIds = new List<int>{ 1 }, BankRowIds = new List<int> { 7, 8, 9 } };
+#endif
+#if false
+            var data = new RuleEvalData() { RuleIds = new List<int>{ 2 }, BankRowIds = new List<int> { 10, 11, 12, 13, 14 } };
+            var data = new RuleEvalData() { RuleIds = new List<int>{ 3 }, BankRowIds = new List<int> { 15, 16, 17 } };
+#endif
+
+            var bankRows = new BankRowRepository().GetOnIds(data.BankRowIds);
+            var ruleGroups = new RuleGroupRepository().GetOnIds(data.RuleIds);
+
+            // Act
+            repo.CreateTransactionUsingRulesFlattened(ruleGroups, bankRows);
+
+            // Assert
+            Assert.AreEqual(1, 1);
+        }
+
+        [TestMethod]
         public void TestNotForeignKeyedEntityInlcude()
         {
             // Arrange
@@ -59,20 +117,6 @@ namespace MoneyStats.Tests
 
             // Assert
             Assert.AreEqual(1, 1);
-        }
-
-        public static bool Compare(string op, IComparable left, IComparable right)
-        {
-            switch (op)
-            {
-                case "<": return left.CompareTo(right) < 0;
-                case ">": return left.CompareTo(right) > 0;
-                case "<=": return left.CompareTo(right) <= 0;
-                case ">=": return left.CompareTo(right) >= 0;
-                case "==": return left.Equals(right);
-                case "!=": return !left.Equals(right);
-                default: throw new ArgumentException("Invalid comparison operator: {0}", op);
-            }
         }
 
         [DataTestMethod]
@@ -90,12 +134,12 @@ namespace MoneyStats.Tests
             // operand;Property;50;<=;
             // where Property <= 50
 
-            var resultToTest = Misc.Compare(operand, ruleValue, transactionValue);
+            var resultToTest = TestHelper.Compare(operand, ruleValue, transactionValue);
             Assert.AreEqual(resultToTest, result);
 
             if (operand != "==" && operand != "!=" && ruleValue != transactionValue)
             {
-                var resultToTestNegated = Misc.Compare(operand, transactionValue, ruleValue);
+                var resultToTestNegated = TestHelper.Compare(operand, transactionValue, ruleValue);
                 Assert.AreEqual(resultToTestNegated, !result);
             }
         }
@@ -187,16 +231,6 @@ namespace MoneyStats.Tests
 
             // Assert
             Assert.AreEqual(result, actual);
-        }
-
-        
-
-        public class TestTransaction
-        {
-            public string StringProperty { get; set; }
-            public int IntProperty { get; set; }
-            public float? FloatNullProperty { get; set; }
-            public float? NullProperty { get; set; }
         }
 
         [TestMethod]

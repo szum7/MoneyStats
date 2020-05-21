@@ -9,11 +9,11 @@ namespace MoneyStats.ExampleData
             var global = new Global(CustomData.BasicValues);
 
 #if true
+            global.DeleteAllFromDatabase(); // DELETE
+            global.InsertAllExamples(); // INSERT
 #endif
 
 #if false
-            global.DeleteAllFromDatabase(); // DELETE
-            global.InsertAllExamples(); // INSERT
             global.ReadRowCounts(); // READ
             global.DropAllTables(); // DROP
             global.ReadRowCounts(); // READ

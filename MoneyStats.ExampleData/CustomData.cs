@@ -4,11 +4,14 @@ using System.Collections.Generic;
 
 namespace MoneyStats.ExampleData
 {
+    /// <summary>
+    /// Have as many dictionaries as you like. E.g. BasicValues dictionary for 
+    /// general testing, BigData dictionary with long strings for max value testing, etc.
+    /// 
+    /// Dictionary item order doesn't matter.
+    /// </summary>
     public static class CustomData
     {
-        /// <summary>
-        /// Order doesn't matter.
-        /// </summary>
         public static readonly Dictionary<string, object> BasicValues = new Dictionary<string, object>
         {
             // Tag

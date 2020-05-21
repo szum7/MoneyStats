@@ -10,11 +10,11 @@ namespace MoneyStats.ExampleData
 {
     public class Global
     {
-        private Dictionary<string, object> InsertValues { get; set; }
+        private Dictionary<string, object> _insertValues { get; set; }
 
         public Global(Dictionary<string, object> insertValues)
         {
-            this.InsertValues = insertValues;
+            this._insertValues = insertValues;
         }
 
         public void ReadRowCounts()
@@ -61,6 +61,8 @@ namespace MoneyStats.ExampleData
         /// </summary>
         public void DeleteAllFromDatabase()
         {
+            this.AreYouSure("You are about to DELETE all records! Do you want to continue?");
+
             using (var db = new MoneyStatsContext())
             {
                 foreach (var tableName in TableDependencyOrder.List)
@@ -76,13 +78,7 @@ namespace MoneyStats.ExampleData
 
         public void DropAllTables()
         {
-            Console.WriteLine("Are you sure about DROPPING ALL TABLES?");
-            var response = Console.ReadKey();
-            if (response.Key != ConsoleKey.Y)
-            {
-                Console.WriteLine("\nAborted.");
-                return;
-            }
+            this.AreYouSure("You are about to DROP all tables! Do you want to continue?");
 
             using (var db = new MoneyStatsContext())
             {
@@ -114,10 +110,21 @@ namespace MoneyStats.ExampleData
         void AttachInsert<TEntity>(EntityBaseRepository<TEntity> repository, DbContext db) where TEntity : EntityBase
         {
             object entityList;
-            if (!InsertValues.TryGetValue(typeof(TEntity).Name, out entityList))
+            if (!_insertValues.TryGetValue(typeof(TEntity).Name, out entityList))
                 return;
 
             repository.InsertWithIdentity(db, (List<TEntity>)entityList);
+        }
+
+        void AreYouSure(string message)
+        {
+            Console.WriteLine($"{message} [y]");
+            var response = Console.ReadLine();
+            if (response.ToLower() != "y")
+            {
+                Console.WriteLine("\nAborted.");
+                throw new NotSureWhatIWasDoingException();
+            }
         }
     }
 }

@@ -26,5 +26,15 @@ namespace MoneyStats.BL.Repositories
                 return list;
             }
         }
+
+        public List<RuleGroup> GetOnIds(List<int> ids)
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                return (from d in context.RuleGroups
+                        where ids.Any(x => x == d.Id)
+                        select d).ToList();
+            }
+        }
     }
 }
