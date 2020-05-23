@@ -27,5 +27,8 @@ namespace MoneyStats.DAL.Models
 
         [NotMapped]
         public bool IsDeleted => this.State == 0;
+
+        [NotMapped]
+        public string BaseFancyName => $"{Id},{State}";
     }
 }

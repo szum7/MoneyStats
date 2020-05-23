@@ -21,20 +21,25 @@ namespace MoneyStats.DAL.Models
 
     public partial class RuleGroup
     {
-
         public RuleGroup()
         {
             this.RulesetRuleGroupConn = new List<RulesetRuleGroupConn>();
             this.TransactionCreatedWithRule = new List<TransactionCreatedWithRule>();
             this.AndRuleGroups = new List<AndRuleGroup>();
             this.RuleActions = new List<RuleAction>();
-
         }
 
         public override string ToString()
         {
-            // TODO write something like: (a & b) || c
-            return base.ToString();
+            if (this.AndRuleGroups.Count == 0 || this.AndRuleGroups[0].Rules.Count == 0 || this.RuleActions.Count == 0)
+                return "";
+
+            var ruleActions = string.Join(", ", RuleActions);
+
+            if (this.AndRuleGroups.Count == 1)
+                return $"{this.AndRuleGroups[0]} => {ruleActions}";
+
+            return $"({string.Join(") || (", AndRuleGroups)}) => {ruleActions}";
         }
     }
 }

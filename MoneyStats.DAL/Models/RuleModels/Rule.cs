@@ -20,5 +20,28 @@ namespace MoneyStats.DAL.Models
 
         public virtual RuleType RuleType { get; set; }
         public virtual AndRuleGroup AndRuleGroup { get; set; }
+
+        public override string ToString()
+        {
+            switch (RuleTypeId)
+            {
+                case (int)RuleTypeEnum.TrueRule:
+                    return "true";
+                case (int)RuleTypeEnum.IsEqualTo:
+                    return $"{Property} == '{Value}'";
+                case (int)RuleTypeEnum.IsGreaterThan:
+                    return $"{Property} > {Value}";
+                case (int)RuleTypeEnum.IsLesserThan:
+                    return $"{Property} < {Value}";
+                case (int)RuleTypeEnum.IsPropertyNull:
+                    return $"{Property} is Null";
+                case (int)RuleTypeEnum.IsPropertyNotNull:
+                    return $"{Property} is not Null";
+                case (int)RuleTypeEnum.ContainsValueOfProperty:
+                    return $"{Property}.Contains({Value})";
+                default:
+                    return base.ToString();
+            }
+        }
     }
 }

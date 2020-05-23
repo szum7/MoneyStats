@@ -59,6 +59,9 @@ namespace MoneyStats.DAL.Models
         [NotMapped]
         public bool IsGroup => !BankRowId.HasValue;
 
+        [NotMapped]
+        public string FancyName => $"[{this.BaseFancyName}][{Title}][{Description}][{Date?.ToString("yyyy-MM-dd")}][{Sum}][{IsCustom}][{BankRowId}]";
+
         public Transaction()
         {
             this.Tags = new List<Tag>();

@@ -35,5 +35,22 @@ namespace MoneyStats.DAL.Models
         public virtual RuleActionType RuleActionType { get; set; }
 
         public virtual Tag Tag { get; set; }
+
+        public override string ToString()
+        {
+            switch (RuleActionTypeId)
+            {
+                case (int)RuleActionTypeEnum.Omit:
+                    return $"Omit";
+                case (int)RuleActionTypeEnum.AddTag:
+                    return (Tag == null) ? $"AddTag({TagId})" : $"AddTag({Tag.Id}, '{Tag.Title}')";
+                case (int)RuleActionTypeEnum.SetValueOfProperty:
+                    return $"{Property} = '{Value}'";
+                case (int)RuleActionTypeEnum.AggregateToMonthlyTransaction:
+                    return $"GroupToMonth";
+                default:
+                    return base.ToString();
+            }
+        }
     }
 }

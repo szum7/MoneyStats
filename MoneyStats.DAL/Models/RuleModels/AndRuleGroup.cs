@@ -23,5 +23,13 @@ namespace MoneyStats.DAL.Models
         {
             this.Rules = new List<Rule>();
         }
+
+        public override string ToString()
+        {
+            if (Rules.Count == 0)
+                return base.ToString();
+
+            return string.Join(" && ", Rules);
+        }
     }
 }
