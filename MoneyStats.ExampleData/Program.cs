@@ -15,8 +15,8 @@ namespace MoneyStats.ExampleData
 
 #if false
             global.ReadRowCounts(); // READ
-            global.DropAllTables(); // DROP
             global.ReadRowCounts(); // READ
+            global.DropAllTables(); // DROP
 #endif
 
             Console.WriteLine("Program ended.");

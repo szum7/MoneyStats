@@ -29,7 +29,7 @@ namespace MoneyStats.Tests
     #region Methods
     public class TestHelper
     {
-        public static bool Compare(string op, IComparable left, IComparable right)
+        public static bool Compare(IComparable left, string op, IComparable right)
         {
             switch (op)
             {
@@ -97,7 +97,7 @@ namespace MoneyStats.Tests
 #endif
 
             var bankRows = new BankRowRepository().GetOnIds(data.BankRowIds);
-            var ruleGroups = new RuleGroupRepository().GetOnIds(data.RuleIds);
+            var ruleGroups = new RuleGroupRepository().GetOnIdsWithEntitiesInDepth(data.RuleIds);
 
             // Act
             repo.CreateTransactionUsingRulesFlattened(ruleGroups, bankRows);
@@ -120,6 +120,30 @@ namespace MoneyStats.Tests
         }
 
         [DataTestMethod]
+        [DataRow("60", "<=", 50, false)]
+        [DataRow("50", "<=", 50, true)]
+        [DataRow("40", "<=", 50, true)]
+        [DataRow("-2", "<=", 50, true)]
+        [DataRow("0", "<=", 50, true)]
+        [DataRow("0", "==", 50, false)]
+        [DataRow("0", "!=", 50, true)]
+        [DataRow("50", ">", 50, false)]
+        [DataRow("51", ">", 50, true)]
+        public void TestCompareWithCast(string ruleValue, string operand, int transactionValue, bool result)
+        {
+            var convertedValue = (IComparable)Convert.ChangeType(ruleValue, transactionValue.GetType());
+
+            var resultToTest = TestHelper.Compare(convertedValue, operand, transactionValue);
+            Assert.AreEqual(resultToTest, result);
+
+            if (operand != "==" && operand != "!=" && !convertedValue.Equals(transactionValue))
+            {
+                var resultToTestNegated = TestHelper.Compare(transactionValue, operand, convertedValue);
+                Assert.AreEqual(resultToTestNegated, !result);
+            }
+        }
+
+        [DataTestMethod]
         [DataRow(60, "<=", 50, false)]
         [DataRow(50, "<=", 50, true)]
         [DataRow(40, "<=", 50, true)]
@@ -134,12 +158,12 @@ namespace MoneyStats.Tests
             // operand;Property;50;<=;
             // where Property <= 50
 
-            var resultToTest = TestHelper.Compare(operand, ruleValue, transactionValue);
+            var resultToTest = TestHelper.Compare(ruleValue, operand, transactionValue);
             Assert.AreEqual(resultToTest, result);
 
             if (operand != "==" && operand != "!=" && ruleValue != transactionValue)
             {
-                var resultToTestNegated = TestHelper.Compare(operand, transactionValue, ruleValue);
+                var resultToTestNegated = TestHelper.Compare(transactionValue, operand, ruleValue);
                 Assert.AreEqual(resultToTestNegated, !result);
             }
         }

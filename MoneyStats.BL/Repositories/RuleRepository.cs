@@ -9,7 +9,15 @@ namespace MoneyStats.BL.Repositories
 {
     public class RuleRepository : EntityBaseRepository<Rule>, IRuleRepository
     {
-        public static bool Compare(string op, IComparable left, IComparable right)
+        /// <summary>
+        /// left op right => true/false
+        /// 1 < 2 => true
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="op"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool Compare(IComparable left, string op, IComparable right)
         {
             switch (op)
             {
@@ -32,8 +40,8 @@ namespace MoneyStats.BL.Repositories
         /// z. save TransactionTagConns
         /// ...
         /// </summary>
-        /// <param name="ruleGroups"></param>
-        /// <param name="transactions"></param>
+        /// <param name="ruleGroups">Needs to have connected entities in-depth loaded! (RuleActions, AndRuleGroups, AndRuleGroups.Rules, etc.)</param>
+        /// <param name="bankRows"></param>
         [Obsolete("Spaghetti code for easier debugging. Do not use it!", false)]
         public void CreateTransactionUsingRulesFlattened(List<RuleGroup> ruleGroups, List<BankRow> bankRows)
         {
@@ -88,49 +96,65 @@ namespace MoneyStats.BL.Repositories
                 {
                     // Check if RuleGroup validates
                     var i = 0;
-                    var oneOrRuleValidates = false;
-                    while (i < ruleGroup.AndRuleGroups.Count && !oneOrRuleValidates)
+                    var oneOrRulesValidate = false;
+                    while (i < ruleGroup.AndRuleGroups.Count && !oneOrRulesValidate)
                     {                        
                         var andRule = ruleGroup.AndRuleGroups[i];  // = (a & b & c)
-                        var allAndRuleValidates = true;
+                        var allAndRulesValidate = true;
                         var j = 0;
-                        while (j < andRule.Rules.Count && allAndRuleValidates)
+                        while (j < andRule.Rules.Count && allAndRulesValidate)
                         {
                             var rule = andRule.Rules[j]; // = a
-                            
+                            var rowValue = typeof(BankRow).GetProperty(rule.Property).GetValue(br);
+
                             if (rule.RuleTypeId == (int)RuleTypeEnum.TrueRule)
                             {
                                 // Do nothing
                             }
+                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsEqualTo)
+                            {
+                                allAndRulesValidate = (rowValue.ToString() == rule.Value);
+                            }
                             else if (rule.RuleTypeId == (int)RuleTypeEnum.IsGreaterThan)
                             {
-                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(br);
-                                allAndRuleValidates = !RuleRepository.Compare("<", rule.Value as IComparable, value);
+                                var convertedValue = (IComparable)Convert.ChangeType(rule.Value, rowValue.GetType());
+                                allAndRulesValidate = RuleRepository.Compare(convertedValue, "<", (IComparable)rowValue);
                             }
                             else if (rule.RuleTypeId == (int)RuleTypeEnum.IsLesserThan)
                             {
-                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(br);
-                                allAndRuleValidates = !RuleRepository.Compare("<", rule.Value as IComparable, value);
+                                var convertedValue = (IComparable)Convert.ChangeType(rule.Value, rowValue.GetType());
+                                allAndRulesValidate = RuleRepository.Compare(convertedValue, ">", (IComparable)rowValue);
                             }
-                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsEqualTo)
+                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsPropertyNull)
                             {
-                                var value = (IComparable)typeof(BankRow).GetProperty(rule.Property).GetValue(br);
-                                allAndRuleValidates = (value == (IComparable)rule.Value);
+                                allAndRulesValidate = (rowValue == null);
+                            }
+                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsPropertyNotNull)
+                            {
+                                allAndRulesValidate = (rowValue != null);
+                            }
+                            else if (rule.RuleTypeId == (int)RuleTypeEnum.ContainsValueOfProperty)
+                            {
+                                allAndRulesValidate = rowValue.ToString().Contains(rule.Value);
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Unexpected RuleTypeId: {rule.RuleTypeId}");
                             }
 
                             j++;
                         }
 
-                        if (allAndRuleValidates)
+                        if (allAndRulesValidate)
                         {
-                            oneOrRuleValidates = true;
+                            oneOrRulesValidate = true;
                         }
 
                         i++;
                     }
 
                     // Apply RuleAction if RuleGroup validated
-                    if (oneOrRuleValidates)
+                    if (oneOrRulesValidate)
                     {
                         Transaction ruleTr = tr;
 

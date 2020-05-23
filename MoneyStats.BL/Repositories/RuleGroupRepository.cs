@@ -16,9 +16,9 @@ namespace MoneyStats.BL.Repositories
                 var list = new List<RuleGroup>();
 
                 list = context.RuleGroups
-                    .Where(rule => rule.IsActive)
-                    .Include(x => x.AndRuleGroups)
-                    .Include(x => x.RuleActions)                    
+                    .Where(rule => rule.State == 1)
+                    .Include(x => x.RuleActions).ThenInclude(x => x.RuleActionType)
+                    .Include(x => x.AndRuleGroups).ThenInclude(x => x.Rules).ThenInclude(x => x.RuleType)
                     .ToList();
 
                 // TODO + test
@@ -27,13 +27,16 @@ namespace MoneyStats.BL.Repositories
             }
         }
 
-        public List<RuleGroup> GetOnIds(List<int> ids)
+        public List<RuleGroup> GetOnIdsWithEntitiesInDepth(List<int> ids)
         {
             using (var context = new MoneyStatsContext())
             {
-                return (from d in context.RuleGroups
-                        where ids.Any(x => x == d.Id)
-                        select d).ToList();
+                return context.RuleGroups
+                    .Where(x => ids.Any(y => y == x.Id) && x.State == 1)
+                    .Include(x => x.RuleActions).ThenInclude(x => x.RuleActionType)
+                    .Include(x => x.RuleActions).ThenInclude(x => x.Tag)
+                    .Include(x => x.AndRuleGroups).ThenInclude(x => x.Rules).ThenInclude(x => x.RuleType)
+                    .ToList();
             }
         }
     }
