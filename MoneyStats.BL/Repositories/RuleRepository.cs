@@ -113,7 +113,7 @@ namespace MoneyStats.BL.Repositories
                             }
                             else if (rule.RuleTypeId == (int)RuleTypeEnum.IsEqualTo)
                             {
-                                allAndRulesValidate = (rowValue.ToString() == rule.Value);
+                                allAndRulesValidate = (rowValue?.ToString() == rule.Value);
                             }
                             else if (rule.RuleTypeId == (int)RuleTypeEnum.IsGreaterThan)
                             {
@@ -153,7 +153,7 @@ namespace MoneyStats.BL.Repositories
                         i++;
                     }
 
-                    // Apply RuleAction if RuleGroup validated
+                    // Apply RuleAction if RuleGroup is valid
                     if (oneOrRulesValidate)
                     {
                         Transaction ruleTr = tr;
