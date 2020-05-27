@@ -20,3 +20,5 @@ https://stackoverflow.com/questions/7616177/convert-to-a-type-on-the-fly-in-c-ne
 https://stackoverflow.com/questions/21533506/find-a-specified-generic-dbset-in-a-dbcontext-dynamically-when-i-have-an-entity
 -- Multiple generic types in one list (generic type still has to be cast)
 https://stackoverflow.com/questions/353126/c-sharp-multiple-generic-types-in-one-list
+-- Entity framework tries to add ID explicitly when adding entry
+https://stackoverflow.com/questions/43355913/entity-framework-tries-to-add-id-explicitly-when-adding-entry

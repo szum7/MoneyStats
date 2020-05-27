@@ -7,6 +7,13 @@ using MoneyStats.BL.Interfaces;
 
 namespace MoneyStats.BL.Repositories
 {
+    public class RuleEvaluationOutput
+    {
+        public List<Transaction> Transactions { get; set; }
+        public List<TransactionCreatedWithRule> TransactionCreatedWithRules { get; set; }
+        public List<TransactionTagConn> TransactionTagConns { get; set; }
+    }
+
     public class RuleRepository : EntityBaseRepository<Rule>, IRuleRepository
     {
         /// <summary>
@@ -43,7 +50,7 @@ namespace MoneyStats.BL.Repositories
         /// <param name="ruleGroups">Needs to have connected entities in-depth loaded! (RuleActions, AndRuleGroups, AndRuleGroups.Rules, etc.)</param>
         /// <param name="bankRows"></param>
         [Obsolete("Spaghetti code for easier debugging. Do not use it!", false)]
-        public void CreateTransactionUsingRulesFlattened(List<RuleGroup> ruleGroups, List<BankRow> bankRows)
+        public RuleEvaluationOutput CreateTransactionUsingRulesFlattened(List<RuleGroup> ruleGroups, List<BankRow> bankRows)
         {
             var transactions = new List<Transaction>();
             var aggregatedTransactions = new Dictionary<DateTime, Transaction>();
@@ -227,19 +234,39 @@ namespace MoneyStats.BL.Repositories
                         transactionCreatedWithRules.Add(new TransactionCreatedWithRule()
                         {
                             RuleGroupId = ruleGroup.Id,
-                            Transaction = ruleTr // no transaction.Id yet.
+                            Transaction = ruleTr, // no transaction.Id yet.
+                            CreateDate = DateTime.Now,
+                            State = 1
                         });
                     }
                 }
             }
 
             // save transactions
+            new TransactionRepository().InsertRange(transactions);
+
+            foreach (var item in transactionCreatedWithRules)
+            {
+                item.TransactionId = item.Transaction.Id;
+                item.Transaction = null; // TODO investigate why this is needed
+            }
 
             // save transactionCreatedWithRule
+            new TransactionCreatedWithRuleRepository().InsertRange(transactionCreatedWithRules);
 
-            // update bankrows (TransactionGroupId)
+            // update bankrows (GroupedTransactionId)
+            new BankRowRepository().UpdateGroupedTransactionIds(bankRows);
 
             // save transactionTagConns
+            new TransactionRepository().SaveTransactionTagConns(transactions);
+
+            // TODO this is not the final version, saves could be inside the method or results passed in another way
+            return new RuleEvaluationOutput()
+            {
+                Transactions = transactions,
+                TransactionCreatedWithRules = transactionCreatedWithRules,
+                TransactionTagConns = transactionTagConns
+            };
         }
     }
 }

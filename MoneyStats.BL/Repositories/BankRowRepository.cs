@@ -33,5 +33,20 @@ namespace MoneyStats.BL.Repositories
                         select d).ToList();
             }
         }
+
+        public void UpdateGroupedTransactionIds(List<BankRow> rows)
+        {
+            var list = rows.Where(x => x.GroupedTransaction != null).ToList();
+
+            if (list.Count == 0)
+                return;
+
+            using (var context = new MoneyStatsContext())
+            {
+                // TODO test if Id has value
+                list.ForEach(x => x.GroupedTransactionId = x.GroupedTransaction.Id);
+                context.SaveChanges();
+            }
+        }
     }
 }
