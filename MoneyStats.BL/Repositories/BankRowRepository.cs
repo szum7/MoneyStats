@@ -43,7 +43,6 @@ namespace MoneyStats.BL.Repositories
 
             using (var context = new MoneyStatsContext())
             {
-                // TODO test if Id has value
                 list.ForEach(x => x.GroupedTransactionId = x.GroupedTransaction.Id);
                 context.SaveChanges();
             }

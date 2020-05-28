@@ -178,34 +178,62 @@ namespace MoneyStats.BL.Repositories
                         // We need to evaluate the AggregateToMonthlyTransaction 
                         // type FIRST and use the aggr.ed Transaction to 
                         // apply the rest of the actions to.
-                        foreach (RuleAction action in ruleGroup.RuleActions)
+                        var aggregatingAction = ruleGroup.RuleActions
+                            .Where(x => x.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToMonthlyTransaction)
+                            .ToList();
+                        if (aggregatingAction.Count > 1)
                         {
-                            if (action.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToMonthlyTransaction)
+                            throw new Exception("You can not aggregate a BankRow to multiple transactions, that would multiply it's sum!");
+                        } 
+                        else if (aggregatingAction.Count == 1)
+                        {
+                            var month = new DateTime(br.AccountingDate.Value.Year, br.AccountingDate.Value.Month, 1);
+                            Transaction monthlyTr = null;
+                            if (!aggregatedTransactions.TryGetValue(month, out monthlyTr)) // New monthly aggregated transaction
                             {
-                                var month = new DateTime(br.AccountingDate.Value.Year, br.AccountingDate.Value.Month, 1);
-                                Transaction monthlyTr = null;
-                                if (!aggregatedTransactions.TryGetValue(month, out monthlyTr))
+                                monthlyTr = new Transaction()
                                 {
-                                    monthlyTr = new Transaction()
-                                    {
-                                        Date = month.AddMonths(1).AddDays(-1),
-                                        Sum = 0
-                                    };
+                                    Date = month.AddMonths(1).AddDays(-1),
+                                    Sum = 0,
+                                    CreateDate = DateTime.Now,
+                                    State = 1
+                                };
 
-                                    aggregatedTransactions.Add(month, monthlyTr); // have a separate list for better performance
-                                    transactions.Add(monthlyTr);
-                                }
-                                monthlyTr.Sum += tr.Sum.Value;
+                                aggregatedTransactions.Add(month, monthlyTr); // have a separate list for better performance
+                                transactions.Add(monthlyTr);
 
-                                // Remove the BankRow created Transaction
-                                transactions.Remove(tr);
-                                // Bring out the aggregated Transaction
-                                ruleTr = monthlyTr;
-
-                                // TODO!!! trg.Id must be saved but there are no tr.Ids yet. May need to run this whole AggregateToMonthlyTransaction type BEFORE other individual transaction saves. 
-                                // It would be better though if this reference stayed the same and could modify the BankRows after the aggregated Transactions were saved.
-                                br.GroupedTransaction = monthlyTr; // no transaction.Id yet
+                                // Save the ruleGroup as reference
+                                transactionCreatedWithRules.Add(new TransactionCreatedWithRule()
+                                {
+                                    RuleGroupId = ruleGroup.Id,
+                                    Transaction = monthlyTr, // no transaction.Id yet.
+                                    CreateDate = DateTime.Now,
+                                    State = 1
+                                });
                             }
+                            monthlyTr.Sum += tr.Sum.Value;
+
+                            // Remove the BankRow created Transaction
+                            transactions.Remove(tr);
+                            // Bring out the aggregated Transaction
+                            ruleTr = monthlyTr;
+
+                            // TODO!!! trg.Id must be saved but there are no tr.Ids yet. May need to run this whole AggregateToMonthlyTransaction type BEFORE other individual transaction saves. 
+                            // It would be better though if this reference stayed the same and could modify the BankRows after the aggregated Transactions were saved.
+                            br.GroupedTransaction = monthlyTr; // no transaction.Id yet
+
+                            // DoNotAddTransactionCreatedWithRules();
+                        }
+                        else
+                        {
+                            // Save the ruleGroup as reference
+                            transactionCreatedWithRules.Add(new TransactionCreatedWithRule()
+                            {
+                                RuleGroupId = ruleGroup.Id,
+                                Transaction = ruleTr, // no transaction.Id yet.
+                                CreateDate = DateTime.Now,
+                                State = 1
+                            });
                         }
 
                         foreach (RuleAction action in ruleGroup.RuleActions)
@@ -229,15 +257,6 @@ namespace MoneyStats.BL.Repositories
                                     throw new Exception($"RuleActionTypeId '{action.RuleActionTypeId}' is not recognized!");
                             }
                         }
-
-                        // Save the ruleGroup as reference
-                        transactionCreatedWithRules.Add(new TransactionCreatedWithRule()
-                        {
-                            RuleGroupId = ruleGroup.Id,
-                            Transaction = ruleTr, // no transaction.Id yet.
-                            CreateDate = DateTime.Now,
-                            State = 1
-                        });
                     }
                 }
             }
