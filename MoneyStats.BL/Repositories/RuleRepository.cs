@@ -116,7 +116,7 @@ namespace MoneyStats.BL.Repositories
 
                             if (rule.RuleTypeId == (int)RuleTypeEnum.TrueRule)
                             {
-                                // Do nothing
+                                allAndRulesValidate = true;
                             }
                             else if (rule.RuleTypeId == (int)RuleTypeEnum.IsEqualTo)
                             {
@@ -277,7 +277,7 @@ namespace MoneyStats.BL.Repositories
             new BankRowRepository().UpdateGroupedTransactionIds(bankRows);
 
             // save transactionTagConns
-            new TransactionRepository().SaveTransactionTagConns(transactions);
+            new TransactionTagConnRepository().SaveTransactionTagConns(transactions);
 
             // TODO this is not the final version, saves could be inside the method or results passed in another way
             return new RuleEvaluationOutput()

@@ -30,5 +30,11 @@ namespace MoneyStats.DAL.Models
 
         [NotMapped]
         public string BaseFancyName => $"{Id},{State}";
+
+        public void SetNew()
+        {
+            this.CreateDate = DateTime.Now;
+            this.State = 1;
+        }
     }
 }
