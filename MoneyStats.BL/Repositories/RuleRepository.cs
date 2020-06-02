@@ -92,10 +92,8 @@ namespace MoneyStats.BL.Repositories
                 {
                     BankRowId = br.Id,
                     Date = br.AccountingDate,
-                    Sum = br.Sum,
-                    CreateDate = DateTime.Now,
-                    State = 1
-                };
+                    Sum = br.Sum
+                }.SetNew();
                 transactions.Add(tr);
                 #endregion
 
@@ -194,10 +192,8 @@ namespace MoneyStats.BL.Repositories
                                 monthlyTr = new Transaction()
                                 {
                                     Date = month.AddMonths(1).AddDays(-1),
-                                    Sum = 0,
-                                    CreateDate = DateTime.Now,
-                                    State = 1
-                                };
+                                    Sum = 0
+                                }.SetNew();
 
                                 aggregatedTransactions.Add(month, monthlyTr); // have a separate list for better performance
                                 transactions.Add(monthlyTr);
@@ -206,10 +202,8 @@ namespace MoneyStats.BL.Repositories
                                 transactionCreatedWithRules.Add(new TransactionCreatedWithRule()
                                 {
                                     RuleGroupId = ruleGroup.Id,
-                                    Transaction = monthlyTr, // no transaction.Id yet.
-                                    CreateDate = DateTime.Now,
-                                    State = 1
-                                });
+                                    Transaction = monthlyTr // no transaction.Id yet.
+                                }.SetNew());
                             }
                             monthlyTr.Sum += tr.Sum.Value;
 
@@ -230,10 +224,8 @@ namespace MoneyStats.BL.Repositories
                             transactionCreatedWithRules.Add(new TransactionCreatedWithRule()
                             {
                                 RuleGroupId = ruleGroup.Id,
-                                Transaction = ruleTr, // no transaction.Id yet.
-                                CreateDate = DateTime.Now,
-                                State = 1
-                            });
+                                Transaction = ruleTr // no transaction.Id yet.
+                            }.SetNew());
                         }
 
                         foreach (RuleAction action in ruleGroup.RuleActions)

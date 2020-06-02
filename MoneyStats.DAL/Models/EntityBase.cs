@@ -30,11 +30,15 @@ namespace MoneyStats.DAL.Models
 
         [NotMapped]
         public string BaseFancyName => $"{Id},{State}";
+    }
 
-        public void SetNew()
+    public static class EntityBaseExtension
+    {
+        public static Type SetNew<Type>(this Type target) where Type : EntityBase
         {
-            this.CreateDate = DateTime.Now;
-            this.State = 1;
+            target.CreateDate = DateTime.Now;
+            target.State = 1;
+            return target;
         }
     }
 }

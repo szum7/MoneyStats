@@ -61,8 +61,7 @@ namespace MoneyStats.BL.Modules
                 BankRowId = bankRow.Id,
                 Date = bankRow.AccountingDate,
                 Sum = bankRow.Sum
-            };
-            item.SetNew();
+            }.SetNew();
             return item;
         }
 
@@ -136,8 +135,7 @@ namespace MoneyStats.BL.Modules
             {
                 RuleGroupId = ruleGroup.Id,
                 Transaction = transaction // no transaction.Id yet.
-            };
-            item.SetNew();
+            }.SetNew();
             return item;
         }
 
@@ -187,8 +185,7 @@ namespace MoneyStats.BL.Modules
                                 {
                                     Date = month.AddMonths(1).AddDays(-1),
                                     Sum = 0
-                                };
-                                monthlyTr.SetNew();
+                                }.SetNew();
 
                                 aggregatedTransactions.Add(month, monthlyTr); // have a separate list for better performance
                                 Transactions.Add(monthlyTr);
