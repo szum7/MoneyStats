@@ -21,12 +21,6 @@ namespace MoneyStats.DAL.Models
     public partial class BankRow : EntityBase
     {
         /// <summary>
-        /// Not yet in use.
-        /// </summary>
-        [NotMapped]
-        public BankType BankType { get; set; }
-
-        /// <summary>
         /// The workflow is:
         /// 1. read bank exported excel transactions
         /// 2. save bank rows
