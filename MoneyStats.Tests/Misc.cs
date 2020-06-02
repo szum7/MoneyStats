@@ -83,8 +83,11 @@ namespace MoneyStats.Tests
     [TestClass]
     public class Misc
     {
+        /// <summary>
+        /// Run with debug then check manually in db if related transactions, tr-tag-conns, etc. got created.
+        /// </summary>
         [TestMethod]
-        public void TestRuleEvaqluation()
+        public void TestRuleEvaluation()
         {
             // Arrange
             var repo = new RuleRepository();
