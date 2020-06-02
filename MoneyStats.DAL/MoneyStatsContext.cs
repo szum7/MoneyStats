@@ -14,10 +14,8 @@ namespace MoneyStats.DAL
         public DbSet<Rule> Rules { get; set; }
         public DbSet<TransactionCreatedWithRule> TransactionCreatedWithRules { get; set; }
         public DbSet<TransactionTagConn> TransactionTagConns { get; set; }
-        public DbSet<RuleType> RuleTypes { get; set; }
         public DbSet<Ruleset> Rulesets { get; set; }
         public DbSet<RulesetRuleGroupConn> RulesetRuleGroupConns { get; set; }
-        public DbSet<RuleActionType> RuleActionTypes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

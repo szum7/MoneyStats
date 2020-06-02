@@ -17,8 +17,7 @@ namespace MoneyStats.BL.Repositories
 
                 list = context.RuleGroups
                     .Where(rule => rule.State == 1)
-                    .Include(x => x.RuleActions).ThenInclude(x => x.RuleActionType)
-                    .Include(x => x.AndRuleGroups).ThenInclude(x => x.Rules).ThenInclude(x => x.RuleType)
+                    .Include(x => x.AndRuleGroups).ThenInclude(x => x.Rules)
                     .ToList();
 
                 // TODO + test
@@ -33,9 +32,8 @@ namespace MoneyStats.BL.Repositories
             {
                 return context.RuleGroups
                     .Where(x => ids.Any(y => y == x.Id) && x.State == 1)
-                    .Include(x => x.RuleActions).ThenInclude(x => x.RuleActionType)
                     .Include(x => x.RuleActions).ThenInclude(x => x.Tag)
-                    .Include(x => x.AndRuleGroups).ThenInclude(x => x.Rules).ThenInclude(x => x.RuleType)
+                    .Include(x => x.AndRuleGroups).ThenInclude(x => x.Rules)
                     .ToList();
             }
         }

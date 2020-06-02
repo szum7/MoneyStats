@@ -23,31 +23,6 @@ namespace MoneyStats.ExampleData
                     new Tag() { Id = 2, Description = "", Title = "Kamat", State = 1 },
                 }
             },
-            // RuleType
-            {
-                nameof(RuleType),
-                new List<RuleType>
-                {
-                    new RuleType() { Id = 1, Title = "TrueRule", State = 1 },
-                    new RuleType() { Id = 2, Title = "IsEqualTo", State = 1 },
-                    new RuleType() { Id = 3, Title = "IsGreaterThan", State = 1 },
-                    new RuleType() { Id = 4, Title = "IsLesserThan", State = 1 },
-                    new RuleType() { Id = 5, Title = "IsPropertyNull", State = 1 },
-                    new RuleType() { Id = 6, Title = "IsPropertyNotNull", State = 1 },
-                    new RuleType() { Id = 7, Title = "ContainsValueOfProperty", State = 1 },
-                }
-            },
-            // RuleActionType
-            {
-                nameof(RuleActionType),
-                new List<RuleActionType>
-                {
-                    new RuleActionType() { Id = 1, Title = "Omit", State = 1 },
-                    new RuleActionType() { Id = 2, Title = "AddTag", State = 1 },
-                    new RuleActionType() { Id = 3, Title = "SetValueOfProperty", State = 1 },
-                    new RuleActionType() { Id = 4, Title = "AggregateToMonthlyTransaction", State = 1 },
-                }
-            },
             // RuleGroup
             {
                 nameof(RuleGroup),
@@ -82,13 +57,13 @@ namespace MoneyStats.ExampleData
                 new List<Rule>
                 {
                     // Rule#1
-                    new Rule() { Id = 1, RuleTypeId = 2, AndRuleGroupId = 1, Property = "Type", Value = "Kamat", State = 1 },
+                    new Rule() { Id = 1, AndRuleGroupId = 1, State = 1, Property = "Type", Value = "Kamat", RuleType = RuleTypeEnum.IsEqualTo },
                     // Rule#2
-                    new Rule() { Id = 2, RuleTypeId = 2, AndRuleGroupId = 2, Property = "PartnerName", Value = "Elemér", State = 1 }, // PartnerName == "Elemér"
-                    new Rule() { Id = 3, RuleTypeId = 4, AndRuleGroupId = 2, Property = "Sum", Value = "2000", State = 1 }, // Sum < 2000
-                    new Rule() { Id = 4, RuleTypeId = 2, AndRuleGroupId = 3, Property = "Currency", Value = "EUR", State = 1 }, // Currency == "EUR"
+                    new Rule() { Id = 2, AndRuleGroupId = 2, State = 1, Property = "PartnerName", Value = "Elemér", RuleType = RuleTypeEnum.IsEqualTo }, // PartnerName == "Elemér"
+                    new Rule() { Id = 3, AndRuleGroupId = 2, State = 1, Property = "Sum", Value = "2000", RuleType = RuleTypeEnum.IsLesserThan }, // Sum < 2000
+                    new Rule() { Id = 4, AndRuleGroupId = 3, State = 1, Property = "Currency", Value = "EUR", RuleType = RuleTypeEnum.IsEqualTo }, // Currency == "EUR"
                     // Rule#3
-                    new Rule() { Id = 5, RuleTypeId = 2, AndRuleGroupId = 4, Property = "Type", Value = "food", State = 1 }, // Type == "food"
+                    new Rule() { Id = 5, AndRuleGroupId = 4, State = 1, Property = "Type", Value = "food", RuleType = RuleTypeEnum.IsEqualTo }, // Type == "food"
                 }
             },
             // RuleAction
@@ -97,12 +72,12 @@ namespace MoneyStats.ExampleData
                 new List<RuleAction>
                 {
                     // Rule#1
-                    new RuleAction() { Id = 1, RuleActionTypeId = 2, RuleGroupId = 1, Property = null, Value = null, TagId = 1, State = 1 },
-                    new RuleAction() { Id = 2, RuleActionTypeId = 2, RuleGroupId = 1, Property = null, Value = null, TagId = 2, State = 1 },
+                    new RuleAction() { Id = 1, RuleGroupId = 1, Property = null, Value = null, TagId = 1, State = 1, RuleActionType = RuleActionTypeEnum.AddTag },
+                    new RuleAction() { Id = 2, RuleGroupId = 1, Property = null, Value = null, TagId = 2, State = 1, RuleActionType = RuleActionTypeEnum.AddTag },
                     // Rule#2
-                    new RuleAction() { Id = 3, RuleActionTypeId = 3, RuleGroupId = 2, Property = "Title", Value = "Elemér < 2000 | EUR", TagId = null, State = 1 },
+                    new RuleAction() { Id = 3, RuleGroupId = 2, Property = "Title", Value = "Elemér < 2000 | EUR", TagId = null, State = 1, RuleActionType = RuleActionTypeEnum.SetValueOfProperty },
                     // Rule#3
-                    new RuleAction() { Id = 4, RuleActionTypeId = 4, RuleGroupId = 3, Property = null, Value = null, TagId = null, State = 1 },
+                    new RuleAction() { Id = 4, RuleGroupId = 3, Property = null, Value = null, TagId = null, State = 1, RuleActionType = RuleActionTypeEnum.AggregateToMonthlyTransaction },
                 }
             },
             // BankRow
@@ -111,30 +86,30 @@ namespace MoneyStats.ExampleData
                 new List<BankRow>
                 {
                     // Circular reference example
-                    new BankRow() { Id = 1, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Circular1", State = 1 },
-                    new BankRow() { Id = 2, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Circular2", State = 1 },
+                    new BankRow() { Id = 1, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Circular1", State = 1 },
+                    new BankRow() { Id = 2, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Circular2", State = 1 },
                     // Grouped example
-                    new BankRow() { Id = 3, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = 3, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Group1", State = 1 },
-                    new BankRow() { Id = 4, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = 3, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Group1", State = 1 },
-                    new BankRow() { Id = 5, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = 3, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Group1", State = 1 },
-                    new BankRow() { Id = 6, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = 4, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Group2", State = 1 },
+                    new BankRow() { Id = 3, IsTransactionCreated = true, GroupedTransactionId = 3, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Group1", State = 1 },
+                    new BankRow() { Id = 4, IsTransactionCreated = true, GroupedTransactionId = 3, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Group1", State = 1 },
+                    new BankRow() { Id = 5, IsTransactionCreated = true, GroupedTransactionId = 3, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Group1", State = 1 },
+                    new BankRow() { Id = 6, IsTransactionCreated = true, GroupedTransactionId = 4, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 0, Currency = null, Message = "Group2", State = 1 },
                     // Rule#1 valid
-                    new BankRow() { Id = 7, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "099960527H402381", Type = "Kamat", Account = "104019457157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = "HU68120527050013209800100008", PartnerName = "Generali Biztosító Zrt.", Sum = -11880, Currency = "HUF", Message = "225534585, rendszeres díj", State = 1 },
-                    new BankRow() { Id = 8, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "440602******4503", Type = "Kamat", Account = "104040657157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = null, PartnerName = "SZENTMIHALYI UT 131.", Sum = -20000, Currency = "HUF", Message = null, State = 1 },
-                    new BankRow() { Id = 9, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "099960527H402381", Type = "Kamat", Account = "104019457157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = null, PartnerName = null, Sum = -90, Currency = "HUF", Message = null, State = 1 },
+                    new BankRow() { Id = 7, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "099960527H402381", Type = "Kamat", Account = "104019457157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = "HU68120527050013209800100008", PartnerName = "Generali Biztosító Zrt.", Sum = -11880, Currency = "HUF", Message = "225534585, rendszeres díj", State = 1 },
+                    new BankRow() { Id = 8, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "440602******4503", Type = "Kamat", Account = "104040657157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = null, PartnerName = "SZENTMIHALYI UT 131.", Sum = -20000, Currency = "HUF", Message = null, State = 1 },
+                    new BankRow() { Id = 9, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(2016, 5, 27), BankTransactionId = "099960527H402381", Type = "Kamat", Account = "104019457157575649481012", AccountName = "SZŐCS ÁRON", PartnerAccount = null, PartnerName = null, Sum = -90, Currency = "HUF", Message = null, State = 1 },
                     // Rule#2 tests (1 validates, 0 does not)
-                    /*1*/ new BankRow() { Id = 10, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = "Elemér", Sum = 100, Currency = null, Message = null, State = 1 },
-                    /*1*/ new BankRow() { Id = 11, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = "Zsolt", Sum = 250000, Currency = "EUR", Message = null, State = 1 },
-                    /*0*/ new BankRow() { Id = 12, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = "Zsolt", Sum = 100, Currency = null, Message = null, State = 1 },
-                    /*1*/ new BankRow() { Id = 13, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = "Elemér", Sum = 200000, Currency = "EUR", Message = null, State = 1 },
-                    /*0*/ new BankRow() { Id = 14, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = "Elemér", Sum = 200000, Currency = null, Message = null, State = 1 },
+                    /*1*/ new BankRow() { Id = 10, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = "Elemér", Sum = 100, Currency = null, Message = null, State = 1 },
+                    /*1*/ new BankRow() { Id = 11, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = "Zsolt", Sum = 250000, Currency = "EUR", Message = null, State = 1 },
+                    /*0*/ new BankRow() { Id = 12, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = "Zsolt", Sum = 100, Currency = null, Message = null, State = 1 },
+                    /*1*/ new BankRow() { Id = 13, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = "Elemér", Sum = 200000, Currency = "EUR", Message = null, State = 1 },
+                    /*0*/ new BankRow() { Id = 14, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = "Elemér", Sum = 200000, Currency = null, Message = null, State = 1 },
                     // Rule#3
-                    new BankRow() { Id = 15, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 21), BankTransactionId = null, Type = "food", Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 100, Currency = null, Message = null, State = 1 },
-                    new BankRow() { Id = 16, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 3, 11), BankTransactionId = null, Type = "food", Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 20, Currency = null, Message = null, State = 1 },
-                    new BankRow() { Id = 17, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 16), BankTransactionId = null, Type = "food", Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 20, Currency = null, Message = null, State = 1 },
-                    new BankRow() { Id = 18, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = "food", Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 3, Currency = null, Message = null, State = 1 },
-                    new BankRow() { Id = 19, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 3, 11), BankTransactionId = null, Type = "food", Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 2, Currency = null, Message = null, State = 1 },
-                    new BankRow() { Id = 20, BankType = BankType.KH, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 9, 20), BankTransactionId = null, Type = "food", Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 111, Currency = null, Message = null, State = 1 },
+                    new BankRow() { Id = 15, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 21), BankTransactionId = null, Type = "food", Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 100, Currency = null, Message = null, State = 1 },
+                    new BankRow() { Id = 16, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 3, 11), BankTransactionId = null, Type = "food", Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 20, Currency = null, Message = null, State = 1 },
+                    new BankRow() { Id = 17, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 16), BankTransactionId = null, Type = "food", Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 20, Currency = null, Message = null, State = 1 },
+                    new BankRow() { Id = 18, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = "food", Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 3, Currency = null, Message = null, State = 1 },
+                    new BankRow() { Id = 19, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 3, 11), BankTransactionId = null, Type = "food", Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 2, Currency = null, Message = null, State = 1 },
+                    new BankRow() { Id = 20, IsTransactionCreated = true, GroupedTransactionId = null, AccountingDate = new DateTime(1999, 9, 20), BankTransactionId = null, Type = "food", Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 111, Currency = null, Message = null, State = 1 },
                 }
             },
             // Transaction

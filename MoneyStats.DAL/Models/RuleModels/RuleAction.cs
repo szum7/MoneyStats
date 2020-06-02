@@ -13,8 +13,7 @@ namespace MoneyStats.DAL.Models
     {
         public string Title { get; set; }
 
-        [ForeignKey("RuleActionType")]
-        public int RuleActionTypeId { get; set; }
+        public RuleActionTypeEnum RuleActionType { get; set; }
 
         public string Property { get; set; }
 
@@ -32,21 +31,20 @@ namespace MoneyStats.DAL.Models
 
         public virtual RuleGroup RuleGroup { get; set; }
 
-        public virtual RuleActionType RuleActionType { get; set; }
-
         public virtual Tag Tag { get; set; }
+
 
         public override string ToString()
         {
-            switch (RuleActionTypeId)
+            switch (RuleActionType)
             {
-                case (int)RuleActionTypeEnum.Omit:
+                case RuleActionTypeEnum.Omit:
                     return $"Omit";
-                case (int)RuleActionTypeEnum.AddTag:
+                case RuleActionTypeEnum.AddTag:
                     return (Tag == null) ? $"AddTag({TagId})" : $"AddTag({Tag.Id}, '{Tag.Title}')";
-                case (int)RuleActionTypeEnum.SetValueOfProperty:
+                case RuleActionTypeEnum.SetValueOfProperty:
                     return $"{Property} = '{Value}'";
-                case (int)RuleActionTypeEnum.AggregateToMonthlyTransaction:
+                case RuleActionTypeEnum.AggregateToMonthlyTransaction:
                     return $"GroupToMonth";
                 default:
                     return base.ToString();

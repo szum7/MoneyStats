@@ -65,7 +65,7 @@ namespace MoneyStats.BL.Repositories
             var sortedArray = new RuleGroup[ruleGroups.Count];
             foreach (var rule in ruleGroups)
             {
-                if (rule.RuleActions.Any(action => action.RuleActionTypeId == (int)RuleActionTypeEnum.Omit))
+                if (rule.RuleActions.Any(action => action.RuleActionType == RuleActionTypeEnum.Omit))
                 {
                     if (rule.RuleActions.Count > 1)
                     {
@@ -114,39 +114,39 @@ namespace MoneyStats.BL.Repositories
                             var rule = andRule.Rules[j]; // = a
                             var rowValue = typeof(BankRow).GetProperty(rule.Property).GetValue(br);
 
-                            if (rule.RuleTypeId == (int)RuleTypeEnum.TrueRule)
+                            if (rule.RuleType == RuleTypeEnum.TrueRule)
                             {
                                 allAndRulesValidate = true;
                             }
-                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsEqualTo)
+                            else if (rule.RuleType == RuleTypeEnum.IsEqualTo)
                             {
                                 allAndRulesValidate = (rowValue?.ToString() == rule.Value);
                             }
-                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsGreaterThan)
+                            else if (rule.RuleType == RuleTypeEnum.IsGreaterThan)
                             {
                                 var convertedValue = (IComparable)Convert.ChangeType(rule.Value, rowValue.GetType());
                                 allAndRulesValidate = RuleRepository.Compare(convertedValue, "<", (IComparable)rowValue);
                             }
-                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsLesserThan)
+                            else if (rule.RuleType == RuleTypeEnum.IsLesserThan)
                             {
                                 var convertedValue = (IComparable)Convert.ChangeType(rule.Value, rowValue.GetType());
                                 allAndRulesValidate = RuleRepository.Compare(convertedValue, ">", (IComparable)rowValue);
                             }
-                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsPropertyNull)
+                            else if (rule.RuleType == RuleTypeEnum.IsPropertyNull)
                             {
                                 allAndRulesValidate = (rowValue == null);
                             }
-                            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsPropertyNotNull)
+                            else if (rule.RuleType == RuleTypeEnum.IsPropertyNotNull)
                             {
                                 allAndRulesValidate = (rowValue != null);
                             }
-                            else if (rule.RuleTypeId == (int)RuleTypeEnum.ContainsValueOfProperty)
+                            else if (rule.RuleType == RuleTypeEnum.ContainsValueOfProperty)
                             {
                                 allAndRulesValidate = rowValue.ToString().Contains(rule.Value);
                             }
                             else
                             {
-                                Console.WriteLine($"Unexpected RuleTypeId: {rule.RuleTypeId}");
+                                Console.WriteLine($"Unexpected RuleTypeId: {rule.RuleType}");
                             }
 
                             j++;
@@ -165,12 +165,12 @@ namespace MoneyStats.BL.Repositories
                     {
                         Transaction ruleTr = tr;
 
-                        if (ruleGroup.RuleActions.Any(rule => rule.RuleActionTypeId == (int)RuleActionTypeEnum.Omit))
+                        if (ruleGroup.RuleActions.Any(rule => rule.RuleActionType == RuleActionTypeEnum.Omit))
                         {
                             transactions.Remove(ruleTr);
                             break;
                         }
-                        if (ruleGroup.RuleActions.Count(rule => rule.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToMonthlyTransaction) > 1)
+                        if (ruleGroup.RuleActions.Count(rule => rule.RuleActionType == RuleActionTypeEnum.AggregateToMonthlyTransaction) > 1)
                         {
                             throw new Exception("You can't have more than one aggregating action applied to a Transaction!");
                         }
@@ -179,7 +179,7 @@ namespace MoneyStats.BL.Repositories
                         // type FIRST and use the aggr.ed Transaction to 
                         // apply the rest of the actions to.
                         var aggregatingAction = ruleGroup.RuleActions
-                            .Where(x => x.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToMonthlyTransaction)
+                            .Where(x => x.RuleActionType == RuleActionTypeEnum.AggregateToMonthlyTransaction)
                             .ToList();
                         if (aggregatingAction.Count > 1)
                         {
@@ -238,23 +238,23 @@ namespace MoneyStats.BL.Repositories
 
                         foreach (RuleAction action in ruleGroup.RuleActions)
                         {
-                            if (action.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToMonthlyTransaction)
+                            if (action.RuleActionType == RuleActionTypeEnum.AggregateToMonthlyTransaction)
                                 continue;
 
-                            switch (action.RuleActionTypeId)
+                            switch (action.RuleActionType)
                             {
-                                case (int)RuleActionTypeEnum.SetValueOfProperty:
+                                case RuleActionTypeEnum.SetValueOfProperty:
 
                                     ruleTr.SetPropertyValueFromString(action.Property, action.Value);
 
                                     break;
-                                case (int)RuleActionTypeEnum.AddTag:
+                                case RuleActionTypeEnum.AddTag:
 
                                     ruleTr.Tags.Add(action.Tag);
 
                                     break;
                                 default:
-                                    throw new Exception($"RuleActionTypeId '{action.RuleActionTypeId}' is not recognized!");
+                                    throw new Exception($"RuleActionTypeId '{action.RuleActionType}' is not recognized!");
                             }
                         }
                     }
