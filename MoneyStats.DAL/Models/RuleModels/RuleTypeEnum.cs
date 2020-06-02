@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace MoneyStats.DAL.Models
+﻿namespace MoneyStats.DAL.Models
 {
     public enum RuleTypeEnum
     {
@@ -11,11 +9,5 @@ namespace MoneyStats.DAL.Models
         IsPropertyNull = 5,
         IsPropertyNotNull = 6,
         ContainsValueOfProperty = 7 // property's value contains a string
-    }
-
-    [Table("RuleType")]
-    public class RuleType : EntityBase
-    {
-        public string Title { get; set; }
     }
 }

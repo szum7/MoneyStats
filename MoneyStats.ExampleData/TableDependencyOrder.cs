@@ -8,12 +8,10 @@ namespace MoneyStats.ExampleData
         public static readonly List<string> List = new List<string>()
         {
             nameof(RuleAction),
-            nameof(RuleActionType),
             nameof(TransactionTagConn),
             nameof(Tag),
             nameof(TransactionCreatedWithRule),
             nameof(Rule),
-            nameof(RuleType),
             nameof(AndRuleGroup),
             nameof(RulesetRuleGroupConn),
             nameof(Ruleset),

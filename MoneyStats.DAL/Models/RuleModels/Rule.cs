@@ -15,29 +15,28 @@ namespace MoneyStats.DAL.Models
     {
         public string Property { get; set; }
         public string Value { get; set; }
-        public int RuleTypeId { get; set; }
+        public RuleTypeEnum RuleType { get; set; }
         public int AndRuleGroupId { get; set; }
 
-        public virtual RuleType RuleType { get; set; }
         public virtual AndRuleGroup AndRuleGroup { get; set; }
 
         public override string ToString()
         {
-            switch (RuleTypeId)
+            switch (RuleType)
             {
-                case (int)RuleTypeEnum.TrueRule:
+                case RuleTypeEnum.TrueRule:
                     return "true";
-                case (int)RuleTypeEnum.IsEqualTo:
+                case RuleTypeEnum.IsEqualTo:
                     return $"{Property} == '{Value}'";
-                case (int)RuleTypeEnum.IsGreaterThan:
+                case RuleTypeEnum.IsGreaterThan:
                     return $"{Property} > {Value}";
-                case (int)RuleTypeEnum.IsLesserThan:
+                case RuleTypeEnum.IsLesserThan:
                     return $"{Property} < {Value}";
-                case (int)RuleTypeEnum.IsPropertyNull:
+                case RuleTypeEnum.IsPropertyNull:
                     return $"{Property} is Null";
-                case (int)RuleTypeEnum.IsPropertyNotNull:
+                case RuleTypeEnum.IsPropertyNotNull:
                     return $"{Property} is not Null";
-                case (int)RuleTypeEnum.ContainsValueOfProperty:
+                case RuleTypeEnum.ContainsValueOfProperty:
                     return $"{Property}.Contains({Value})";
                 default:
                     return base.ToString();

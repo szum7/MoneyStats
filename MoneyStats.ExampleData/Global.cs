@@ -20,8 +20,6 @@ namespace MoneyStats.ExampleData
         public void ReadRowCounts()
         {
             this.PrintCount(new TagRepository());
-            this.PrintCount(new RuleTypeRepository());
-            this.PrintCount(new RuleActionTypeRepository());
             this.PrintCount(new RuleGroupRepository());
             this.PrintCount(new AndRuleGroupRepository());
             this.PrintCount(new RuleRepository());
@@ -41,8 +39,6 @@ namespace MoneyStats.ExampleData
             using (var db = new MoneyStatsContext())
             {
                 this.AttachInsert(new TagRepository(), db);
-                this.AttachInsert(new RuleTypeRepository(), db);
-                this.AttachInsert(new RuleActionTypeRepository(), db);
                 this.AttachInsert(new RuleGroupRepository(), db);
                 this.AttachInsert(new AndRuleGroupRepository(), db);
                 this.AttachInsert(new RuleRepository(), db);

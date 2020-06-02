@@ -35,7 +35,7 @@ namespace MoneyStats.BL.Modules
             var sortedArray = new RuleGroup[ruleGroups.Count];
             foreach (var rule in ruleGroups)
             {
-                if (rule.RuleActions.Any(action => action.RuleActionTypeId == (int)RuleActionTypeEnum.Omit))
+                if (rule.RuleActions.Any(action => action.RuleActionType == RuleActionTypeEnum.Omit))
                 {
                     if (rule.RuleActions.Count > 1)
                     {
@@ -68,37 +68,37 @@ namespace MoneyStats.BL.Modules
 
         bool IsRuleTrue(Rule rule, object rowValue)
         {
-            if (rule.RuleTypeId == (int)RuleTypeEnum.TrueRule)
+            if (rule.RuleType == RuleTypeEnum.TrueRule)
             {
                 return true;
             }
-            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsEqualTo)
+            else if (rule.RuleType == RuleTypeEnum.IsEqualTo)
             {
                 return (rowValue?.ToString() == rule.Value);
             }
-            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsGreaterThan)
+            else if (rule.RuleType == RuleTypeEnum.IsGreaterThan)
             {
                 var convertedValue = (IComparable)Convert.ChangeType(rule.Value, rowValue.GetType());
                 return RuleRepository.Compare(convertedValue, "<", (IComparable)rowValue);
             }
-            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsLesserThan)
+            else if (rule.RuleType == RuleTypeEnum.IsLesserThan)
             {
                 var convertedValue = (IComparable)Convert.ChangeType(rule.Value, rowValue.GetType());
                 return RuleRepository.Compare(convertedValue, ">", (IComparable)rowValue);
             }
-            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsPropertyNull)
+            else if (rule.RuleType == RuleTypeEnum.IsPropertyNull)
             {
                 return (rowValue == null);
             }
-            else if (rule.RuleTypeId == (int)RuleTypeEnum.IsPropertyNotNull)
+            else if (rule.RuleType == RuleTypeEnum.IsPropertyNotNull)
             {
                 return (rowValue != null);
             }
-            else if (rule.RuleTypeId == (int)RuleTypeEnum.ContainsValueOfProperty)
+            else if (rule.RuleType == RuleTypeEnum.ContainsValueOfProperty)
             {
                 return rowValue.ToString().Contains(rule.Value);
             }
-            throw new Exception($"Unexpected RuleTypeId: {rule.RuleTypeId}");
+            throw new Exception($"Unexpected RuleTypeId: {rule.RuleType}");
         }
 
         bool CheckIfBankRowValidatesToRuleGroup(RuleGroup ruleGroup, BankRow bankRow)
@@ -158,7 +158,7 @@ namespace MoneyStats.BL.Modules
                     if (ruleGroup.RuleActions.Count == 0)
                         throw new Exception("RuleGroup is without RuleActions!");
 
-                    if(ruleGroup.RuleActions.Count(x => x.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToMonthlyTransaction) > 1)
+                    if(ruleGroup.RuleActions.Count(x => x.RuleActionType == RuleActionTypeEnum.AggregateToMonthlyTransaction) > 1)
                         throw new Exception("You can not aggregate a BankRow to multiple transactions, that would multiply it's sum!");
 
                     var oneOrRulesValidate = this.CheckIfBankRowValidatesToRuleGroup(ruleGroup, bankRow); // = (a & b & c) || d || (e & f)
@@ -168,7 +168,7 @@ namespace MoneyStats.BL.Modules
                     {
                         Transaction validTransaction = transaction;
 
-                        if (ruleGroup.RuleActions[0].RuleActionTypeId == (int)RuleActionTypeEnum.Omit)
+                        if (ruleGroup.RuleActions[0].RuleActionType == RuleActionTypeEnum.Omit)
                         {
                             Transactions.Remove(validTransaction);
                             break;
@@ -177,7 +177,7 @@ namespace MoneyStats.BL.Modules
                         // We need to evaluate the AggregateToMonthlyTransaction 
                         // type FIRST and use the aggr.ed Transaction to 
                         // apply the rest of the actions to.
-                        if (ruleGroup.RuleActions.Any(x => x.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToMonthlyTransaction))
+                        if (ruleGroup.RuleActions.Any(x => x.RuleActionType == RuleActionTypeEnum.AggregateToMonthlyTransaction))
                         {
                             var month = new DateTime(bankRow.AccountingDate.Value.Year, bankRow.AccountingDate.Value.Month, 1);
                             Transaction monthlyTr = null;
@@ -217,23 +217,23 @@ namespace MoneyStats.BL.Modules
 
                         foreach (RuleAction action in ruleGroup.RuleActions)
                         {
-                            if (action.RuleActionTypeId == (int)RuleActionTypeEnum.AggregateToMonthlyTransaction)
+                            if (action.RuleActionType == RuleActionTypeEnum.AggregateToMonthlyTransaction)
                                 continue;
 
-                            switch (action.RuleActionTypeId)
+                            switch (action.RuleActionType)
                             {
-                                case (int)RuleActionTypeEnum.SetValueOfProperty:
+                                case RuleActionTypeEnum.SetValueOfProperty:
 
                                     validTransaction.SetPropertyValueFromString(action.Property, action.Value);
                                     break;
 
-                                case (int)RuleActionTypeEnum.AddTag:
+                                case RuleActionTypeEnum.AddTag:
 
                                     validTransaction.Tags.Add(action.Tag);
                                     break;
 
                                 default:
-                                    throw new Exception($"RuleActionTypeId '{action.RuleActionTypeId}' is not recognized!");
+                                    throw new Exception($"RuleActionTypeId '{action.RuleActionType}' is not recognized!");
                             }
                         }
                     }
