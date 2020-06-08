@@ -6,7 +6,7 @@ using System.Text;
 namespace MoneyStats.DAL.Models
 {
     /// <summary>
-    /// Not yet in use. DO NOT USE IT only as a list of RuleGroups!
+    /// Not yet in use. DO NOT USE IT only as a list of Rules!
     /// Use different rulesets for different workflows. For example 
     /// create a ruleset for K&H transactions and another for OTP.
     // [(a & b & c) || (d & e) || f] => x, y
@@ -19,17 +19,17 @@ namespace MoneyStats.DAL.Models
         public string Title { get; set; }
 
         [NotMapped]
-        [Obsolete("Do not use Rulesets only as a list of RuleGroups!", false)] // TODO delete when Rulesets are implemented
-        public virtual List<RuleGroup> RuleGroups { get; set; }
-        public virtual List<RulesetRuleGroupConn> RulesetRuleGroupConn { get; set; }
+        [Obsolete("Do not use Rulesets only as a list of Rules!", false)] // TODO delete when Rulesets are implemented
+        public virtual List<Rule> Rules { get; set; }
+        public virtual List<RulesetRuleConn> RulesetRuleConns { get; set; }
     }
 
     public partial class Ruleset
     {
         public Ruleset()
         {
-            //this.RuleGroups = new List<RuleGroup>();
-            this.RulesetRuleGroupConn = new List<RulesetRuleGroupConn>();
+            //this.Rules = new List<Rules>();
+            this.RulesetRuleConns = new List<RulesetRuleConn>();
         }
     }
 }

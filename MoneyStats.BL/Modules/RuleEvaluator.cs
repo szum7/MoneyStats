@@ -26,16 +26,16 @@ namespace MoneyStats.BL.Modules
             this.TransactionCreatedWithRules = new List<TransactionCreatedWithRule>();
         }
 
-        List<RuleGroup> GetSortedRuleGroups(List<RuleGroup> ruleGroups)
+        List<Rule> GetSortedRules(List<Rule> rules)
         {
-            // Sort ruleGroups based on Omit actions. 
+            // Sort Rules based on Omit actions. 
             // Rules with Omit actions need to run first (break from iteration)
             int start = 0;
-            int end = ruleGroups.Count - 1;
-            var sortedArray = new RuleGroup[ruleGroups.Count];
-            foreach (var rule in ruleGroups)
+            int end = rules.Count - 1;
+            var sortedArray = new Rule[rules.Count];
+            foreach (var rule in rules)
             {
-                if (rule.RuleActions.Any(action => action.RuleActionType == RuleActionTypeEnum.Omit))
+                if (rule.RuleActions.Any(action => action.RuleActionType == RuleActionType.Omit))
                 {
                     if (rule.RuleActions.Count > 1)
                     {
@@ -65,56 +65,57 @@ namespace MoneyStats.BL.Modules
             return item;
         }
 
-        bool IsRuleTrue(Rule rule, object rowValue)
+        bool IsConditionTrue(Condition condition, object rowValue)
         {
-            if (rule.RuleType == RuleTypeEnum.TrueRule)
+            if (condition.ConditionType == ConditionType.TrueRule)
             {
                 return true;
             }
-            else if (rule.RuleType == RuleTypeEnum.IsEqualTo)
+            else if (condition.ConditionType == ConditionType.IsEqualTo)
             {
-                return (rowValue?.ToString() == rule.Value);
+                return (rowValue?.ToString() == condition.Value);
             }
-            else if (rule.RuleType == RuleTypeEnum.IsGreaterThan)
+            else if (condition.ConditionType == ConditionType.IsGreaterThan)
             {
-                var convertedValue = (IComparable)Convert.ChangeType(rule.Value, rowValue.GetType());
-                return RuleRepository.Compare(convertedValue, "<", (IComparable)rowValue);
+                var convertedValue = (IComparable)Convert.ChangeType(condition.Value, rowValue.GetType());
+                return ConditionRepository.Compare(convertedValue, "<", (IComparable)rowValue);
             }
-            else if (rule.RuleType == RuleTypeEnum.IsLesserThan)
+            else if (condition.ConditionType == ConditionType.IsLesserThan)
             {
-                var convertedValue = (IComparable)Convert.ChangeType(rule.Value, rowValue.GetType());
-                return RuleRepository.Compare(convertedValue, ">", (IComparable)rowValue);
+                var convertedValue = (IComparable)Convert.ChangeType(condition.Value, rowValue.GetType());
+                return ConditionRepository.Compare(convertedValue, ">", (IComparable)rowValue);
             }
-            else if (rule.RuleType == RuleTypeEnum.IsPropertyNull)
+            else if (condition.ConditionType == ConditionType.IsPropertyNull)
             {
                 return (rowValue == null);
             }
-            else if (rule.RuleType == RuleTypeEnum.IsPropertyNotNull)
+            else if (condition.ConditionType == ConditionType.IsPropertyNotNull)
             {
                 return (rowValue != null);
             }
-            else if (rule.RuleType == RuleTypeEnum.ContainsValueOfProperty)
+            else if (condition.ConditionType == ConditionType.ContainsValueOfProperty)
             {
-                return rowValue.ToString().Contains(rule.Value);
+                return rowValue.ToString().Contains(condition.Value);
             }
-            throw new Exception($"Unexpected RuleTypeId: {rule.RuleType}");
+
+            throw new Exception($"Unexpected RuleTypeId: {condition.ConditionType}");
         }
 
-        bool CheckIfBankRowValidatesToRuleGroup(RuleGroup ruleGroup, BankRow bankRow)
+        bool CheckIfBankRowValidatesToRule(Rule rule, BankRow bankRow)
         {         
             var i = 0;
             var oneOrRulesValidate = false;
-            while (i < ruleGroup.AndRuleGroups.Count && !oneOrRulesValidate)
+            while (i < rule.AndConditionGroups.Count && !oneOrRulesValidate)
             {
-                var andRule = ruleGroup.AndRuleGroups[i];  // = (a & b & c)
+                var andRule = rule.AndConditionGroups[i];  // = (a & b & c)
                 var allAndRulesValidate = true;
                 var j = 0;
-                while (j < andRule.Rules.Count && allAndRulesValidate)
+                while (j < andRule.Conditions.Count && allAndRulesValidate)
                 {
-                    var rule = andRule.Rules[j]; // = a
-                    var rowValue = typeof(BankRow).GetProperty(rule.Property).GetValue(bankRow);
+                    var condition = andRule.Conditions[j]; // = a
+                    var rowValue = typeof(BankRow).GetProperty(condition.Property).GetValue(bankRow);
 
-                    allAndRulesValidate = this.IsRuleTrue(rule, rowValue);
+                    allAndRulesValidate = this.IsConditionTrue(condition, rowValue);
 
                     j++;
                 }
@@ -129,44 +130,44 @@ namespace MoneyStats.BL.Modules
             return oneOrRulesValidate;
         }
 
-        TransactionCreatedWithRule GetNewTransactionCreatedWithRule(RuleGroup ruleGroup, Transaction transaction)
+        TransactionCreatedWithRule GetNewTransactionCreatedWithRule(Rule rule, Transaction transaction)
         {
             var item = new TransactionCreatedWithRule()
             {
-                RuleGroupId = ruleGroup.Id,
+                RuleId = rule.Id,
                 Transaction = transaction // no transaction.Id yet.
             }.SetNew();
             return item;
         }
 
-        public void Run(List<RuleGroup> ruleGroups, List<BankRow> bankRows)
+        public void Run(List<Rule> rules, List<BankRow> bankRows)
         {
             this.BankRows = bankRows;
             var aggregatedTransactions = new Dictionary<DateTime, Transaction>();
 
-            ruleGroups = this.GetSortedRuleGroups(ruleGroups);
+            rules = this.GetSortedRules(rules);
 
             foreach (var bankRow in bankRows)
             {
                 Transaction transaction = this.GetNewTransaction(bankRow);
                 Transactions.Add(transaction);
 
-                foreach (RuleGroup ruleGroup in ruleGroups) // item = (a & b & c) || d || (e & f) => action
+                foreach (Rule rule in rules) // item = (a & b & c) || d || (e & f) => action
                 {
-                    if (ruleGroup.RuleActions.Count == 0)
-                        throw new Exception("RuleGroup is without RuleActions!");
+                    if (rule.RuleActions.Count == 0)
+                        throw new Exception("Rule is without RuleActions!");
 
-                    if(ruleGroup.RuleActions.Count(x => x.RuleActionType == RuleActionTypeEnum.AggregateToMonthlyTransaction) > 1)
+                    if(rule.RuleActions.Count(x => x.RuleActionType == RuleActionType.AggregateToMonthlyTransaction) > 1)
                         throw new Exception("You can not aggregate a BankRow to multiple transactions, that would multiply it's sum!");
 
-                    var oneOrRulesValidate = this.CheckIfBankRowValidatesToRuleGroup(ruleGroup, bankRow); // = (a & b & c) || d || (e & f)
+                    var oneOrRulesValidate = this.CheckIfBankRowValidatesToRule(rule, bankRow); // = (a & b & c) || d || (e & f)
 
-                    // Apply RuleAction if RuleGroup is valid
+                    // Apply RuleAction if Rule is valid
                     if (oneOrRulesValidate)
                     {
                         Transaction validTransaction = transaction;
 
-                        if (ruleGroup.RuleActions[0].RuleActionType == RuleActionTypeEnum.Omit)
+                        if (rule.RuleActions[0].RuleActionType == RuleActionType.Omit)
                         {
                             Transactions.Remove(validTransaction);
                             break;
@@ -175,7 +176,7 @@ namespace MoneyStats.BL.Modules
                         // We need to evaluate the AggregateToMonthlyTransaction 
                         // type FIRST and use the aggr.ed Transaction to 
                         // apply the rest of the actions to.
-                        if (ruleGroup.RuleActions.Any(x => x.RuleActionType == RuleActionTypeEnum.AggregateToMonthlyTransaction))
+                        if (rule.RuleActions.Any(x => x.RuleActionType == RuleActionType.AggregateToMonthlyTransaction))
                         {
                             var month = new DateTime(bankRow.AccountingDate.Value.Year, bankRow.AccountingDate.Value.Month, 1);
                             Transaction monthlyTr = null;
@@ -190,8 +191,8 @@ namespace MoneyStats.BL.Modules
                                 aggregatedTransactions.Add(month, monthlyTr); // have a separate list for better performance
                                 Transactions.Add(monthlyTr);
 
-                                // Save the ruleGroup as reference
-                                TransactionCreatedWithRules.Add(this.GetNewTransactionCreatedWithRule(ruleGroup, monthlyTr));
+                                // Save the Rule as reference
+                                TransactionCreatedWithRules.Add(this.GetNewTransactionCreatedWithRule(rule, monthlyTr));
                             }
                             monthlyTr.Sum += transaction.Sum.Value;
 
@@ -208,23 +209,23 @@ namespace MoneyStats.BL.Modules
                         }
                         else
                         {
-                            // Save the ruleGroup as reference
-                            TransactionCreatedWithRules.Add(this.GetNewTransactionCreatedWithRule(ruleGroup, validTransaction));
+                            // Save the Rule as reference
+                            TransactionCreatedWithRules.Add(this.GetNewTransactionCreatedWithRule(rule, validTransaction));
                         }
 
-                        foreach (RuleAction action in ruleGroup.RuleActions)
+                        foreach (RuleAction action in rule.RuleActions)
                         {
-                            if (action.RuleActionType == RuleActionTypeEnum.AggregateToMonthlyTransaction)
+                            if (action.RuleActionType == RuleActionType.AggregateToMonthlyTransaction)
                                 continue;
 
                             switch (action.RuleActionType)
                             {
-                                case RuleActionTypeEnum.SetValueOfProperty:
+                                case RuleActionType.SetValueOfProperty:
 
                                     validTransaction.SetPropertyValueFromString(action.Property, action.Value);
                                     break;
 
-                                case RuleActionTypeEnum.AddTag:
+                                case RuleActionType.AddTag:
 
                                     validTransaction.Tags.Add(action.Tag);
                                     break;

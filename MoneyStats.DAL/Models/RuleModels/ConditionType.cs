@@ -1,6 +1,6 @@
 ﻿namespace MoneyStats.DAL.Models
 {
-    public enum RuleTypeEnum
+    public enum ConditionType
     {
         TrueRule = 1,
         IsEqualTo = 2, // can be used with strings, numbers, dates, etc.

@@ -23,47 +23,47 @@ namespace MoneyStats.ExampleData
                     new Tag() { Id = 2, Description = "", Title = "Kamat" }.SetNew(),
                 }
             },
-            // RuleGroup
-            {
-                nameof(RuleGroup),
-                new List<RuleGroup>
-                {
-                    // These rules are mostly fictional examples, do not apply them to real bank exported excel files!
-                    // Rule#1 : Típus == "Kamat" => addTags("K&H", "Kamat")
-                    new RuleGroup() { Id = 1, Title = "K&H kamat" }.SetNew(),
-                    // Rule#2 : (PartnerName == "Elemér" && Sum < 2000) || Currency == "EUR" => setProperty(Title, "Elemér < 2000 | EUR")
-                    new RuleGroup() { Id = 2, Title = "Elemér < 2000 | EUR" }.SetNew(),
-                    // Rule#3 : Type == "food" => aggregate()
-                    new RuleGroup() { Id = 3, Title = "Aggregate to transaction" }.SetNew(),
-                }
-            },
-            // AndRuleGroup
-            {
-                nameof(AndRuleGroup),
-                new List<AndRuleGroup>
-                {
-                    // Rule#1
-                    new AndRuleGroup() { Id = 1, RuleGroupId = 1 }.SetNew(),
-                    // Rule#2
-                    new AndRuleGroup() { Id = 2, RuleGroupId = 2 }.SetNew(), // (PartnerName == "Elemér") && (Sum < 2000)
-                    new AndRuleGroup() { Id = 3, RuleGroupId = 2 }.SetNew(), // (Currency == "EUR")
-                    // Rule#3
-                    new AndRuleGroup() { Id = 4, RuleGroupId = 3 }.SetNew(), // (Type == "food")
-                }
-            },
             // Rule
             {
                 nameof(Rule),
                 new List<Rule>
                 {
+                    // These rules are mostly fictional examples, do not apply them to real bank exported excel files!
+                    // Rule#1 : Típus == "Kamat" => addTags("K&H", "Kamat")
+                    new Rule() { Id = 1, Title = "K&H kamat" }.SetNew(),
+                    // Rule#2 : (PartnerName == "Elemér" && Sum < 2000) || Currency == "EUR" => setProperty(Title, "Elemér < 2000 | EUR")
+                    new Rule() { Id = 2, Title = "Elemér < 2000 | EUR" }.SetNew(),
+                    // Rule#3 : Type == "food" => aggregate()
+                    new Rule() { Id = 3, Title = "Aggregate to transaction" }.SetNew(),
+                }
+            },
+            // AndConditionGroup
+            {
+                nameof(AndConditionGroup),
+                new List<AndConditionGroup>
+                {
                     // Rule#1
-                    new Rule() { Id = 1, AndRuleGroupId = 1, Property = "Type", Value = "Kamat", RuleType = RuleTypeEnum.IsEqualTo }.SetNew(),
+                    new AndConditionGroup() { Id = 1, RuleId = 1 }.SetNew(),
                     // Rule#2
-                    new Rule() { Id = 2, AndRuleGroupId = 2, Property = "PartnerName", Value = "Elemér", RuleType = RuleTypeEnum.IsEqualTo }.SetNew(), // PartnerName == "Elemér"
-                    new Rule() { Id = 3, AndRuleGroupId = 2, Property = "Sum", Value = "2000", RuleType = RuleTypeEnum.IsLesserThan }.SetNew(), // Sum < 2000
-                    new Rule() { Id = 4, AndRuleGroupId = 3, Property = "Currency", Value = "EUR", RuleType = RuleTypeEnum.IsEqualTo }.SetNew(), // Currency == "EUR"
+                    new AndConditionGroup() { Id = 2, RuleId = 2 }.SetNew(), // (PartnerName == "Elemér") && (Sum < 2000)
+                    new AndConditionGroup() { Id = 3, RuleId = 2 }.SetNew(), // (Currency == "EUR")
                     // Rule#3
-                    new Rule() { Id = 5, AndRuleGroupId = 4, Property = "Type", Value = "food", RuleType = RuleTypeEnum.IsEqualTo }.SetNew(), // Type == "food"
+                    new AndConditionGroup() { Id = 4, RuleId = 3 }.SetNew(), // (Type == "food")
+                }
+            },
+            // Condition
+            {
+                nameof(Condition),
+                new List<Condition>
+                {
+                    // Rule#1
+                    new Condition() { Id = 1, AndConditionGroupId = 1, Property = "Type", Value = "Kamat", ConditionType = ConditionType.IsEqualTo }.SetNew(),
+                    // Rule#2
+                    new Condition() { Id = 2, AndConditionGroupId = 2, Property = "PartnerName", Value = "Elemér", ConditionType = ConditionType.IsEqualTo }.SetNew(), // PartnerName == "Elemér"
+                    new Condition() { Id = 3, AndConditionGroupId = 2, Property = "Sum", Value = "2000", ConditionType = ConditionType.IsLesserThan }.SetNew(), // Sum < 2000
+                    new Condition() { Id = 4, AndConditionGroupId = 3, Property = "Currency", Value = "EUR", ConditionType = ConditionType.IsEqualTo }.SetNew(), // Currency == "EUR"
+                    // Rule#3
+                    new Condition() { Id = 5, AndConditionGroupId = 4, Property = "Type", Value = "food", ConditionType = ConditionType.IsEqualTo }.SetNew(), // Type == "food"
                 }
             },
             // RuleAction
@@ -72,12 +72,12 @@ namespace MoneyStats.ExampleData
                 new List<RuleAction>
                 {
                     // Rule#1
-                    new RuleAction() { Id = 1, RuleGroupId = 1, Property = null, Value = null, TagId = 1, RuleActionType = RuleActionTypeEnum.AddTag }.SetNew(),
-                    new RuleAction() { Id = 2, RuleGroupId = 1, Property = null, Value = null, TagId = 2, RuleActionType = RuleActionTypeEnum.AddTag }.SetNew(),
+                    new RuleAction() { Id = 1, RuleId = 1, Property = null, Value = null, TagId = 1, RuleActionType = RuleActionType.AddTag }.SetNew(),
+                    new RuleAction() { Id = 2, RuleId = 1, Property = null, Value = null, TagId = 2, RuleActionType = RuleActionType.AddTag }.SetNew(),
                     // Rule#2
-                    new RuleAction() { Id = 3, RuleGroupId = 2, Property = "Title", Value = "Elemér < 2000 | EUR", TagId = null, RuleActionType = RuleActionTypeEnum.SetValueOfProperty }.SetNew(),
+                    new RuleAction() { Id = 3, RuleId = 2, Property = "Title", Value = "Elemér < 2000 | EUR", TagId = null, RuleActionType = RuleActionType.SetValueOfProperty }.SetNew(),
                     // Rule#3
-                    new RuleAction() { Id = 4, RuleGroupId = 3, Property = null, Value = null, TagId = null, RuleActionType = RuleActionTypeEnum.AggregateToMonthlyTransaction }.SetNew(),
+                    new RuleAction() { Id = 4, RuleId = 3, Property = null, Value = null, TagId = null, RuleActionType = RuleActionType.AggregateToMonthlyTransaction }.SetNew(),
                 }
             },
             // BankRow

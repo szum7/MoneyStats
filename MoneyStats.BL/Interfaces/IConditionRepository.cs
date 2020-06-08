@@ -2,8 +2,7 @@
 
 namespace MoneyStats.BL.Interfaces
 {
-    public interface IAndRuleGroupRepository : IEntityBaseRepository<AndRuleGroup>
+    public interface IConditionRepository : IEntityBaseRepository<Condition>
     {
-
     }
 }

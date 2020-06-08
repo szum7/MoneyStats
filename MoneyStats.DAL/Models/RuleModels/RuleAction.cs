@@ -5,22 +5,22 @@ using System.Linq;
 namespace MoneyStats.DAL.Models
 {
     /// <summary>
-    /// RuleActions are not stored to be used multiple types. They belong
-    /// to exactly one RuleGroup.
+    /// RuleActions are not stored to be used multiple types. 
+    /// They belong to exactly one Rule.
     /// </summary>
     [Table("RuleAction")]
     public partial class RuleAction : EntityBase
     {
         public string Title { get; set; }
 
-        public RuleActionTypeEnum RuleActionType { get; set; }
+        public RuleActionType RuleActionType { get; set; }
 
         public string Property { get; set; }
 
         public string Value { get; set; }
 
-        [ForeignKey("RuleGroup")]
-        public int RuleGroupId { get; set; }
+        [ForeignKey("Rule")]
+        public int RuleId { get; set; }
 
         /// <summary>
         /// For AddTag RuleAction type.
@@ -29,7 +29,7 @@ namespace MoneyStats.DAL.Models
         public int? TagId { get; set; }
 
 
-        public virtual RuleGroup RuleGroup { get; set; }
+        public virtual Rule Rule { get; set; }
 
         public virtual Tag Tag { get; set; }
 
@@ -38,13 +38,13 @@ namespace MoneyStats.DAL.Models
         {
             switch (RuleActionType)
             {
-                case RuleActionTypeEnum.Omit:
+                case RuleActionType.Omit:
                     return $"Omit";
-                case RuleActionTypeEnum.AddTag:
+                case RuleActionType.AddTag:
                     return (Tag == null) ? $"AddTag({TagId})" : $"AddTag({Tag.Id}, '{Tag.Title}')";
-                case RuleActionTypeEnum.SetValueOfProperty:
+                case RuleActionType.SetValueOfProperty:
                     return $"{Property} = '{Value}'";
-                case RuleActionTypeEnum.AggregateToMonthlyTransaction:
+                case RuleActionType.AggregateToMonthlyTransaction:
                     return $"GroupToMonth";
                 default:
                     return base.ToString();

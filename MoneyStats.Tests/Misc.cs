@@ -13,7 +13,7 @@ namespace MoneyStats.Tests
     #region Classes
     public class RuleEvalData
     {
-        public List<int> RuleGroupIds { get; set; }
+        public List<int> RuleIds { get; set; }
         public List<int> BankRowIds { get; set; }
     }
 
@@ -90,20 +90,20 @@ namespace MoneyStats.Tests
         public void TestRuleEvaluation()
         {
             // Arrange
-            var repo = new RuleRepository();
+            var repo = new ConditionRepository();
 #if true
-            var data = new RuleEvalData() { RuleGroupIds = new List<int>{ 1 }, BankRowIds = new List<int> { 7, 8, 9 } };
+            var data = new RuleEvalData() { RuleIds = new List<int>{ 1 }, BankRowIds = new List<int> { 7, 8, 9 } };
 #endif
 #if false
-            var data = new RuleEvalData() { RuleGroupIds = new List<int>{ 3 }, BankRowIds = new List<int> { 15, 16, 17, 18, 19, 20 } };
-            var data = new RuleEvalData() { RuleGroupIds = new List<int>{ 2 }, BankRowIds = new List<int> { 10, 11, 12, 13, 14 } };
+            var data = new RuleEvalData() { RuleIds = new List<int>{ 3 }, BankRowIds = new List<int> { 15, 16, 17, 18, 19, 20 } };
+            var data = new RuleEvalData() { RuleIds = new List<int>{ 2 }, BankRowIds = new List<int> { 10, 11, 12, 13, 14 } };
 #endif
 
             var bankRows = new BankRowRepository().GetOnIds(data.BankRowIds);
-            var ruleGroups = new RuleGroupRepository().GetOnIdsWithEntitiesInDepth(data.RuleGroupIds);
+            var rules = new RuleRepository().GetOnIdsWithEntitiesInDepth(data.RuleIds);
 
             // Act
-            repo.CreateTransactionUsingRulesFlattened(ruleGroups, bankRows);
+            repo.CreateTransactionUsingRulesFlattened(rules, bankRows);
 
             // Assert
             Assert.AreEqual(1, 1);

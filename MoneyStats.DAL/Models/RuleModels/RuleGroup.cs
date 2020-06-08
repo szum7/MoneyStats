@@ -4,42 +4,42 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MoneyStats.DAL.Models
 {
     /// <summary>
-    /// Example 1: RuleGroup = (a & b & c) || (d & e) || f => x, y
-    /// This class/model/table is basically the OrRuleGroup wrapped in 
+    /// Example 1: Rule = (a & b & c) || (d & e) || f => x, y
+    /// This class/model/table is basically the OrConditionGroup wrapped in 
     /// together with the actions and some properties (like the Title)
     /// </summary>
-    [Table("RuleGroup")]
-    public partial class RuleGroup : EntityBase
+    [Table("Rule")]
+    public partial class Rule : EntityBase
     {
         public string Title { get; set; }
 
-        public virtual List<AndRuleGroup> AndRuleGroups { get; set; }
+        public virtual List<AndConditionGroup> AndConditionGroups { get; set; }
         public virtual List<RuleAction> RuleActions { get; set; }
-        public virtual List<RulesetRuleGroupConn> RulesetRuleGroupConn { get; set; }
+        public virtual List<RulesetRuleConn> RulesetRuleConns { get; set; }
         public virtual List<TransactionCreatedWithRule> TransactionCreatedWithRule { get; set; }
     }
 
-    public partial class RuleGroup
+    public partial class Rule
     {
-        public RuleGroup()
+        public Rule()
         {
-            this.RulesetRuleGroupConn = new List<RulesetRuleGroupConn>();
+            this.RulesetRuleConns = new List<RulesetRuleConn>();
             this.TransactionCreatedWithRule = new List<TransactionCreatedWithRule>();
-            this.AndRuleGroups = new List<AndRuleGroup>();
+            this.AndConditionGroups = new List<AndConditionGroup>();
             this.RuleActions = new List<RuleAction>();
         }
 
         public override string ToString()
         {
-            if (this.AndRuleGroups.Count == 0 || this.AndRuleGroups[0].Rules.Count == 0 || this.RuleActions.Count == 0)
+            if (this.AndConditionGroups.Count == 0 || this.AndConditionGroups[0].Conditions.Count == 0 || this.RuleActions.Count == 0)
                 return "";
 
             var ruleActions = string.Join(", ", RuleActions);
 
-            if (this.AndRuleGroups.Count == 1)
-                return $"{this.AndRuleGroups[0]} => {ruleActions}";
+            if (this.AndConditionGroups.Count == 1)
+                return $"{this.AndConditionGroups[0]} => {ruleActions}";
 
-            return $"({string.Join(") || (", AndRuleGroups)}) => {ruleActions}";
+            return $"({string.Join(") || (", AndConditionGroups)}) => {ruleActions}";
         }
     }
 }

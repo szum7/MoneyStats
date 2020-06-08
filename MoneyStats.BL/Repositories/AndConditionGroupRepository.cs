@@ -3,7 +3,7 @@ using MoneyStats.DAL.Models;
 
 namespace MoneyStats.BL.Repositories
 {
-    public class AndRuleGroupRepository : EntityBaseRepository<AndRuleGroup>, IAndRuleGroupRepository
+    public class AndConditionGroupRepository : EntityBaseRepository<AndConditionGroup>, IAndConditionGroupRepository
     {
     }
 }
