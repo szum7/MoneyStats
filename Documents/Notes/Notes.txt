@@ -1,4 +1,81 @@
-﻿> add-migration InitialCreate
+﻿
+
+-- Tags
+SET IDENTITY_INSERT [Tag] ON;
+INSERT INTO [Tag] ([Id], [Title], [State]) VALUES (1, 'Food', 1);
+INSERT INTO [Tag] ([Id], [Title], [State]) VALUES (2, 'Work', 1);
+INSERT INTO [Tag] ([Id], [Title], [State]) VALUES (3, 'Software developer', 1);
+INSERT INTO [Tag] ([Id], [Title], [State]) VALUES (4, 'Graphic design', 1);
+SET IDENTITY_INSERT [Tag] OFF;
+
+
+-- BankRows
+SET IDENTITY_INSERT [BankRow] ON;
+INSERT INTO [BankRow] ([Id], [BankType], [AccountingDate], [TransactionId], [Type], [Account], [AccountName], [PartnerAccount], [PartnerName], [Sum], [Currency], [Message], [State]) VALUES 
+(1, 1, '2001-01-01 10:00:00', 'trid1', 'type1', '100000000', 'John Doe', '222222222', 'Food Ltd.', -1850, 'HUF', '', 1);
+INSERT INTO [BankRow] ([Id], [BankType], [AccountingDate], [TransactionId], [Type], [Account], [AccountName], [PartnerAccount], [PartnerName], [Sum], [Currency], [Message], [State]) VALUES 
+(2, 1, '2000-02-01 10:00:00', 'trid2', 'type2', '100000000', 'John Doe', '555555555', 'Microsoft', 250000, 'HUF', '2000-02', 1);
+SET IDENTITY_INSERT [BankRow] OFF;
+
+
+-- Transactions
+SET IDENTITY_INSERT [Transaction] ON;
+INSERT INTO [Transaction] ([Id], [Title], [Date], [BankTransactionId], [Sum], [State]) VALUES (1, 'Some food', '2001-01-01 10:00:00', 1, -1850, 1);
+INSERT INTO [Transaction] ([Id], [Title], [Date], [BankTransactionId], [Sum], [State]) VALUES (2, 'Azure subscription', '2000-02-01 10:00:00', 2, 250000, 1);
+SET IDENTITY_INSERT [Transaction] OFF;
+
+
+-- TransactionTagConns
+INSERT INTO [TransactionTagConn] ([TransactionId], [TagId], [State]) VALUES (1, 1, 1);
+INSERT INTO [TransactionTagConn] ([TransactionId], [TagId], [State]) VALUES (2, 2, 1);
+INSERT INTO [TransactionTagConn] ([TransactionId], [TagId], [State]) VALUES (2, 3, 1);
+
+
+-- ===============
+-- ===============
+-- ===============
+
+
+DELETE FROM [TransactionTagConn];
+DELETE FROM [Transaction];
+DELETE FROM [Tag];
+DELETE FROM [BankRow];
+
+DBCC CHECKIDENT ([TransactionTagConn], RESEED, 0);
+DBCC CHECKIDENT ([Transaction], RESEED, 0);
+DBCC CHECKIDENT ([Tag], RESEED, 0);
+DBCC CHECKIDENT ([BankRow], RESEED, 0);
+
+
+-- ===============
+-- ===============
+-- ===============
+
+
+DROP TABLE [RuleAction];
+DROP TABLE [RuleActionType];
+DROP TABLE [TransactionTagConn];
+DROP TABLE [Tag];
+DROP TABLE [TransactionCreatedWithRule];
+DROP TABLE [Rule];
+DROP TABLE [RuleType];
+DROP TABLE [AndRuleGroup];
+DROP TABLE [RulesetRuleGroupConn];
+DROP TABLE [Ruleset];
+DROP TABLE [RuleGroup];
+DROP TABLE [Transaction];
+DROP TABLE [BankRow];
+DROP TABLE [__EFMigrationsHistory];
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+
+> add-migration InitialCreate
 Info:
 -----
 Creates a script to create or update the database based on your current model.
@@ -17,6 +94,13 @@ Not removing these .cs files will give you a nice history what happened with you
 
 > update-database
 // Runs the last (?) migration .cs.
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
 
 
 // Object properties (e.g.: TransactionTagConn) will remain null
@@ -39,6 +123,13 @@ public List<Transaction> EagerLoading() {
                 }).ToList();
     }
 }
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
 
 
 Az ajánlás a következő (EntityFramework):
