@@ -11,11 +11,11 @@ namespace MoneyStats.ExampleData
             nameof(TransactionTagConn),
             nameof(Tag),
             nameof(TransactionCreatedWithRule),
-            nameof(Rule),
-            nameof(AndRuleGroup),
-            nameof(RulesetRuleGroupConn),
+            nameof(Condition),
+            nameof(AndConditionGroup),
+            nameof(RulesetRuleConn),
             nameof(Ruleset),
-            nameof(RuleGroup),
+            nameof(Rule),
             nameof(Transaction),
             nameof(BankRow)
         };

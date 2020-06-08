@@ -10,33 +10,33 @@ namespace MoneyStats.DAL.Models
     /// Example 1: transaction.property == value
     /// Example 2: transaction.property.Contains(value)
     /// </summary>
-    [Table("Rule")]
-    public class Rule : EntityBase
+    [Table("Condition")]
+    public class Condition : EntityBase
     {
         public string Property { get; set; }
         public string Value { get; set; }
-        public RuleTypeEnum RuleType { get; set; }
-        public int AndRuleGroupId { get; set; }
+        public ConditionType ConditionType { get; set; }
+        public int AndConditionGroupId { get; set; }
 
-        public virtual AndRuleGroup AndRuleGroup { get; set; }
+        public virtual AndConditionGroup AndConditionGroup { get; set; }
 
         public override string ToString()
         {
-            switch (RuleType)
+            switch (ConditionType)
             {
-                case RuleTypeEnum.TrueRule:
+                case ConditionType.TrueRule:
                     return "true";
-                case RuleTypeEnum.IsEqualTo:
+                case ConditionType.IsEqualTo:
                     return $"{Property} == '{Value}'";
-                case RuleTypeEnum.IsGreaterThan:
+                case ConditionType.IsGreaterThan:
                     return $"{Property} > {Value}";
-                case RuleTypeEnum.IsLesserThan:
+                case ConditionType.IsLesserThan:
                     return $"{Property} < {Value}";
-                case RuleTypeEnum.IsPropertyNull:
+                case ConditionType.IsPropertyNull:
                     return $"{Property} is Null";
-                case RuleTypeEnum.IsPropertyNotNull:
+                case ConditionType.IsPropertyNotNull:
                     return $"{Property} is not Null";
-                case RuleTypeEnum.ContainsValueOfProperty:
+                case ConditionType.ContainsValueOfProperty:
                     return $"{Property}.Contains({Value})";
                 default:
                     return base.ToString();

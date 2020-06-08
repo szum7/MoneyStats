@@ -12,7 +12,7 @@ namespace MoneyStats.Tests
     public class EvaluateRulesTestInput
     {
         public List<BankRow> BankRows { get; set; }
-        public List<RuleGroup> RuleGroups { get; set; }
+        public List<Rule> Rules { get; set; }
     }
 
     public class EvaluateRulesTestOutput
@@ -35,7 +35,7 @@ namespace MoneyStats.Tests
                 {
 
                 },
-                RuleGroups = new List<RuleGroup>()
+                Rules = new List<Rule>()
                 {
 
                 }
@@ -64,7 +64,7 @@ namespace MoneyStats.Tests
         public void ActAndAssert(EvaluateRulesTestInput input, EvaluateRulesTestOutput output)
         {
             // Act
-            var result = new RuleRepository().CreateTransactionUsingRulesFlattened(input.RuleGroups, input.BankRows);
+            var result = new ConditionRepository().CreateTransactionUsingRulesFlattened(input.Rules, input.BankRows);
 
             // Assert
             Assert.AreEqual(result.Transactions.Count, output.Transactions.Count);

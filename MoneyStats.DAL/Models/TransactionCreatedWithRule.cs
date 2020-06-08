@@ -8,10 +8,10 @@ namespace MoneyStats.DAL.Models
     [Table("TransactionCreatedWithRule")]
     public class TransactionCreatedWithRule : EntityBase
     {
-        public int RuleGroupId { get; set; }
+        public int RuleId { get; set; }
         public int TransactionId { get; set; }
 
-        public virtual RuleGroup RuleGroup { get; set; }
+        public virtual Rule Rule { get; set; }
         public virtual Transaction Transaction { get; set; }
     }
 }

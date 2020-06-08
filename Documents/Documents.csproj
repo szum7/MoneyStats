@@ -10,8 +10,4 @@
     <None Remove="SQL\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Database\Design\" />
-  </ItemGroup>
-
 </Project>

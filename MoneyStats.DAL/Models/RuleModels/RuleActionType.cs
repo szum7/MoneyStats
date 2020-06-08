@@ -1,6 +1,6 @@
 ﻿namespace MoneyStats.DAL.Models
 {
-    public enum RuleActionTypeEnum
+    public enum RuleActionType
     {
         Omit = 1,
         AddTag = 2,
