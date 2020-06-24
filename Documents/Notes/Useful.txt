@@ -1,0 +1,2 @@
+﻿Running a set of commands from a batch file (run VSCode, run NG serve)
+https://stackoverflow.com/questions/45907520/running-a-set-of-commands-from-a-batch-file-run-vscode-run-ng-serve

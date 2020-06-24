@@ -1,0 +1,68 @@
+.wn-container {
+    width: 1200px;
+    margin:150px auto 0;
+    text-align: center;
+
+    $line-width: 180px;
+    $line-height: 6px;
+    $circle-size: 18px;
+    $step-width: $line-width + $circle-size;
+    $active-color: #222;
+    $inactive-color: #ddd;
+
+    .step {
+        display: inline-block;
+        position: relative;
+        width: $step-width;
+        margin-left: -3px;
+
+        &.first {
+            margin-left: -($step-width - $circle-size);
+
+            .line {
+                display: none;
+            }
+            
+            .circle {
+                background: $active-color;
+            }
+        }
+
+        &.active {
+            
+            .line,
+            .circle {
+                background: $active-color;
+            }
+        }
+
+        .title,
+        .line,
+        .circle {
+            position: absolute;
+        }
+    
+        .title {
+            bottom: 15px;
+            right: (-$step-width / 2) + 10;
+            width: $step-width;
+            text-align: center;
+        }
+
+        .line {
+            width: $line-width;
+            height: $line-height;
+            background: $inactive-color;
+            top: ($circle-size / 2) - ($line-height / 2);
+        }
+
+        .circle {
+            background: $inactive-color;
+            border-radius: 20px;
+            width: $circle-size;
+            height: $circle-size;
+            right: 2px;
+            z-index: 100;
+        }
+    }    
+}

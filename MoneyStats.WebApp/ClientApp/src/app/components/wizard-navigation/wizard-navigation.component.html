@@ -1,0 +1,7 @@
+<div class="wn-container">
+    <div class="step" *ngFor="let wizardStep of wizardSteps; let i = index" [ngClass]="{'first': i === 0, 'active': i <= stepsAt}">
+        <div class="title">{{wizardStep.title}}</div>
+        <div class="line"></div>
+        <div class="circle"></div>
+    </div>
+</div>

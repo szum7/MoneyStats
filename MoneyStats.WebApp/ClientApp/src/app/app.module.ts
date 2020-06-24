@@ -13,6 +13,7 @@ import { LoadingScreenComponent } from './components/loading-screen/loading-scre
 import { FileFileComparerComponent } from './components/file-file-comparer/file-file-comparer.component';
 import { DbFileComparerComponent } from './components/db-file-comparer/db-file-comparer.component';
 import { RuleEvaluatorComponent } from './components/rule-evaluator/rule-evaluator.component';
+import { WizardNavigationComponent } from './components/wizard-navigation/wizard-navigation.component';
 
 // Pages
 import { HomePage } from './pages/home-page/home.page';
@@ -36,6 +37,7 @@ import { BankRowService } from './services/bank-row-service/bank-row.service';
     FileFileComparerComponent,
     DbFileComparerComponent,
     RuleEvaluatorComponent,
+    WizardNavigationComponent,
     // Pages
     HomePage,
     TestTablePage,
