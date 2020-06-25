@@ -1,0 +1,17 @@
+@import "./../../../styles/variables.scss";
+
+$stepper-box-height: 50px;
+.stepper-box {
+    position: fixed;
+    top: $header-height + $wizard-nav-height;
+    height: $stepper-box-height;
+    left: 0;
+    right: 0;
+    border-bottom: 1px solid #ddd;
+    background: #fff;
+    padding-top: 10px;
+}
+
+.content {
+    margin-top: $header-height + $wizard-nav-height + $stepper-box-height;
+}

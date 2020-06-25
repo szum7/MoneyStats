@@ -1,28 +1,51 @@
-import { Component } from '@angular/core';
-import { ReadBankRowForInsertion } from 'src/app/models/component-models/read-bank-row-for-insertion';
+import { Component, OnInit } from '@angular/core';
 import { StageType } from '../../models/component-models/stage-type.enum';
 import { FileFileResult } from '../../models/component-models/file-file-result';
 import { DbFileResult } from 'src/app/models/component-models/db-file-result';
 import { RuleTransaction } from 'src/app/models/component-models/rule-transaction';
+import { WizardStep } from 'src/app/models/component-models/wizard-step';
 
 @Component({
     selector: 'app-update-page',
     templateUrl: './update.page.html',
     styleUrls: ['./update.page.scss']
 })
-export class UpdatePage {
+export class UpdatePage implements OnInit {
     
-    public stageType = StageType;
+    stageType = StageType;
 
-    public stage: StageType;    
-    public fileFileResult: FileFileResult;
-    public dbFileResult: DbFileResult;
+    stage: StageType;    
+    fileFileResult: FileFileResult;
+    dbFileResult: DbFileResult;
+
+    stepsAt: number;
+    wizardSteps: WizardStep[];
     
     constructor() {
         this.fileFileResult = new FileFileResult();
         this.dbFileResult = new DbFileResult();
 
+        this.stepsAt = 0;
+
+        this.wizardSteps = [
+            new WizardStep("Import files", "#"),
+            new WizardStep("Manage read files", "#"),
+            new WizardStep("Create transactions", "#")
+        ];
+
         this.setFirstStage();
+    }
+
+    ngOnInit(): void {
+
+    }
+
+    click_NextStep() {
+        this.stepsAt++;
+    }
+
+    click_PrevStep() {
+        this.stepsAt--;
     }
 
     private setFirstStage(): void {

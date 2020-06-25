@@ -1,14 +1,27 @@
-.wn-container {
-    width: 1200px;
-    margin:150px auto 0;
-    text-align: center;
+@import "./../../../styles/variables.scss";
 
-    $line-width: 180px;
-    $line-height: 6px;
-    $circle-size: 18px;
-    $step-width: $line-width + $circle-size;
-    $active-color: #222;
-    $inactive-color: #ddd;
+
+$line-width: 180px;
+$line-height: 6px;
+$circle-size: 18px;
+$step-width: $line-width + $circle-size;
+$active-color: #eee;
+$active-text-color: #eee;
+$inactive-color: #666;
+$inactive-text-color: #999;
+$background-color: #444;
+
+.wn-container {
+    margin: auto;
+    text-align: center;
+    height: $wizard-nav-height;
+    padding-top: 30px;
+    border-bottom: 1px solid #ddd;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: $header-height;    
+    background: $background-color;
 
     .step {
         display: inline-block;
@@ -34,6 +47,10 @@
             .circle {
                 background: $active-color;
             }
+
+            .title {
+                color: $active-text-color;
+            }
         }
 
         .title,
@@ -43,10 +60,11 @@
         }
     
         .title {
-            bottom: 15px;
+            bottom: 5px;
             right: (-$step-width / 2) + 10;
             width: $step-width;
             text-align: center;
+            color: $inactive-text-color;
         }
 
         .line {

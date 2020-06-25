@@ -1,15 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterService } from 'src/app/services/router-service/router.service';
+import { WizardStep } from 'src/app/models/component-models/wizard-step';
 
-export class WizardStep {
-    public title: string;
-    public link: string;
-
-    constructor(title: string, link: string){
-        this.title = title;
-        this.link = link;
-    }
-}
 
 @Component({
   selector: 'app-wizard-navigation',
@@ -18,16 +10,9 @@ export class WizardStep {
 })
 export class WizardNavigationComponent {
 
-    wizardSteps: WizardStep[];
-    stepsAt: number;
+    @Input() wizardSteps: WizardStep[];
+    @Input() stepsAt: number;
 
     constructor(private router: RouterService) {
-        this.wizardSteps = [
-            new WizardStep("Import files", "#"),
-            new WizardStep("Manage read files", "#"),
-            new WizardStep("Create transactions", "#")
-        ];
-
-        this.stepsAt = 0;
     }
 }
