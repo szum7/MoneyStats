@@ -1,8 +1,22 @@
 <app-wizard-navigation [stepsAt]="stepsAt" [wizardSteps]="wizardSteps"></app-wizard-navigation>
 
-<div class="stepper-box center">
-    <button (click)="click_PrevStep()" [disabled]="stepsAt <= 0">Previous step</button>
-    <button (click)="click_NextStep()" [disabled]="stepsAt >= wizardSteps.length - 1">Next step</button>
+<div class="stepper-box">
+    <div class="width50 float-left tright">
+        <div class="nav-btn mr5" (click)="click_PrevStep()" [ngClass]="{'unabled': stepsAt <= 0}">
+            <p>Previous step</p>&nbsp;
+            <span class="icon">
+                <fa-icon icon="arrow-left"></fa-icon>
+            </span>
+        </div>
+    </div>
+    <div class="width50 float-right">
+        <div class="nav-btn ml5" (click)="click_NextStep()" [ngClass]="{'unabled': stepsAt >= wizardSteps.length - 1}">
+            <span class="icon">
+                <fa-icon icon="arrow-right"></fa-icon>
+            </span>
+            &nbsp;<p>Next step</p>
+        </div>
+    </div>
 </div>
 
 <div class="content">

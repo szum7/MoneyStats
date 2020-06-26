@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { HttpClientModule } from '@angular/common/http';
-import { faInfoCircle, faCaretRight, faCaretLeft, faSun, faCog, faTimes, faTag, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faCaretRight, faCaretLeft, faSun, faCog, faTimes, faTag, faAlignJustify, faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 // Components
 import { AppComponent } from './app.component';
@@ -78,5 +78,7 @@ export class AppModule {
       library.add(faCog);
       library.add(faAlignJustify);
       library.add(faTag);
+      library.add(faArrowLeft);
+      library.add(faArrowRight);
   }
 }
