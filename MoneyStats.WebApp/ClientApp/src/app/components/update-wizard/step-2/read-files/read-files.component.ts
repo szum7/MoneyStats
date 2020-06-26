@@ -9,6 +9,7 @@ import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row'
 export class ReadFilesComponent implements OnInit {
 
   @Input() params: Array<Array<ReadInBankRow>>;
+  // NEXT handle params, code this file to do the duplication test
 
   constructor() {    
   }
