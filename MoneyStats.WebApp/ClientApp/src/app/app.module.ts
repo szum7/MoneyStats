@@ -1,8 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
 import { faInfoCircle, faCaretRight, faCaretLeft, faSun, faCog, faTimes, faTag, faAlignJustify, faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
@@ -75,12 +74,13 @@ import { FooterComponent } from './components/footer/footer.component';
   bootstrap: [AppComponent]
 })
 export class AppModule { 
-  constructor() {
-      library.add(faInfoCircle);
-      library.add(faCog);
-      library.add(faAlignJustify);
-      library.add(faTag);
-      library.add(faArrowLeft);
-      library.add(faArrowRight);
+  constructor(library: FaIconLibrary) {
+    // library.addIconPacks(fas);
+    library.addIcons(faInfoCircle);
+    library.addIcons(faCog);
+    library.addIcons(faAlignJustify);
+    library.addIcons(faTag);
+    library.addIcons(faArrowLeft);
+    library.addIcons(faArrowRight);
   }
 }

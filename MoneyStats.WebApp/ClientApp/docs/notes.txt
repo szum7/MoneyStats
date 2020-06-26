@@ -6,6 +6,9 @@ https://stackoverflow.com/questions/51949848/angular-get-headers-from-excel-uplo
 // Problem after npm audit fix
 https://stackoverflow.com/questions/60174503/job-name-getprojectmetadata-does-not-exist
 
+// Update fa icons
+https://github.com/FortAwesome/angular-fontawesome/blob/master/docs/upgrading/0.4.0-0.5.0.md
+
 Open console in root :: ctrl + shift + c
 
 //
