@@ -3,6 +3,8 @@ https://github.com/SheetJS/sheetjs
 
 https://stackoverflow.com/questions/51949848/angular-get-headers-from-excel-uploaded-using-xlsx
 
+// Problem after npm audit fix
+https://stackoverflow.com/questions/60174503/job-name-getprojectmetadata-does-not-exist
 
 Open console in root :: ctrl + shift + c
 
