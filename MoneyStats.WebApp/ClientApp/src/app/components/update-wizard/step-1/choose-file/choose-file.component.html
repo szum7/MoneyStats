@@ -1,4 +1,10 @@
-<div class="content">
-    <p class="center">Import files from your local drive. Supported format: <strong>.xls, .xlsx</strong>. Supported transactions: <strong>K&H</strong>.</p>
+<div class="content center">
+    <p>
+        Import files from your local drive. <br/>
+        Supported format: <strong>.xls, .xlsx</strong>. <br/>
+        Supported transactions: <strong>K&H</strong>.</p>
     <input type="file" class="file-browser" multiple placeholder="Upload file" accept=".xlsx,.xls" (change)="change_filesSelected($event)">
+    <div class="mt10">
+        <div *ngFor="let file of readFiles">{{file.name}}</div>
+    </div>
 </div>

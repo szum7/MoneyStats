@@ -16,7 +16,7 @@ import { PropertyMapRow } from 'src/app/models/component-models/property-map-row
 })
 export class DbFileComparerComponent implements OnInit {
 
-    // TODO!!!
+    // TODO Old code, might not work
     // Régi transactionös program, lehet már más fog kelleni:
     // get bank rows from db
     // compare with read bank rows
@@ -92,7 +92,7 @@ export class DbFileComparerComponent implements OnInit {
                     fileRow.compareResults.isSameContent = true;
                     fileRow.isExcluded = true;
                 }
-                if (false) { // TODO some validation could be here
+                if (false) { // some validation could be here
                     fileRow.compareResults.isInvalid = true;
                     fileRow.isExcluded = true;
                 }

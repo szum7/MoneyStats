@@ -2,3 +2,13 @@
 https://github.com/SheetJS/sheetjs
 
 https://stackoverflow.com/questions/51949848/angular-get-headers-from-excel-uploaded-using-xlsx
+
+
+Open console in root :: ctrl + shift + c
+
+//
+// Angular CLI commands
+//
+
+// New feature component
+ng generate component hero-detail

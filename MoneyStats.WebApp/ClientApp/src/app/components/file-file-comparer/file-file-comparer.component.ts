@@ -40,7 +40,7 @@ export class FileFileComparerComponent implements OnInit {
     ngOnInit(): void { }
 
     private getBankType(): BankType {
-        // TODO ask user to provide us with this value or realize it based on the file
+        // LATER ask user to provide us with this value or realize it based on the file
         return BankType.KH;
     }
 

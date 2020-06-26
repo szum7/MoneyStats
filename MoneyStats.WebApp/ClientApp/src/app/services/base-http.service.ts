@@ -13,7 +13,7 @@ export class BaseHttpService {
 
     constructor() {
 
-        // TODO
+        // IMPROVE BaseHttpService structure
         // Could have a generic map and logic property but typescript can't (really) instanciate generic types.
         // Could do it with constructor parameters, but then the injections would also have to be passed in.
     }

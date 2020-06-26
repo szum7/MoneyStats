@@ -98,6 +98,6 @@ export class ExcelBankRowMapper {
         // 1. Subtract number of days between Jan 1, 1900 and Jan 1, 1970, plus 1  (Google "excel leap year bug")
         // Neet to add +1 for some reason - Sz. Aron
         // 2. Convert to milliseconds.
-        return (new Date((excelDate - (25567 + 1 + 1)) * 86400 * 1000)).toString(); // TODO hour is at 01:00:00. Should be at 00:00:00
+        return (new Date((excelDate - (25567 + 1 + 1)) * 86400 * 1000)).toString(); // HACK hour is at 01:00:00. Should be at 00:00:00
     }
 }

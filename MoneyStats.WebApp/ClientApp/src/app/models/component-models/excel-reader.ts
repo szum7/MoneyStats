@@ -4,12 +4,12 @@ import * as XLSX from 'xlsx';
 
 export class ExcelReader {
     
-    public inputFileNames: Array<string>;
+    //public inputFileNames: Array<string>;
     private isFinishedArray: Array<boolean>;
     private mapper: ExcelBankRowMapper;
 
     constructor(mapper: ExcelBankRowMapper) {
-        this.inputFileNames = [];
+        //this.inputFileNames = [];
         this.mapper = mapper;
     }
 
@@ -28,7 +28,7 @@ export class ExcelReader {
         
         let self = this;
         let mappedExcelMatrix: Array<Array<ReadInBankRow>> = []; // One row is one document.
-        this.inputFileNames = [];
+        //this.inputFileNames = [];
 
         this.initFinishedArray(inputFiles.length);
 
@@ -37,7 +37,7 @@ export class ExcelReader {
             let file = inputFiles[i];
 
             // Save filename
-            this.inputFileNames.push(file.name);
+            //this.inputFileNames.push(file.name);
 
             // Read file
             self.readFile(file, function(unmappedArray) { // this is an async function
