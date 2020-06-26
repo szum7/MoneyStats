@@ -1,5 +1,5 @@
-export enum StageType {
-    fileFileCompare,
-    dbFileCompare,
-    evaluateRules
-}
+// export enum StageType {
+//     fileFileCompare,
+//     dbFileCompare,
+//     evaluateRules
+// }

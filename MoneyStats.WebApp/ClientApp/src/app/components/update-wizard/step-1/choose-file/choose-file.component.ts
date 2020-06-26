@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 import { ExcelReader } from 'src/app/models/component-models/excel-reader';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
@@ -17,6 +17,8 @@ import { BankType } from 'src/app/models/service-models/bank-type.enum';
   styleUrls: ['./choose-file.component.scss']
 })
 export class ChooseFileComponent implements OnInit {
+  
+  @Output() nextStepChange = new EventEmitter();
 
   public readFiles: any[];
 
@@ -37,7 +39,7 @@ export class ChooseFileComponent implements OnInit {
       return BankType.KH;
   }
 
-  change_filesSelected(event) {
+  change_filesSelected(event): void {
 
       // Get the selected files
       let files = event.target.files;
@@ -52,5 +54,10 @@ export class ChooseFileComponent implements OnInit {
       }
       let mappedExcelMatrix: Array<Array<ReadInBankRow>> = this.reader.getBankRowMatrix(files);
       console.log(mappedExcelMatrix);
+      this.emitOutput(mappedExcelMatrix);
+  }
+
+  private emitOutput(mappedExcelMatrix: Array<Array<ReadInBankRow>>): void {
+    this.nextStepChange.emit(mappedExcelMatrix);
   }
 }

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 
 @Component({
   selector: 'app-read-files-component',
@@ -7,7 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReadFilesComponent implements OnInit {
 
-  constructor() { }
+  @Input() params: Array<Array<ReadInBankRow>>;
+
+  constructor() {    
+  }
 
   ngOnInit() {
   }
