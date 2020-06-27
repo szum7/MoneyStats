@@ -59,13 +59,13 @@ $stepper-box-height: 50px;
     }
 }
 
-$side-nav-width: 40px;
 $hover-color: #444;
 $side-nav-background: #333;
 $sub-menu-background: #434343;
 $sub-item-hover-background: #525252;
 $inactive-text-color: rgba(255, 255, 255, 0.7);
 $active-text-color: rgba(255, 255, 255, 0.9);
+$side-nav-border: 1px solid rgba(0, 0, 0, 0.3);
 
 .right-side-menu {
     position: fixed;
@@ -74,10 +74,12 @@ $active-text-color: rgba(255, 255, 255, 0.9);
     bottom: 0;
     width: $side-nav-width;
     background: $side-nav-background;
+    border-top: $side-nav-border;
+    border-right: $side-nav-border;
 
     .btns {
         .btn-item {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+            border-bottom: $side-nav-border;
 
             &.show {
                 .btn-toggle {
@@ -99,6 +101,7 @@ $active-text-color: rgba(255, 255, 255, 0.9);
             }
             .sub-menu {
                 background: $sub-menu-background;
+                left: 2px !important;
 
                 .sub-item {
                     cursor: pointer;

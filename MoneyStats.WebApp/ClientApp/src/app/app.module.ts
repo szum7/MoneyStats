@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
-import { faInfoCircle, faCaretRight, faCaretLeft, faSun, faCog, faTimes, faTag, faAlignJustify, faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faCaretRight, faCaretLeft, faSun, faCog, faTimes, faTag, faAlignJustify, faArrowRight, faArrowLeft, faChartBar, faChartPie } from '@fortawesome/free-solid-svg-icons';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Pages
@@ -78,5 +78,7 @@ export class AppModule {
     library.addIcons(faTag);
     library.addIcons(faArrowLeft);
     library.addIcons(faArrowRight);
+    library.addIcons(faChartPie);
+    library.addIcons(faChartBar);
   }
 }
