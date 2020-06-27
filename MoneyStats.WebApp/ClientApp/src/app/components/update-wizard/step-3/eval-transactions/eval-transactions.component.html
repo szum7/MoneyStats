@@ -1,1 +1,26 @@
-<p>eval-transactions works!</p>
+<div class="content">
+    <p class="center">Maybe.</p><!-- TODO write info -->
+
+    <div class="mapped-bank-rows" *ngIf="bankRows != null && bankRows.length > 0">
+
+        <!-- Header -->
+        <div class="bank-row header">
+            <span class="tr-row {{propertyMap.customClass}}" *ngFor="let propertyMap of mapper.propertyMaps"
+                [ngClass]="{'isClosed': !propertyMap.isOpen}" [ngStyle]="{'width': propertyMap.width}"
+                (click)="click_toggleColumnVisibility(propertyMap)">
+                {{propertyMap.literal}}
+            </span>
+        </div>
+        <!-- TODO legyen a táblázat fixed headerrel, mindig lássuk mi micsoda -->
+
+        <!-- Body -->
+        <div class="bank-row" *ngFor="let tr of sortBy_bankRows(bankRows, 'AccountingDate')"
+            [ngClass]="{'excluded': tr.isExcluded, 'new-row': tr.compareResults.isNew, 'same-content': tr.compareResults.isSameContent}">
+            <button type="button" (click)="click_toggleRowExclusion(tr)">{{tr.isExcluded ? "-" : "+"}}</button>
+            <span class="tr-row {{propertyMap.customClass}}" *ngFor="let propertyMap of mapper.propertyMaps"
+                [ngClass]="{'isClosed': !propertyMap.isOpen}" [ngStyle]="{'min-width': propertyMap.width}">
+                {{mapper.getPropertyValue(tr.bankRow, propertyMap.property)}}
+            </span>
+        </div>
+    </div>
+</div>

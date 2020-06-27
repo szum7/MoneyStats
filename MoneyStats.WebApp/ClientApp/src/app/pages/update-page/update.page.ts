@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { WizardStep } from 'src/app/models/component-models/wizard-step';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
+import { ReadBankRowForInsertion } from 'src/app/models/component-models/read-bank-row-for-insertion';
 
 export enum StepAlertType {
     Criteria,
@@ -28,7 +29,7 @@ export class CurrentStep {
 }
 
 export class UpdateWizard {
-    
+
     stepsAt: number;
     wizardSteps: WizardStep[];
     currentStep: CurrentStep;
@@ -57,11 +58,11 @@ export class UpdateWizard {
 
         return true;
     }
-    
-    public previous(): boolean {        
+
+    public previous(): boolean {
         if (this.stepsAt <= 0)
-        return false;
-        
+            return false;
+
         this.stepsAt--;
         this.currentStep = new CurrentStep();
 
@@ -78,7 +79,7 @@ export class UpdateResultsUtilities {
 
 export class UpdateResults {
     firstResult: ReadInBankRow[][];
-    secondResult: any; // TODO
+    secondResult: ReadBankRowForInsertion[];
     thirdResult: any; // TODO
     utils: UpdateResultsUtilities;
 
@@ -92,11 +93,11 @@ export class UpdateResults {
     templateUrl: './update.page.html',
     styleUrls: ['./update.page.scss']
 })
-export class UpdatePage implements OnInit {    
+export class UpdatePage implements OnInit {
 
     wizard: UpdateWizard;
     results: UpdateResults;
-    
+
     constructor() {
         this.wizard = new UpdateWizard();
         this.results = new UpdateResults();
@@ -111,12 +112,18 @@ export class UpdatePage implements OnInit {
 
     click_PrevStep() {
         this.wizard.previous();
+        // TODO could null out the last updateResult (first, second or third)
     }
 
-    output_firstStep($output: {matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper}): void {
+    output_firstStep($output: { matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper }): void {
         // TODO Check if everything is okay and set step-alerts
         this.results.firstResult = $output.matrix;
         this.results.utils.bankMapper = $output.mapper;
+    }
+
+    output_secondStep($output: ReadBankRowForInsertion[]): void {
+        // TODO Check if everything is okay and set step-alerts
+        this.results.secondResult = $output;
     }
 
     // private setFirstStage(): void {

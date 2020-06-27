@@ -33,10 +33,10 @@
             <app-choose-file (nextStepChange)="output_firstStep($event)"></app-choose-file>
         </div>
         <div *ngSwitchCase="1">
-            <app-read-files-component [params]="results.firstResult" [mapper]="results.utils.bankMapper"></app-read-files-component>
+            <app-read-files-component [params]="results.firstResult" [mapper]="results.utils.bankMapper" (nextStepChange)="output_secondStep($event)"></app-read-files-component>
         </div>
         <div *ngSwitchCase="2">
-            <app-eval-transactions-component></app-eval-transactions-component>
+            <app-eval-transactions-component [params]="results.secondResult" [mapper]="results.utils.bankMapper"></app-eval-transactions-component>
         </div>
         <div *ngSwitchDefault>
             <p>Something went wrong.</p>
