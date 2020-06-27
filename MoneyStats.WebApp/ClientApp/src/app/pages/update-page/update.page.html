@@ -10,7 +10,8 @@
         </div>
     </div>
     <div class="width50 float-right relative">
-        <div class="nav-btn ml5" (click)="click_NextStep()" [ngClass]="{'unabled': wizard.stepsAt >= wizard.wizardSteps.length - 1}">
+        <div class="nav-btn ml5" (click)="click_NextStep()"
+            [ngClass]="{'unabled': wizard.stepsAt >= wizard.wizardSteps.length - 1}">
             <span class="icon">
                 <fa-icon icon="arrow-right"></fa-icon>
             </span>
@@ -32,7 +33,7 @@
             <app-choose-file (nextStepChange)="output_firstStep($event)"></app-choose-file>
         </div>
         <div *ngSwitchCase="1">
-            <app-read-files-component [params]="results.firstResult"></app-read-files-component>
+            <app-read-files-component [params]="results.firstResult" [mapper]="results.utils.bankMapper"></app-read-files-component>
         </div>
         <div *ngSwitchCase="2">
             <app-eval-transactions-component></app-eval-transactions-component>

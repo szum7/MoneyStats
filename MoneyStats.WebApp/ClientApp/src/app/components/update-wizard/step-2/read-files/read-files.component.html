@@ -1,1 +1,27 @@
-<p>read-files works!</p>
+<div class="content">
+    <p class="center">The program finds the duplicates across multiple files and omits them.</p>
+
+    <div class="mapped-bank-rows" *ngIf="readInBankRows != null && readInBankRows.length > 0">
+
+        <!-- Header -->
+        <div class="bank-row header">
+            <span class="tr-row {{propertyMap.customClass}}" *ngFor="let propertyMap of mapper.propertyMaps"
+                [ngClass]="{'isClosed': !propertyMap.isOpen}" [ngStyle]="{'width': propertyMap.width}"
+                (click)="click_toggleColumnVisibility(propertyMap)">
+                {{propertyMap.literal}}
+            </span>
+        </div>
+        <!-- TODO legyen a táblázat fixed headerrel, mindig lássuk mi micsoda -->
+
+        <!-- Body -->
+        <div class="bank-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
+            [ngClass]="{'excluded': tr.isExcluded}">
+            <button type="button" (click)="click_toggleRowExclusion(tr)">{{tr.isExcluded ? "-" : "+"}}</button>
+            <span class="tr-row {{propertyMap.customClass}}" *ngFor="let propertyMap of mapper.propertyMaps"
+                [ngClass]="{'isClosed': !propertyMap.isOpen}" [ngStyle]="{'min-width': propertyMap.width}">
+                {{mapper.getPropertyValue(tr.bankRow, propertyMap.property)}}
+            </span>
+        </div>
+
+    </div>
+</div>

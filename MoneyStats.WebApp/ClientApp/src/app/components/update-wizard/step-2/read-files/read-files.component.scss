@@ -1,0 +1,49 @@
+.file-browser {
+    display: inline-block;
+}
+
+.bank-row {
+    border: 1px solid #ddd;
+    margin: 2px 0;
+    font-size: 13px;
+
+    &.header {
+        padding-left: 26px;
+
+        .tr-row.isClosed {
+            color: #666;
+            background: #666;
+            border-color: #666;
+        }
+
+        span {
+            cursor: pointer;
+            vertical-align: bottom;
+            border: 1px solid #ddd;
+        }
+    }
+
+    button {
+        margin-right: 2px;
+        width: 25px;
+    }
+
+    .tr-row {
+        display: inline-block;
+        margin-right: 2px;
+        padding: 2px;
+
+        &.isClosed {
+            min-width: auto !important;
+            width: 20px !important;
+            overflow: hidden;
+            white-space: nowrap;
+            height: 18px;
+            color: #fff;
+        }
+    }
+}
+
+.excluded {
+    background: #ff9999;
+}

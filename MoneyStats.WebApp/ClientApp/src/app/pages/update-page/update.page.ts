@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WizardStep } from 'src/app/models/component-models/wizard-step';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
+import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 
 export enum StepAlertType {
     Criteria,
@@ -68,10 +69,22 @@ export class UpdateWizard {
     }
 }
 
+/// <summary>
+/// A class for utilities used throughout multiple steps.
+/// </summary>
+export class UpdateResultsUtilities {
+    bankMapper: ExcelBankRowMapper;
+}
+
 export class UpdateResults {
-    firstResult: Array<Array<ReadInBankRow>>;
+    firstResult: ReadInBankRow[][];
     secondResult: any; // TODO
     thirdResult: any; // TODO
+    utils: UpdateResultsUtilities;
+
+    constructor() {
+        this.utils = new UpdateResultsUtilities();
+    }
 }
 
 @Component({
@@ -90,7 +103,6 @@ export class UpdatePage implements OnInit {
     }
 
     ngOnInit(): void {
-
     }
 
     click_NextStep() {
@@ -101,9 +113,10 @@ export class UpdatePage implements OnInit {
         this.wizard.previous();
     }
 
-    output_firstStep(output: Array<Array<ReadInBankRow>>): void {
+    output_firstStep($output: {matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper}): void {
         // TODO Check if everything is okay and set step-alerts
-        this.results.firstResult = output;
+        this.results.firstResult = $output.matrix;
+        this.results.utils.bankMapper = $output.mapper;
     }
 
     // private setFirstStage(): void {

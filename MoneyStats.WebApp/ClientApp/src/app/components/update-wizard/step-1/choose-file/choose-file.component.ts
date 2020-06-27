@@ -17,47 +17,67 @@ import { BankType } from 'src/app/models/service-models/bank-type.enum';
   styleUrls: ['./choose-file.component.scss']
 })
 export class ChooseFileComponent implements OnInit {
-  
-  @Output() nextStepChange = new EventEmitter();
+
+  @Output() nextStepChange = new EventEmitter<{ matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper }>();
 
   public readFiles: any[];
 
   private reader: ExcelReader;
   private mapper: ExcelBankRowMapper;
-  
+
   constructor(private loadingScreen: LoadingScreenService) {
+    console.log("choose-file constructor");
     this.readFiles = [];
     this.mapper = new ExcelBankRowMapper(this.getBankType());
     this.reader = new ExcelReader(this.mapper);
   }
 
   ngOnInit() {
+    console.log("choose-file oninit");
   }
 
   private getBankType(): BankType {
-      // LATER ask user to provide us with this value or realize it based on the file
-      return BankType.KH;
+    // LATER ask user to provide us with this value or realize it based on the file
+    return BankType.KH;
   }
 
   change_filesSelected(event): void {
 
-      // Get the selected files
-      let files = event.target.files;
+    // Get the selected files
+    let files = event.target.files;
 
-      // Save filenames
-      this.readFiles = files;
+    // Save filenames
+    this.readFiles = files;
 
-      // Read files
-      if (files == null || files.length === 0) {
-          console.log("No files uploaded.");
-          return;
+    // Read files
+    if (files == null || files.length === 0) {
+      console.log("No files uploaded.");
+      return;
+    }
+    let mappedExcelMatrix: Array<Array<ReadInBankRow>> = this.reader.getBankRowMatrix(files);
+
+    // Wait for reader to read files
+    var self = this;
+    this.loadingScreen.start();
+    var finishedReadingInterval = setInterval(function () {
+
+      if (self.reader.isReadingFinished()) {
+        clearInterval(finishedReadingInterval);
+
+        // Evaluate read files
+        if (mappedExcelMatrix == null || mappedExcelMatrix.length == 0) {
+          console.log("No read files/rows to work with.");
+        }
+
+        self.loadingScreen.stop();
+        console.log(mappedExcelMatrix);
+
+        self.emitOutput(mappedExcelMatrix, self.mapper);
       }
-      let mappedExcelMatrix: Array<Array<ReadInBankRow>> = this.reader.getBankRowMatrix(files);
-      console.log(mappedExcelMatrix);
-      this.emitOutput(mappedExcelMatrix);
+    }, 10);
   }
 
-  private emitOutput(mappedExcelMatrix: Array<Array<ReadInBankRow>>): void {
-    this.nextStepChange.emit(mappedExcelMatrix);
+  private emitOutput(mappedExcelMatrix: Array<Array<ReadInBankRow>>, mapper: ExcelBankRowMapper): void {
+    this.nextStepChange.emit({ matrix: mappedExcelMatrix, mapper: mapper });
   }
 }

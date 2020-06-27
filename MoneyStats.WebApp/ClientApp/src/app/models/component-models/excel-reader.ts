@@ -56,6 +56,7 @@ export class ExcelReader {
         }
     }
 
+    //@Async-function-with-callback
     private readFile(file: File, callback: (response: any) => void): void {
 
         let fileReader = new FileReader();
