@@ -38,6 +38,7 @@ export class UpdateWizard {
         this.wizardSteps = [
             new WizardStep("Import files", "#"),
             new WizardStep("Manage read files", "#"),
+            new WizardStep("Compare with database", "#"),
             new WizardStep("Create transactions", "#")
         ];
 
@@ -125,22 +126,4 @@ export class UpdatePage implements OnInit {
         // TODO Check if everything is okay and set step-alerts
         this.results.secondResult = $output;
     }
-
-    // private setFirstStage(): void {
-    //     this.stage = StageType.fileFileCompare;
-    // }
-
-    // change_fileFileOutput(output: FileFileResult): void {
-    //     this.fileFileResult = output;
-    //     this.stage = StageType.dbFileCompare;
-    // }
-
-    // change_dbFileOutput(output: Array<RuleTransaction>): void {
-    //     this.dbFileResult.bankRowList = output;
-    //     this.stage = StageType.evaluateRules;
-    // }
-
-    // change_ruleEvaluatorOutput(output: any): void {
-    //     // Not yet implemented
-    // }
 }

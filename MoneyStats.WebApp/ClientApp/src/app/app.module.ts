@@ -22,9 +22,6 @@ import { BankRowService } from './services/bank-row-service/bank-row.service';
 import { AppComponent } from './app.component';
 import { NavComponent } from './components/nav/nav.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
-import { FileFileComparerComponent } from './components/file-file-comparer/file-file-comparer.component';
-import { DbFileComparerComponent } from './components/db-file-comparer/db-file-comparer.component';
-import { RuleEvaluatorComponent } from './components/rule-evaluator/rule-evaluator.component';
 import { WizardNavigationComponent } from './components/wizard-navigation/wizard-navigation.component';
 import { WizardTestComponent } from './components/wizard-test/wizard-test.component';
 import { ChooseFileComponent } from './components/update-wizard/step-1/choose-file/choose-file.component';
@@ -43,9 +40,6 @@ import { FooterComponent } from './components/footer/footer.component';
     AppComponent,
     NavComponent,
     LoadingScreenComponent,
-    FileFileComparerComponent,
-    DbFileComparerComponent,
-    RuleEvaluatorComponent,
     WizardNavigationComponent,
     WizardTestComponent,
     ChooseFileComponent,
