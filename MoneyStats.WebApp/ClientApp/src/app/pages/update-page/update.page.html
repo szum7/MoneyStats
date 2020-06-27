@@ -1,6 +1,6 @@
-<app-wizard-navigation [stepsAt]="wizard.stepsAt" [wizardSteps]="wizard.wizardSteps"></app-wizard-navigation>
+<!-- <app-wizard-navigation [stepsAt]="wizard.stepsAt" [wizardSteps]="wizard.wizardSteps"></app-wizard-navigation> -->
 
-<div class="stepper-box">
+<!-- <div class="stepper-box">
     <div class="width50 float-left tright">
         <div class="nav-btn mr5" (click)="click_PrevStep()" [ngClass]="{'unabled': wizard.stepsAt <= 0}">
             <p>Previous step</p>&nbsp;
@@ -25,6 +25,37 @@
             </ul>
         </div>
     </div>
+</div> -->
+
+<div class="right-side-menu">
+    <section class="btns">
+        <div class="btn-item" ngbDropdown placement="right-top">
+            <div class="btn-toggle" id="dropdownBasic1" ngbDropdownToggle>
+                <fa-icon icon="arrow-left"></fa-icon>
+            </div>
+            <div class="sub-menu" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <div class="sub-item" ngbDropdownItem><fa-icon icon="align-justify"></fa-icon><span>Action - 1</span></div>
+                <div class="sub-item" ngbDropdownItem>Another Action</div>
+                <div class="sub-item" ngbDropdownItem>Something else is here</div>
+            </div>
+        </div>
+        <div class="btn-item" ngbDropdown placement="right-top">
+            <div class="btn-toggle" id="dropdownBasic2" ngbDropdownToggle>
+                <fa-icon icon="arrow-right"></fa-icon>
+            </div>
+            <div class="sub-menu" ngbDropdownMenu aria-labelledby="dropdownBasic2">
+                <div class="sub-item" ngbDropdownItem>Something else is here</div>
+            </div>
+        </div>
+        <div class="btn-item">
+            <div class="btn-toggle">
+                <fa-icon icon="tag"></fa-icon>
+            </div>
+        </div>
+    </section>
+    <section class="wizard-nav">
+
+    </section>
 </div>
 
 <div class="content">
@@ -33,10 +64,12 @@
             <app-choose-file (nextStepChange)="output_firstStep($event)"></app-choose-file>
         </div>
         <div *ngSwitchCase="1">
-            <app-read-files-component [params]="results.firstResult" [mapper]="results.utils.bankMapper" (nextStepChange)="output_secondStep($event)"></app-read-files-component>
+            <app-read-files-component [params]="results.firstResult" [mapper]="results.utils.bankMapper"
+                (nextStepChange)="output_secondStep($event)"></app-read-files-component>
         </div>
         <div *ngSwitchCase="2">
-            <app-eval-transactions-component [params]="results.secondResult" [mapper]="results.utils.bankMapper"></app-eval-transactions-component>
+            <app-eval-transactions-component [params]="results.secondResult" [mapper]="results.utils.bankMapper">
+            </app-eval-transactions-component>
         </div>
         <div *ngSwitchDefault>
             <p>Something went wrong.</p>

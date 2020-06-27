@@ -18,3 +18,77 @@ Upload() {
         // - map hungarian names to english
         // - properties with null values doesn't show up
     }
+
+
+
+
+    
+        <div class="btn">
+            <label for="btn1">
+                <fa-icon icon="arrow-left"></fa-icon>
+            </label>
+            <input type="checkbox" id="btn1">
+            <div class="sub-menu">
+                <div class="sub-item">
+                    <fa-icon icon="arrow-left"></fa-icon><span>Hello this is me</span>
+                </div>
+                <div class="sub-item"><span>Yet another</span></div>
+            </div>
+        </div>
+        <div class="btn">
+            <label for="btn2">
+                <fa-icon icon="arrow-left"></fa-icon>
+            </label>
+            <input type="checkbox" id="btn2">
+            <div class="sub-menu">
+                <div class="sub-item"><span>Tissue</span></div>
+                <div class="sub-item">
+                    <fa-icon icon="arrow-left"></fa-icon><span>Yet another</span>
+                </div>
+                <div class="sub-item"><span>We are many</span></div>
+            </div>
+        </div>
+        <div class="btn">
+            <fa-icon icon="arrow-left"></fa-icon>
+        </div>
+
+
+
+        .buttons {
+        
+
+        .sub-menu {
+            position: absolute;
+            left: $side-nav-width;
+            top: $side-nav-width;
+            padding: 5px;
+            border: 1px solid #ddd;
+            background: #444;
+            color: #eee;
+            display: none;
+        }
+
+        .btn {
+            color: #eee;
+
+            /* Checkbox hack */
+            input[type="checkbox"] {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+    
+            label {
+                -webkit-appearance: push-button;
+                -moz-appearance: button;
+                cursor: pointer;
+                padding: 5px;
+                display: block;
+            }
+    
+            /* Toggled State */
+            input[type="checkbox"]:checked ~ div.sub-menu {
+                display: block;
+            }
+        }
+    }

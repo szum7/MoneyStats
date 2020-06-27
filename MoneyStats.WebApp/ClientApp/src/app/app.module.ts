@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
 import { faInfoCircle, faCaretRight, faCaretLeft, faSun, faCog, faTimes, faTag, faAlignJustify, faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Pages
 import { HomePage } from './pages/home-page/home.page';
@@ -51,6 +52,7 @@ import { FooterComponent } from './components/footer/footer.component';
     BrowserModule,
     HttpClientModule,
     FontAwesomeModule,
+    NgbModule,
     RouterModule.forRoot([
       { path: '', component: HomePage },
       { path: 'testtable', component: TestTablePage },

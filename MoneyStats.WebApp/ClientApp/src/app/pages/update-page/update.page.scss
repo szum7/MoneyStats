@@ -59,6 +59,87 @@ $stepper-box-height: 50px;
     }
 }
 
+$side-nav-width: 40px;
+$hover-color: #444;
+$side-nav-background: #333;
+$sub-menu-background: #434343;
+$sub-item-hover-background: #525252;
+$inactive-text-color: rgba(255, 255, 255, 0.7);
+$active-text-color: rgba(255, 255, 255, 0.9);
+
+.right-side-menu {
+    position: fixed;
+    top: $header-height;
+    left: 0;
+    bottom: 0;
+    width: $side-nav-width;
+    background: $side-nav-background;
+
+    .btns {
+        .btn-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+
+            &.show {
+                .btn-toggle {
+                    color: $active-text-color;
+                }
+            }
+
+            .btn-toggle {
+                width: $side-nav-width;
+                height: $side-nav-width;
+                line-height: $side-nav-width;
+                color: $inactive-text-color;
+                cursor: pointer;
+                text-align: center;
+
+                &:hover {
+                    color: $active-text-color;
+                }
+            }
+            .sub-menu {
+                background: $sub-menu-background;
+
+                .sub-item {
+                    cursor: pointer;
+                    font-size: $menu-font-size;
+                    color: $inactive-text-color;
+                    padding-left: 14px;
+                    padding-right: 14px;
+
+                    &:hover {
+                        background: $sub-item-hover-background;
+                    }
+                }
+            }
+
+            /* Ng-bootstrap overrides begin */
+            .dropdown-menu {
+                border-radius: 0;
+                margin: 0;
+                padding: 5px 0 5px 0;
+                margin-left: -2px;
+                min-width: 0;
+
+                .dropdown-item fa-icon {
+                    width: 23px;
+                    display: inline-block;
+                    text-align: left;
+                }
+            }
+            /* Ng-bootstrap overrides end */
+        }
+    }
+
+    /* Ng-bootstrap overrides begin */
+    .dropdown-toggle::after {
+        content: none;
+    }
+    /* Ng-bootstrap overrides end */
+}
+
 .content {
-    margin-top: $header-height + $wizard-nav-height + $stepper-box-height;
+    // margin-top: $header-height + $wizard-nav-height + $stepper-box-height;
+    margin-top: $header-height;
+    margin-left: $side-nav-width;
 }
