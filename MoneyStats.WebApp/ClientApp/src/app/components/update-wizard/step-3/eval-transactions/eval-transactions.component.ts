@@ -1,8 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { PropertyMapRow } from 'src/app/models/component-models/property-map-row';
 import { ReadBankRowForInsertion } from 'src/app/models/component-models/read-bank-row-for-insertion';
+import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
+import { BankRow } from 'src/app/models/service-models/bank-row.model';
+import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
 
 @Component({
   selector: 'app-eval-transactions-component',
@@ -15,13 +17,47 @@ export class EvalTransactionsComponent implements OnInit {
   @Input() mapper: ExcelBankRowMapper;
   public get bankRows(): ReadBankRowForInsertion[] { return this.params; }
 
-  constructor() { }
+  constructor(
+    private loadingScreen: LoadingScreenService,
+    private bankRowService: BankRowService) {       
+    }
 
   ngOnInit() {
     this.program();
   }
 
   private program(): void {
+    let self = this;
+    self.loadingScreen.start();
+    self.getBankRowsFromDb(function (dbList) {
+      self.compareDbToFileRows(dbList);
+      self.loadingScreen.stop();
+      console.log("Compare finished");
+    });
+  }
+
+  private getBankRowsFromDb(callback: (response: Array<BankRow>) => void): void {
+    this.bankRowService.get().subscribe(response => {
+      console.log(response);
+      callback(response);
+    }, error => {
+      console.error("Couldn't get bank rows from database!");
+      console.log(error);
+    })
+  }
+
+  private compareDbToFileRows(dbList: Array<BankRow>): void {
+    for (let i = 0; i < dbList.length; i++) {
+      let dbRow: BankRow = dbList[i];
+      for (let j = 0; j < this.bankRows.length; j++) {
+        let fileRow: ReadBankRowForInsertion = this.bankRows[j];
+
+        if (dbRow.getContentId() === fileRow.bankRow.getContentId()) {
+          fileRow.compareResults.isSameContent = true;
+          fileRow.isExcluded = true;
+        }
+      }
+    }
   }
 
   sortBy_bankRows(arr: any[], property: string) {
@@ -34,11 +70,11 @@ export class EvalTransactionsComponent implements OnInit {
   }
 
   click_toggleColumnVisibility(propertyMap: PropertyMapRow): void {
-      propertyMap.isOpen = !propertyMap.isOpen;
+    propertyMap.isOpen = !propertyMap.isOpen;
   }
 
   click_toggleRowExclusion(row: ReadBankRowForInsertion): void {
-      row.isExcluded = !row.isExcluded;
+    row.isExcluded = !row.isExcluded;
   }
 
 }

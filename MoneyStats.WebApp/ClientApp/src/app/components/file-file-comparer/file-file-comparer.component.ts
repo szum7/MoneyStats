@@ -18,14 +18,6 @@ import { FileFileResult } from 'src/app/models/component-models/file-file-result
 })
 export class FileFileComparerComponent implements OnInit {
 
-    // New bank rows page
-    // 1. file merge stage (exclude duplicates between xml rows from multiple files)
-    // 2. db merge stage (exclude duplicates between db rows and xml rows)
-    // 3. eval rule and edit stage (evaluate rules and allow edition to rows)
-
-    // Edit bank rows page
-    // 1. list bank rows from db for edition    
-
     reader: ExcelReader;
     mapper: ExcelBankRowMapper;
     readInBankRows: Array<ReadInBankRow>;
