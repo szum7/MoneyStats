@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { WizardStep } from 'src/app/models/component-models/wizard-step';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
@@ -92,13 +92,25 @@ export class UpdateResults {
 @Component({
     selector: 'app-update-page',
     templateUrl: './update.page.html',
-    styleUrls: ['./update.page.scss']
+    styleUrls: ['./update.page.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class UpdatePage implements OnInit {
 
     wizard: UpdateWizard;
     results: UpdateResults;
     isTitleTagsHidden: boolean;
+    public get nextStepAlert(): string {
+
+        let alerts = "test";
+
+        if (this.wizard && this.wizard.currentStep.stepAlerts.length > 0) {
+            alerts = this.wizard.currentStep.stepAlerts.join("<br>\n");
+            // TODO check if only alerts or requirements
+        }
+        
+        return "Next step<br>\n\n" + alerts;
+    }
 
     constructor() {
         this.wizard = new UpdateWizard();

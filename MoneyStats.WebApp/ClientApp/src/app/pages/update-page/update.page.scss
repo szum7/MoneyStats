@@ -146,6 +146,52 @@ $disabled-color: #666;
             }
             /* Ng-bootstrap overrides end */
         }
+
+        .next-step-tooltip {
+            top: 5px !important;
+            left: 1px !important;
+            // opacity: 0.8;
+            font-size: 12px;
+
+            .arrow {
+                top: 10px !important;
+
+                &:before {
+                    border-right-color: $side-nav-background !important;
+                }
+            }
+
+            .tooltip-inner {
+                background: #f2f2f2;
+                color: #333;
+                border: 1px solid $side-nav-background;
+                border-radius: 3px;
+                text-align: left;
+            }
+        }
+
+        .general-tooltip {
+            font-size: 12px;
+
+            .arrow {
+
+                &:before {
+                    border-right-color: $side-nav-background !important;
+                }
+            }
+
+            .tooltip-inner {
+                background: $side-nav-background;
+                color: #bbb;
+                border-radius: 5px;
+                padding-left: 10px;
+                padding-right: 12px;
+            }
+
+            &.no-wrap {
+                white-space: nowrap;
+            }
+        }
     }
 
     /* Ng-bootstrap overrides begin */

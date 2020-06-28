@@ -29,13 +29,16 @@
 
 <div class="right-side-menu">
     <section class="btns">
-        <div class="btn-item" (click)="click_NextStep()"
+        <div class="btn-item" (click)="click_NextStep()" [ngbTooltip]="nextStepAlert" 
+        tooltipClass="next-step-tooltip" triggers="click" [autoClose]="'outside'" placement="right-top"
             [ngClass]="{'unabled': wizard.stepsAt >= wizard.wizardSteps.length - 1}">
             <div class="btn-toggle">
                 <fa-icon icon="arrow-right"></fa-icon>
             </div>
         </div>
-        <div class="btn-item" (click)="click_PrevStep()" [ngClass]="{'unabled': wizard.stepsAt <= 0}">
+        <div class="btn-item" (click)="click_PrevStep()" [ngClass]="{'unabled': wizard.stepsAt <= 0}" 
+        [ngbTooltip]="nextStepAlert" 
+        tooltipClass="general-tooltip no-wrap" triggers="click" [autoClose]="'outside'" placement="right">
             <div class="btn-toggle">
                 <fa-icon icon="arrow-left"></fa-icon>
             </div>
