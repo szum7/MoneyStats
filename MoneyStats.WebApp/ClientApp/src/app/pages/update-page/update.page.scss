@@ -81,6 +81,7 @@ $disabled-color: #666;
     .btns {
         .btn-item {
             border-bottom: $side-nav-border;
+            position: relative;
 
             &.unabled {
                 .btn-toggle {
@@ -113,6 +114,7 @@ $disabled-color: #666;
                     color: $active-text-color;
                 }
             }
+
             .sub-menu {
                 background: $sub-menu-background;
                 left: 2px !important;
@@ -145,28 +147,66 @@ $disabled-color: #666;
                 }
             }
             /* Ng-bootstrap overrides end */
+
+            &:hover .next-step-tooltip {
+                display: block;
+            }
         }
 
         .next-step-tooltip {
-            top: 5px !important;
-            left: 1px !important;
-            // opacity: 0.8;
+            display: none;
+            position: absolute;
+            z-index: 2000;
+            top: 3px;
+            left: $side-nav-width + 3;
+            border: 1px solid $side-nav-background;
+            background: #fff;
+            color: #333;
+            opacity: 0.8;
             font-size: 12px;
+            padding: 7px 9px 7px 7px;
 
-            .arrow {
-                top: 10px !important;
+            p {
+                padding: 0 0 5px 0;
+                margin: 0;
+                white-space: nowrap;
+            }
 
-                &:before {
-                    border-right-color: $side-nav-background !important;
+            .title {
+                font-weight: bold;
+            }
+
+            .progress-text {
+                font-weight: bold;
+
+                .icon {
+                    width: 12px;
+                    display: inline-block;
+                    text-align: center;
+                    margin-right: 2px;
+                }
+
+                &.okay {
+                    color: rgb(41, 145, 41);
+                }
+
+                &.not-okay {
+                    color: rgb(231, 54, 54);
                 }
             }
 
-            .tooltip-inner {
-                background: #f2f2f2;
-                color: #333;
-                border: 1px solid $side-nav-background;
-                border-radius: 3px;
-                text-align: left;
+            .tips {
+                margin: 0;
+                padding: 0 0 0 19px;
+
+                .tip {
+                    color: #555;
+                    white-space: nowrap;
+
+                    &.error {
+                        color: rgb(231, 54, 54);
+                    }
+                }
             }
         }
 
@@ -174,7 +214,6 @@ $disabled-color: #666;
             font-size: 12px;
 
             .arrow {
-
                 &:before {
                     border-right-color: $side-nav-background !important;
                 }

@@ -12,14 +12,39 @@ export enum StepAlertType {
 export class StepAlert {
     title: string;
     type: StepAlertType;
+
+    constructor(title: string) {
+        this.title = title;
+    }
+
+    public setToCriteria() {
+        this.type = StepAlertType.Criteria;
+        return this;
+    }
+
+    public setToMessage() {
+        this.type = StepAlertType.Message;
+        return this;
+    }
 }
 
 export class CurrentStep {
-    isProgressPossible: boolean;
-    stepAlerts: string[];
+
+    get isProgressable(): boolean {
+
+        if (!this.stepAlerts)
+            return true;
+
+        for (let i = 0; i < this.stepAlerts.length; i++) {
+            const element = this.stepAlerts[i];
+            if (element.type == StepAlertType.Criteria)
+                return false;
+        }
+        return true;
+    }
+    stepAlerts: StepAlert[];
 
     constructor() {
-        this.isProgressPossible = true; // TODO add criterias and validations (where needed)
         this.stepAlerts = [];
     }
 
@@ -51,7 +76,7 @@ export class UpdateWizard {
         if (this.stepsAt >= this.wizardSteps.length - 1)
             return false;
 
-        if (!this.currentStep.isProgressPossible)
+        if (!this.currentStep.isProgressable)
             return false;
 
         this.stepsAt++;
@@ -100,16 +125,12 @@ export class UpdatePage implements OnInit {
     wizard: UpdateWizard;
     results: UpdateResults;
     isTitleTagsHidden: boolean;
-    public get nextStepAlert(): string {
+    get stepAlertType() { return StepAlertType; }
+    get isStepReadyToProgress() {
+        if (!this.wizard)
+            return false;
 
-        let alerts = "test";
-
-        if (this.wizard && this.wizard.currentStep.stepAlerts.length > 0) {
-            alerts = this.wizard.currentStep.stepAlerts.join("<br>\n");
-            // TODO check if only alerts or requirements
-        }
-        
-        return "Next step<br>\n\n" + alerts;
+        return this.wizard.currentStep.isProgressable;
     }
 
     constructor() {
@@ -128,6 +149,7 @@ export class UpdatePage implements OnInit {
     click_PrevStep() {
         this.wizard.previous();
         // TODO could null out the last updateResult (first, second or third)
+        // TODO alert user if sure about going back (handle misclicks)
     }
 
     click_toggleTitleTags(): void {

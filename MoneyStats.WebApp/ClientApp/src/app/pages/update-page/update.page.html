@@ -29,35 +29,68 @@
 
 <div class="right-side-menu">
     <section class="btns">
-        <div class="btn-item" (click)="click_NextStep()" [ngbTooltip]="nextStepAlert" 
-        tooltipClass="next-step-tooltip" triggers="click" [autoClose]="'outside'" placement="right-top"
+        <div class="btn-item" (click)="click_NextStep()"
             [ngClass]="{'unabled': wizard.stepsAt >= wizard.wizardSteps.length - 1}">
             <div class="btn-toggle">
                 <fa-icon icon="arrow-right"></fa-icon>
             </div>
+            <div class="next-step-tooltip">
+                <p class="title">Next step</p>
+                <p class="progress-text okay" *ngIf="isStepReadyToProgress">
+                    <span class="icon">
+                        <fa-icon icon="check"></fa-icon>
+                    </span>
+                    All is good, you're ready to advance.
+                </p>
+                <p class="progress-text not-okay" *ngIf="!isStepReadyToProgress">
+                    <span class="icon">
+                        <fa-icon icon="times"></fa-icon>
+                    </span>
+                    There are still unresolved issues!
+                </p>
+                <ul class="tips" *ngIf="wizard.currentStep.stepAlerts.length > 0">
+                    <li class="tip" *ngFor="let tip of wizard.currentStep.stepAlerts"
+                        [ngClass]="{'error': tip.type === stepAlertType.Criteria}">{{tip.title}}</li>
+                </ul>
+            </div>
         </div>
-        <div class="btn-item" (click)="click_PrevStep()" [ngClass]="{'unabled': wizard.stepsAt <= 0}" 
-        [ngbTooltip]="nextStepAlert" 
-        tooltipClass="general-tooltip no-wrap" triggers="click" [autoClose]="'outside'" placement="right">
+        <div class="btn-item" (click)="click_PrevStep()" [ngClass]="{'unabled': wizard.stepsAt <= 0}"
+            ngbTooltip="Previous step" tooltipClass="general-tooltip no-wrap" placement="right">
             <div class="btn-toggle">
                 <fa-icon icon="arrow-left"></fa-icon>
             </div>
         </div>
-        <div class="btn-item" ngbDropdown placement="right-top">
-            <div class="btn-toggle" id="dropdownBasic1" ngbDropdownToggle>
-                <fa-icon icon="cog"></fa-icon>
-            </div>
-            <div class="sub-menu" ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                <div class="sub-item" ngbDropdownItem>Something else is here</div>
-                <div class="sub-item" ngbDropdownItem>Maybe</div>
+        <div ngbTooltip="Settings" tooltipClass="general-tooltip no-wrap" placement="right">
+            <div class="btn-item" ngbDropdown placement="right-top">
+                <div class="btn-toggle" id="dropdownBasic1" ngbDropdownToggle>
+                    <fa-icon icon="cog"></fa-icon>
+                </div>
+                <div class="sub-menu" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <div class="sub-item" ngbDropdownItem>Info</div>
+                    <div class="sub-item" ngbDropdownItem>Sound</div>
+                    <div class="sub-item" ngbDropdownItem>Resolution</div>
+                </div>
             </div>
         </div>
-        <div class="btn-item" (click)="click_toggleTitleTags()">
+        <div ngbTooltip="Tools" tooltipClass="general-tooltip no-wrap" placement="right">
+            <div class="btn-item" ngbDropdown placement="right-top">
+                <div class="btn-toggle" id="dropdownBasic2" ngbDropdownToggle>
+                    <fa-icon icon="wrench"></fa-icon>
+                </div>
+                <div class="sub-menu" ngbDropdownMenu aria-labelledby="dropdownBasic2">
+                    <div class="sub-item" ngbDropdownItem>Delete life</div>
+                    <div class="sub-item" ngbDropdownItem>Add life</div>
+                </div>
+            </div>
+        </div>
+        <div class="btn-item" (click)="click_toggleTitleTags()" ngbTooltip="Minimize wizard stepper tooltips"
+            tooltipClass="general-tooltip no-wrap" placement="right">
             <div class="btn-toggle">
                 <fa-icon *ngIf="!isTitleTagsHidden" icon="eye"></fa-icon>
                 <fa-icon *ngIf="isTitleTagsHidden" icon="eye-slash"></fa-icon>
             </div>
         </div>
+        <!-- TODO make tooltips toggleable (they get annoying) -->
     </section>
     <section class="wizard-nav">
 
