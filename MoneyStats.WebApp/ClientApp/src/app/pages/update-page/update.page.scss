@@ -1,64 +1,5 @@
 @import "./../../../styles/variables.scss";
 
-$stepper-box-height: 50px;
-.stepper-box {
-    position: fixed;
-    top: $header-height + $wizard-nav-height;
-    height: $stepper-box-height;
-    left: 0;
-    right: 0;
-    border-bottom: 1px solid #ddd;
-    background: #444;
-    padding-top: 12px;
-
-    .nav-btn {
-        display: inline-block;
-        cursor: pointer;
-
-        &.unabled {
-            cursor: default;
-
-            p,
-            .icon {
-                color: #8a8a8a;
-            }
-
-            &:hover .icon,
-            .icon {
-                background-color: #555;
-            }
-
-            &:hover p {
-                color: #8a8a8a;
-            }
-        }
-
-        .icon {
-            display: inline-block;
-            padding: 5px 8px;
-            border-radius: 40px;
-            font-size: 12px;
-            background-color: #666;
-            color: #eee;
-        }
-
-        &:hover .icon {
-            background-color: #777;
-        }
-
-        p {
-            display: inline-block;
-            color: #eee;
-            padding: 0;
-            margin: 0;
-        }
-
-        &:hover p {
-            color: #fff;
-        }
-    }
-}
-
 $hover-color: #444;
 $side-nav-background: #333;
 $sub-menu-background: #434343;
@@ -246,7 +187,6 @@ $disabled-color: #666;
 }
 
 .update-page-content {
-    // margin-top: $header-height + $wizard-nav-height + $stepper-box-height;
     margin-top: $header-height;
     margin-left: $side-nav-width;
 }
