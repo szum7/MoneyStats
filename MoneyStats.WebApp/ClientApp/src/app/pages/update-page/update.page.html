@@ -1,7 +1,7 @@
 <!-- <app-wizard-navigation [stepsAt]="wizard.stepsAt" [wizardSteps]="wizard.wizardSteps"></app-wizard-navigation> -->
 
 <div class="left-side-menu">
-    <section class="btns">
+    <section class="btns" #btnsElement>
         <!-- Next step btn -->
         <div class="btn-item" (click)="click_NextStep()"
             [ngClass]="{'unabled': wizard.stepsAt >= wizard.wizardSteps.length - 1}">
@@ -72,8 +72,10 @@
             </div>
         </div>
     </section>
-    <section class="wizard-nav">
-
+    <section class="wizard-nav-section" #wizardNavElement>
+        <div *ngIf="wizardNavMaxHeight != null">
+            <app-wizard-navigation [isTooltipsHidden]="isTooltipsDisabled" [maxHeight]="wizardNavMaxHeight" [stepsAt]="wizard.stepsAt" [wizardSteps]="wizard.wizardSteps"></app-wizard-navigation>
+        </div>
     </section>
 </div>
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, AfterContentInit, AfterViewInit } from '@angular/core';
 import { WizardStep } from 'src/app/models/component-models/wizard-step';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
@@ -120,7 +120,7 @@ export class UpdateResults {
     styleUrls: ['./update.page.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class UpdatePage implements OnInit {
+export class UpdatePage implements OnInit, AfterContentInit, AfterViewInit {
 
     wizard: UpdateWizard;
     results: UpdateResults;
@@ -133,10 +133,33 @@ export class UpdatePage implements OnInit {
         return this.wizard.currentStep.isProgressable;
     }
 
+    @ViewChild('wizardNavElement', null) wizardNavView: ElementRef;
+    @ViewChild('btnsElement', null) btnsView: ElementRef;
+    wizardNavMaxHeight: number;
+
     constructor() {
         this.wizard = new UpdateWizard();
         this.results = new UpdateResults();
         this.isTooltipsDisabled = false;
+    }
+
+    ngAfterViewInit(): void {
+        this.initWizardNavPositionAndHeight();
+    }
+
+    ngAfterContentInit(): void {
+    }
+
+    private initWizardNavPositionAndHeight(): void {
+        let btnsHeight = this.btnsView.nativeElement.offsetHeight;
+        console.log(btnsHeight);
+        this.wizardNavView.nativeElement.style.top = btnsHeight + "px";
+        let self = this;
+
+        setTimeout(function () {
+            self.wizardNavMaxHeight = self.wizardNavView.nativeElement.offsetHeight;
+            console.log(self.wizardNavMaxHeight);
+        }, 1000); // HACK against "ExpressionChangedAfterItHasBeenCheckedError"
     }
 
     ngOnInit(): void {

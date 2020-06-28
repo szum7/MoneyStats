@@ -1,15 +1,99 @@
 @import "./../../../styles/variables.scss";
 
-
-$line-width: 180px;
-$line-height: 6px;
+// HACK unfortunetaly setting these means messing up the style
+// TODO fix css to be truly dynamic
+$line-width: 6px;
+$line-height: 100px;
 $circle-size: 18px;
-$step-width: $line-width + $circle-size;
+$step-width: $line-width + $circle-size; // TODO delete
+$step-height: $line-width + $circle-size;
 $active-color: #eee;
 $active-text-color: #eee;
 $inactive-color: #666;
 $inactive-text-color: #999;
 $background-color: #444;
+$tooltip-height: 28px;
+
+.wizard-nav {
+    //margin-top: 10px;
+
+    .step {
+        position: relative;
+        text-align: center;
+
+        &.first {
+            .line {
+                display: none;
+            }
+
+            .circle {
+                background: $active-color;
+                bottom: -2px;
+            }
+
+            .title {
+                bottom: -($circle-size / 2);
+            }
+        }
+
+        &.active {
+            .line,
+            .circle {
+                background: $active-color;
+            }
+
+            .title {
+                color: $active-text-color;
+            }
+        }
+
+        .title {
+            position: absolute;
+            bottom: -(($tooltip-height / 2) + ($circle-size / 2));
+            left: $side-nav-width + 5px;
+            white-space: nowrap;
+            padding: 0 12px;
+            background-color: $background-color;
+            color: #aaa;
+            opacity: 0.95;
+            font-size: 12px;
+            border-radius: 3px;
+            height: $tooltip-height;
+            line-height: $tooltip-height;
+
+            &:before {
+                content: "";
+                position: absolute;
+                border-color: transparent;
+                border-style: solid;
+                top: ($circle-size / 2) + 1;
+                left: -9px;
+                border-width: 0.4rem 0.4rem 0;
+                border-top-color: $background-color;
+                transform: rotate(90deg);
+            }
+        }
+
+        .circle {
+            background: $inactive-color;
+            border-radius: 20px;
+            width: $circle-size;
+            height: $circle-size;
+            z-index: 100;
+            position: absolute;
+            bottom: -($circle-size) + 1;
+            left: ($side-nav-width / 2) - ($circle-size / 2);
+        }
+
+        .line {
+            width: $line-width;
+            //height: 100px; // default height
+            background: $inactive-color;
+            margin: auto;
+            margin-top: $circle-size - 2;
+        }
+    }
+}
 
 .wn-container {
     margin: auto;
@@ -20,7 +104,7 @@ $background-color: #444;
     position: fixed;
     left: 0;
     right: 0;
-    top: $header-height;    
+    top: $header-height;
     background: $background-color;
 
     .step {
@@ -35,14 +119,13 @@ $background-color: #444;
             .line {
                 display: none;
             }
-            
+
             .circle {
                 background: $active-color;
             }
         }
 
         &.active {
-            
             .line,
             .circle {
                 background: $active-color;
@@ -58,7 +141,7 @@ $background-color: #444;
         .circle {
             position: absolute;
         }
-    
+
         .title {
             bottom: 5px;
             right: (-$step-width / 2) + 10;
@@ -82,5 +165,5 @@ $background-color: #444;
             right: 2px;
             z-index: 100;
         }
-    }    
+    }
 }

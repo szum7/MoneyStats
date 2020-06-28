@@ -1,8 +1,18 @@
-<div class="wn-container">
+<!-- <div class="wn-container">
     <div class="step" *ngFor="let wizardStep of wizardSteps; let i = index" [ngClass]="{'first': i === 0, 'active': i <= stepsAt}">
         <div class="title">{{wizardStep.title}}</div>
         <div class="line"></div>
         <div class="circle"></div>
     </div>
-</div>
+</div> -->
 <!-- TODO alert the user somehow when the next step is available (e.g.: with color: red-green or just graying out) -->
+
+<div class="wizard-nav">
+    <div class="step" *ngFor="let wizardStep of wizardSteps; let i = index"
+        [ngClass]="{'first': i === 0, 'active': i <= stepsAt}">
+        <div class="title" [ngClass]="{'hidden': isTooltipsHidden}">{{wizardStep.title}}</div>
+        <div class="line" [ngStyle]="{'height': lineHeight}"></div>
+        <div></div>
+        <div class="circle"></div>
+    </div>
+</div>
