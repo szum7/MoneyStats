@@ -124,7 +124,7 @@ export class UpdatePage implements OnInit {
 
     wizard: UpdateWizard;
     results: UpdateResults;
-    isTitleTagsHidden: boolean;
+    isTooltipsDisabled: boolean;
     get stepAlertType() { return StepAlertType; }
     get isStepReadyToProgress() {
         if (!this.wizard)
@@ -136,7 +136,7 @@ export class UpdatePage implements OnInit {
     constructor() {
         this.wizard = new UpdateWizard();
         this.results = new UpdateResults();
-        this.isTitleTagsHidden = false;
+        this.isTooltipsDisabled = false;
     }
 
     ngOnInit(): void {
@@ -153,7 +153,7 @@ export class UpdatePage implements OnInit {
     }
 
     click_toggleTitleTags(): void {
-        this.isTitleTagsHidden = !this.isTitleTagsHidden;
+        this.isTooltipsDisabled = !this.isTooltipsDisabled;
     }
 
     output_firstStep($output: { matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper }): void {
