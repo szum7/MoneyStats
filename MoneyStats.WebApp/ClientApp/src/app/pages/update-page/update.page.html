@@ -27,7 +27,7 @@
     </div>
 </div> -->
 
-<div class="right-side-menu">
+<div class="left-side-menu">
     <section class="btns">
         <div class="btn-item" (click)="click_NextStep()"
             [ngClass]="{'unabled': wizard.stepsAt >= wizard.wizardSteps.length - 1}">
@@ -97,7 +97,7 @@
     </section>
 </div>
 
-<div class="content">
+<div class="update-page-content">
     <div class="dialog-contianer" [ngSwitch]="wizard.stepsAt">
         <div *ngSwitchCase="0">
             <app-choose-file (nextStepChange)="output_firstStep($event)"></app-choose-file>

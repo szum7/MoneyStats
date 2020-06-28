@@ -68,7 +68,7 @@ $active-text-color: rgba(255, 255, 255, 0.9);
 $side-nav-border: 1px solid rgba(0, 0, 0, 0.3);
 $disabled-color: #666;
 
-.right-side-menu {
+.left-side-menu {
     position: fixed;
     top: $header-height;
     left: 0;
@@ -162,7 +162,7 @@ $disabled-color: #666;
             border: 1px solid $side-nav-background;
             background: #fff;
             color: #333;
-            opacity: 0.8;
+            opacity: 0.9;
             font-size: 12px;
             padding: 7px 9px 7px 7px;
 
@@ -245,7 +245,7 @@ $disabled-color: #666;
     /* Ng-bootstrap overrides end */
 }
 
-.content {
+.update-page-content {
     // margin-top: $header-height + $wizard-nav-height + $stepper-box-height;
     margin-top: $header-height;
     margin-left: $side-nav-width;
