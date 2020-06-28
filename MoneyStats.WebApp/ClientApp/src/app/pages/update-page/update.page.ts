@@ -98,10 +98,12 @@ export class UpdatePage implements OnInit {
 
     wizard: UpdateWizard;
     results: UpdateResults;
+    isTitleTagsHidden: boolean;
 
     constructor() {
         this.wizard = new UpdateWizard();
         this.results = new UpdateResults();
+        this.isTitleTagsHidden = false;
     }
 
     ngOnInit(): void {
@@ -114,6 +116,10 @@ export class UpdatePage implements OnInit {
     click_PrevStep() {
         this.wizard.previous();
         // TODO could null out the last updateResult (first, second or third)
+    }
+
+    click_toggleTitleTags(): void {
+        this.isTitleTagsHidden = !this.isTitleTagsHidden;
     }
 
     output_firstStep($output: { matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper }): void {

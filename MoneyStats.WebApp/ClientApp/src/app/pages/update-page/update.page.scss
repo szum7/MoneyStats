@@ -66,6 +66,7 @@ $sub-item-hover-background: #525252;
 $inactive-text-color: rgba(255, 255, 255, 0.7);
 $active-text-color: rgba(255, 255, 255, 0.9);
 $side-nav-border: 1px solid rgba(0, 0, 0, 0.3);
+$disabled-color: #666;
 
 .right-side-menu {
     position: fixed;
@@ -80,6 +81,19 @@ $side-nav-border: 1px solid rgba(0, 0, 0, 0.3);
     .btns {
         .btn-item {
             border-bottom: $side-nav-border;
+
+            &.unabled {
+                .btn-toggle {
+                    color: $disabled-color;
+                    cursor: default;
+                }
+                .btn-toggle:hover {
+                    color: $disabled-color;
+                }
+                .sub-menu .sub-item:hover {
+                    background: transparent;
+                }
+            }
 
             &.show {
                 .btn-toggle {
@@ -136,7 +150,12 @@ $side-nav-border: 1px solid rgba(0, 0, 0, 0.3);
 
     /* Ng-bootstrap overrides begin */
     .dropdown-toggle::after {
-        content: none;
+        position: absolute;
+        top: 18px;
+        right: 2px;
+        transform: rotate(270deg);
+        opacity: 0.4;
+        font-size: 13px;
     }
     /* Ng-bootstrap overrides end */
 }

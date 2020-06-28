@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
-import { faInfoCircle, faCaretRight, faCaretLeft, faSun, faCog, faTimes, faTag, faAlignJustify, faArrowRight, faArrowLeft, faChartBar, faChartPie } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faEye, faEyeSlash, faCog, faTag, faAlignJustify, faArrowRight, faArrowLeft, faChartBar, faChartPie, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Pages
@@ -69,16 +69,25 @@ import { FooterComponent } from './components/footer/footer.component';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { 
+export class AppModule {
+
   constructor(library: FaIconLibrary) {
-    // library.addIconPacks(fas);
-    library.addIcons(faInfoCircle);
-    library.addIcons(faCog);
-    library.addIcons(faAlignJustify);
-    library.addIcons(faTag);
-    library.addIcons(faArrowLeft);
-    library.addIcons(faArrowRight);
-    library.addIcons(faChartPie);
-    library.addIcons(faChartBar);
+
+    let icons: IconDefinition[] = [
+      faInfoCircle, faCog, faAlignJustify, faTag,
+      faArrowLeft, faArrowRight,
+      faChartPie, faChartBar,
+      faEye, faEyeSlash
+    ];
+
+    this.initIcons(library, icons);
   }
+
+  private initIcons(library: FaIconLibrary, icons: IconDefinition[]): void {    
+    for (let i = 0; i < icons.length; i++) {
+      library.addIcons(icons[i]);
+    }
+    //library.addIconPacks(fas);
+  }
+
 }
