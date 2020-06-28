@@ -148,18 +148,18 @@ export class UpdatePage implements OnInit, AfterContentInit, AfterViewInit {
     }
 
     ngAfterContentInit(): void {
+        // Might be useful when trying to fix hack#num1
     }
 
     private initWizardNavPositionAndHeight(): void {
         let btnsHeight = this.btnsView.nativeElement.offsetHeight;
-        console.log(btnsHeight);
         this.wizardNavView.nativeElement.style.top = btnsHeight + "px";
-        let self = this;
 
+        let self = this;
         setTimeout(function () {
             self.wizardNavMaxHeight = self.wizardNavView.nativeElement.offsetHeight;
             console.log(self.wizardNavMaxHeight);
-        }, 1000); // HACK against "ExpressionChangedAfterItHasBeenCheckedError"
+        }, 300); // HACK #num1 against "ExpressionChangedAfterItHasBeenCheckedError"
     }
 
     ngOnInit(): void {

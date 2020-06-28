@@ -5,17 +5,13 @@
 $line-width: 6px;
 $line-height: 100px;
 $circle-size: 18px;
-$step-width: $line-width + $circle-size; // TODO delete
-$step-height: $line-width + $circle-size;
 $active-color: #eee;
 $active-text-color: #eee;
 $inactive-color: #666;
-$inactive-text-color: #999;
 $background-color: #444;
 $tooltip-height: 28px;
 
 .wizard-nav {
-    //margin-top: 10px;
 
     .step {
         position: relative;
@@ -91,79 +87,6 @@ $tooltip-height: 28px;
             background: $inactive-color;
             margin: auto;
             margin-top: $circle-size - 2;
-        }
-    }
-}
-
-.wn-container {
-    margin: auto;
-    text-align: center;
-    height: $wizard-nav-height;
-    padding-top: 30px;
-    border-bottom: 1px solid #555;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: $header-height;
-    background: $background-color;
-
-    .step {
-        display: inline-block;
-        position: relative;
-        width: $step-width;
-        margin-left: -3px;
-
-        &.first {
-            margin-left: -($step-width - $circle-size);
-
-            .line {
-                display: none;
-            }
-
-            .circle {
-                background: $active-color;
-            }
-        }
-
-        &.active {
-            .line,
-            .circle {
-                background: $active-color;
-            }
-
-            .title {
-                color: $active-text-color;
-            }
-        }
-
-        .title,
-        .line,
-        .circle {
-            position: absolute;
-        }
-
-        .title {
-            bottom: 5px;
-            right: (-$step-width / 2) + 10;
-            width: $step-width;
-            text-align: center;
-            color: $inactive-text-color;
-        }
-
-        .line {
-            width: $line-width;
-            height: $line-height;
-            background: $inactive-color;
-            top: ($circle-size / 2) - ($line-height / 2);
-        }
-
-        .circle {
-            background: $inactive-color;
-            border-radius: 20px;
-            width: $circle-size;
-            height: $circle-size;
-            right: 2px;
-            z-index: 100;
         }
     }
 }
