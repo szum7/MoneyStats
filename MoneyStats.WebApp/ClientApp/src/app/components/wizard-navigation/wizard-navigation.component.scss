@@ -1,51 +1,45 @@
 @import "./../../../styles/variables.scss";
 
+// Recommended values:
+// $line-width: 4px;
+// $circle-size: 12px;
+// $tooltip-height: 28px;
 
-$line-width: 180px;
-$line-height: 6px;
-$circle-size: 18px;
-$step-width: $line-width + $circle-size;
-$active-color: #eee;
+$line-width: 4px;
+$circle-size: 12px;
+$tooltip-height: 28px;
+$text-background-color: #444;
+
+$active-line-color: #ddd;
+$active-circle-color: #ddd;
 $active-text-color: #eee;
-$inactive-color: #666;
-$inactive-text-color: #999;
-$background-color: #444;
 
-.wn-container {
-    margin: auto;
-    text-align: center;
-    height: $wizard-nav-height;
-    padding-top: 30px;
-    border-bottom: 1px solid #555;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: $header-height;    
-    background: $background-color;
+$inactive-line-color: #595959;
+$inactive-circle-color: #595959;
+$inactive-text-color: #aaa;
+
+.wizard-nav {
+    height: calc(100% - 15px);
 
     .step {
-        display: inline-block;
         position: relative;
-        width: $step-width;
-        margin-left: -3px;
+        text-align: center;
 
         &.first {
-            margin-left: -($step-width - $circle-size);
+            height: 0 !important;
 
             .line {
                 display: none;
             }
-            
-            .circle {
-                background: $active-color;
-            }
         }
 
         &.active {
-            
-            .line,
+            .line {
+                background: $active-circle-color;
+            }
+
             .circle {
-                background: $active-color;
+                background: $active-line-color;
             }
 
             .title {
@@ -53,34 +47,53 @@ $background-color: #444;
             }
         }
 
-        .title,
-        .line,
-        .circle {
-            position: absolute;
-        }
-    
         .title {
-            bottom: 5px;
-            right: (-$step-width / 2) + 10;
-            width: $step-width;
-            text-align: center;
+            position: absolute;
+            bottom: -(($tooltip-height / 2) + ($circle-size / 2));
+            left: $side-nav-width + 5px;
+            white-space: nowrap;
+            padding: 0 12px;
+            background-color: $text-background-color;
             color: $inactive-text-color;
-        }
+            font-size: 12px;
+            border-radius: 3px;
+            height: $tooltip-height;
+            line-height: $tooltip-height;
 
-        .line {
-            width: $line-width;
-            height: $line-height;
-            background: $inactive-color;
-            top: ($circle-size / 2) - ($line-height / 2);
+            &:before {
+                content: "";
+                position: absolute;
+                border-color: transparent;
+                border-style: solid;
+                top: 10px;
+                left: -9px;
+                border-width: 0.4rem 0.4rem 0;
+                border-top-color: $text-background-color;
+                transform: rotate(90deg);
+            }
         }
 
         .circle {
-            background: $inactive-color;
+            background: $inactive-circle-color;
             border-radius: 20px;
             width: $circle-size;
             height: $circle-size;
-            right: 2px;
             z-index: 100;
+            position: absolute;
+            bottom: -($circle-size) + 1;
+            left: ($side-nav-width / 2) - ($circle-size / 2);
         }
-    }    
+
+        .line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: $line-width;
+            background: $inactive-line-color;
+            margin: auto;
+            margin-top: $circle-size - 2;
+        }
+    }
 }

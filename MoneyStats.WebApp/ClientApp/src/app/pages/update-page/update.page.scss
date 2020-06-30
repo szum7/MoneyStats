@@ -1,64 +1,205 @@
 @import "./../../../styles/variables.scss";
 
-$stepper-box-height: 50px;
-.stepper-box {
+$hover-color: #444;
+$side-nav-background: #333;
+$sub-menu-background: #434343;
+$sub-item-hover-background: #525252;
+$inactive-text-color: rgba(255, 255, 255, 0.7);
+$active-text-color: rgba(255, 255, 255, 0.9);
+$side-nav-border: 1px solid rgba(0, 0, 0, 0.3);
+$disabled-color: #666;
+
+.left-side-menu {
     position: fixed;
-    top: $header-height + $wizard-nav-height;
-    height: $stepper-box-height;
+    top: $header-height;
     left: 0;
-    right: 0;
-    border-bottom: 1px solid #ddd;
-    background: #444;
-    padding-top: 12px;
+    bottom: 0;
+    width: $side-nav-width;
+    background: $side-nav-background;
+    border-top: $side-nav-border;
+    border-right: $side-nav-border;
 
-    .nav-btn {
-        display: inline-block;
-        cursor: pointer;
+    .btns {
+        .btn-item {
+            border-bottom: $side-nav-border;
+            position: relative;
 
-        &.unabled {
-            cursor: default;
-
-            p,
-            .icon {
-                color: #8a8a8a;
+            &.unabled {
+                .btn-toggle {
+                    color: $disabled-color;
+                    cursor: default;
+                }
+                .btn-toggle:hover {
+                    color: $disabled-color;
+                }
+                .sub-menu .sub-item:hover {
+                    background: transparent;
+                }
             }
 
-            &:hover .icon,
-            .icon {
-                background-color: #555;
+            &.show {
+                .btn-toggle {
+                    color: $active-text-color;
+                }
             }
 
-            &:hover p {
-                color: #8a8a8a;
+            .btn-toggle {
+                width: $side-nav-width;
+                height: $side-nav-width;
+                line-height: $side-nav-width;
+                color: $inactive-text-color;
+                cursor: pointer;
+                text-align: center;
+
+                &:hover {
+                    color: $active-text-color;
+                }
+            }
+
+            .sub-menu {
+                background: $sub-menu-background;
+                left: 2px !important;
+
+                .sub-item {
+                    cursor: pointer;
+                    font-size: $menu-font-size;
+                    color: $inactive-text-color;
+                    padding-left: 14px;
+                    padding-right: 14px;
+
+                    &:hover {
+                        background: $sub-item-hover-background;
+                    }
+                }
+            }
+
+            /* Ng-bootstrap overrides begin */
+            .dropdown-menu {
+                border-radius: 0;
+                margin: 0;
+                padding: 5px 0 5px 0;
+                margin-left: -2px;
+                min-width: 0;
+
+                .dropdown-item fa-icon {
+                    width: 23px;
+                    display: inline-block;
+                    text-align: left;
+                }
+            }
+            /* Ng-bootstrap overrides end */
+
+            &:hover .next-step-tooltip {
+                display: block;
             }
         }
 
-        .icon {
-            display: inline-block;
-            padding: 5px 8px;
-            border-radius: 40px;
+        .next-step-tooltip {
+            display: none;
+            position: absolute;
+            z-index: 2000;
+            top: 3px;
+            left: $side-nav-width + 3;
+            border: 1px solid $side-nav-background;
+            background: #fff;
+            color: #333;
+            opacity: 0.9;
             font-size: 12px;
-            background-color: #666;
-            color: #eee;
+            padding: 7px 9px 7px 7px;
+
+            p {
+                padding: 0 0 5px 0;
+                margin: 0;
+                white-space: nowrap;
+            }
+
+            .title {
+                font-weight: bold;
+            }
+
+            .progress-text {
+                font-weight: bold;
+
+                .icon {
+                    width: 12px;
+                    display: inline-block;
+                    text-align: center;
+                    margin-right: 2px;
+                }
+
+                &.okay {
+                    color: rgb(41, 145, 41);
+                }
+
+                &.not-okay {
+                    color: rgb(231, 54, 54);
+                }
+            }
+
+            .tips {
+                margin: 0;
+                padding: 0 0 0 19px;
+
+                .tip {
+                    color: #555;
+                    white-space: nowrap;
+
+                    &.error {
+                        color: rgb(231, 54, 54);
+                    }
+                }
+            }
         }
 
-        &:hover .icon {
-            background-color: #777;
-        }
+        .general-tooltip {
+            font-size: 12px;
 
-        p {
-            display: inline-block;
-            color: #eee;
-            padding: 0;
-            margin: 0;
-        }
+            .arrow {
+                &:before {
+                    border-right-color: $side-nav-background !important;
+                }
+            }
 
-        &:hover p {
-            color: #fff;
+            .tooltip-inner {
+                background: $side-nav-background;
+                color: #bbb;
+                border-radius: 5px;
+                padding-left: 10px;
+                padding-right: 12px;
+            }
+
+            &.no-wrap {
+                white-space: nowrap;
+            }
         }
+    }
+
+    /* Ng-bootstrap overrides begin */
+    .dropdown-toggle::after {
+        position: absolute;
+        top: 18px;
+        right: 2px;
+        transform: rotate(270deg);
+        opacity: 0.4;
+        font-size: 13px;
+    }
+    /* Ng-bootstrap overrides end */
+
+    .wizard-nav-section {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 15px 0;
     }
 }
 
-.content {
-    margin-top: $header-height + $wizard-nav-height + $stepper-box-height;
+.update-page-content {
+    margin-top: $header-height;
+    margin-left: $side-nav-width;
+
+    .wizard-nav-section {
+        padding-top: 30px;
+    }
 }

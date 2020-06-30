@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, AfterContentInit, AfterViewInit } from '@angular/core';
 import { WizardStep } from 'src/app/models/component-models/wizard-step';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
@@ -12,14 +12,39 @@ export enum StepAlertType {
 export class StepAlert {
     title: string;
     type: StepAlertType;
+
+    constructor(title: string) {
+        this.title = title;
+    }
+
+    public setToCriteria() {
+        this.type = StepAlertType.Criteria;
+        return this;
+    }
+
+    public setToMessage() {
+        this.type = StepAlertType.Message;
+        return this;
+    }
 }
 
 export class CurrentStep {
-    isProgressPossible: boolean;
-    stepAlerts: string[];
+
+    get isProgressable(): boolean {
+
+        if (!this.stepAlerts)
+            return true;
+
+        for (let i = 0; i < this.stepAlerts.length; i++) {
+            const element = this.stepAlerts[i];
+            if (element.type == StepAlertType.Criteria)
+                return false;
+        }
+        return true;
+    }
+    stepAlerts: StepAlert[];
 
     constructor() {
-        this.isProgressPossible = true; // TODO add criterias and validations (where needed)
         this.stepAlerts = [];
     }
 
@@ -36,10 +61,10 @@ export class UpdateWizard {
 
     constructor() {
         this.wizardSteps = [
-            new WizardStep("Import files", "#"),
-            new WizardStep("Manage read files", "#"),
-            new WizardStep("Compare with database", "#"),
-            new WizardStep("Create transactions", "#")
+            new WizardStep("Step 1 - Import files", "#"),
+            new WizardStep("Step 2 - Manage read files", "#"),
+            new WizardStep("Step 3 - Compare with database", "#"),
+            new WizardStep("Step 4 - Create transactions", "#")
         ];
 
         this.stepsAt = 0;
@@ -51,7 +76,7 @@ export class UpdateWizard {
         if (this.stepsAt >= this.wizardSteps.length - 1)
             return false;
 
-        if (!this.currentStep.isProgressPossible)
+        if (!this.currentStep.isProgressable)
             return false;
 
         this.stepsAt++;
@@ -92,16 +117,39 @@ export class UpdateResults {
 @Component({
     selector: 'app-update-page',
     templateUrl: './update.page.html',
-    styleUrls: ['./update.page.scss']
+    styleUrls: ['./update.page.scss'],
+    encapsulation: ViewEncapsulation.None
 })
-export class UpdatePage implements OnInit {
+export class UpdatePage implements OnInit, AfterViewInit {
 
     wizard: UpdateWizard;
     results: UpdateResults;
+    isTooltipsDisabled: boolean;
+    get stepAlertType() { return StepAlertType; }
+    get isStepReadyToProgress() {
+        if (!this.wizard)
+            return false;
+
+        return this.wizard.currentStep.isProgressable;
+    }
+
+    @ViewChild('wizardNavElement', null) wizardNavView: ElementRef;
+    @ViewChild('btnsElement', null) btnsView: ElementRef;
+    wizardNavMaxHeight: number;
 
     constructor() {
         this.wizard = new UpdateWizard();
         this.results = new UpdateResults();
+        this.isTooltipsDisabled = false;
+    }
+
+    ngAfterViewInit(): void {
+        this.initWizardNavPositionAndHeight();
+    }
+
+    private initWizardNavPositionAndHeight(): void {
+        let btnsHeight = this.btnsView.nativeElement.offsetHeight;
+        this.wizardNavView.nativeElement.style.top = btnsHeight + "px";
     }
 
     ngOnInit(): void {
@@ -114,6 +162,11 @@ export class UpdatePage implements OnInit {
     click_PrevStep() {
         this.wizard.previous();
         // TODO could null out the last updateResult (first, second or third)
+        // TODO alert user if sure about going back (handle misclicks)
+    }
+
+    click_toggleTitleTags(): void {
+        this.isTooltipsDisabled = !this.isTooltipsDisabled;
     }
 
     output_firstStep($output: { matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper }): void {

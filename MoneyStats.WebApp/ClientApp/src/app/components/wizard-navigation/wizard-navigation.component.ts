@@ -10,9 +10,14 @@ import { WizardStep } from 'src/app/models/component-models/wizard-step';
 })
 export class WizardNavigationComponent {
 
-    @Input() wizardSteps: WizardStep[];
-    @Input() stepsAt: number;
+  @Input() wizardSteps: WizardStep[];
+  @Input() stepsAt: number;
+  @Input() isTooltipsHidden: boolean;
 
-    constructor(private router: RouterService) {
-    }
+  get stepHeightPercent(): string {
+    return (100 / (this.wizardSteps.length - 1)) + "%";
+  }
+
+  constructor(private router: RouterService) {
+  }
 }
