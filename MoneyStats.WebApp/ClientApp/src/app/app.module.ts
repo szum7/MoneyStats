@@ -29,6 +29,7 @@ import { ChooseFileComponent } from './components/update-wizard/step-1/choose-fi
 import { ReadFilesComponent } from './components/update-wizard/step-2/read-files/read-files.component';
 import { EvalTransactionsComponent } from './components/update-wizard/step-3/eval-transactions/eval-transactions.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { WizardNavComponent } from './components/wizard-nav/wizard-nav.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { FooterComponent } from './components/footer/footer.component';
     FooterComponent,
     ReadFilesComponent,
     EvalTransactionsComponent,
+    WizardNavComponent,
   ],
   imports: [
     BrowserModule,

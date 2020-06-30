@@ -198,4 +198,8 @@ $disabled-color: #666;
 .update-page-content {
     margin-top: $header-height;
     margin-left: $side-nav-width;
+
+    .wizard-nav-section {
+        padding-top: 30px;
+    }
 }

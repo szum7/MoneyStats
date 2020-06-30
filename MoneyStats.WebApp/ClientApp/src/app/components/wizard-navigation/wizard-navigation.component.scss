@@ -1,7 +1,7 @@
 @import "./../../../styles/variables.scss";
 
 // HACK unfortunetaly setting these means messing up the style
-// TODO fix css to be truly dynamic
+// TODO fix css to be truly dynamic (contianer height is knows, use height: percent)
 $line-width: 6px;
 $line-height: 100px;
 $circle-size: 14px;
@@ -52,7 +52,6 @@ $tooltip-height: 28px;
             padding: 0 12px;
             background-color: $background-color;
             color: #aaa;
-            opacity: 0.95;
             font-size: 12px;
             border-radius: 3px;
             height: $tooltip-height;

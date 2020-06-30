@@ -61,10 +61,10 @@ export class UpdateWizard {
 
     constructor() {
         this.wizardSteps = [
-            new WizardStep("Import files", "#"),
-            new WizardStep("Manage read files", "#"),
-            new WizardStep("Compare with database", "#"),
-            new WizardStep("Create transactions", "#")
+            new WizardStep("Step 1 - Import files", "#"),
+            new WizardStep("Step 2 - Manage read files", "#"),
+            new WizardStep("Step 3 - Compare with database", "#"),
+            new WizardStep("Step 4 - Create transactions", "#")
         ];
 
         this.stepsAt = 0;
