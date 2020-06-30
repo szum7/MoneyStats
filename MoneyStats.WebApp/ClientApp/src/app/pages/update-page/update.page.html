@@ -72,9 +72,7 @@
         </div>
     </section>
     <section class="wizard-nav-section" #wizardNavElement>
-        <div *ngIf="wizardNavMaxHeight != null">
-            <app-wizard-navigation [isTooltipsHidden]="isTooltipsDisabled" [maxHeight]="wizardNavMaxHeight" [stepsAt]="wizard.stepsAt" [wizardSteps]="wizard.wizardSteps"></app-wizard-navigation>
-        </div>
+        <app-wizard-navigation [isTooltipsHidden]="isTooltipsDisabled" [stepsAt]="wizard.stepsAt" [wizardSteps]="wizard.wizardSteps"></app-wizard-navigation>        
     </section>
 </div>
 

@@ -1,8 +1,9 @@
 <div class="wizard-nav">
     <div class="step" *ngFor="let wizardStep of wizardSteps; let i = index"
-        [ngClass]="{'first': i === 0, 'active': i <= stepsAt}">
+        [ngClass]="{'first': i === 0, 'active': i <= stepsAt}"
+        [ngStyle]="{'height': stepHeightPercent}">
         <div class="title" [ngClass]="{'hidden': isTooltipsHidden}">{{wizardStep.title}}</div>
-        <div class="line" [ngStyle]="{'height': lineHeight}"></div>
+        <div class="line"></div>
         <div></div>
         <div class="circle"></div>
     </div>

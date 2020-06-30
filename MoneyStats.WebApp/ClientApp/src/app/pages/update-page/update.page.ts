@@ -120,7 +120,7 @@ export class UpdateResults {
     styleUrls: ['./update.page.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class UpdatePage implements OnInit, AfterContentInit, AfterViewInit {
+export class UpdatePage implements OnInit, AfterViewInit {
 
     wizard: UpdateWizard;
     results: UpdateResults;
@@ -147,19 +147,9 @@ export class UpdatePage implements OnInit, AfterContentInit, AfterViewInit {
         this.initWizardNavPositionAndHeight();
     }
 
-    ngAfterContentInit(): void {
-        // Might be useful when trying to fix hack#num1
-    }
-
     private initWizardNavPositionAndHeight(): void {
         let btnsHeight = this.btnsView.nativeElement.offsetHeight;
         this.wizardNavView.nativeElement.style.top = btnsHeight + "px";
-
-        let self = this;
-        setTimeout(function () {
-            self.wizardNavMaxHeight = self.wizardNavView.nativeElement.offsetHeight;
-            console.log(self.wizardNavMaxHeight);
-        }, 300); // HACK #num1 against "ExpressionChangedAfterItHasBeenCheckedError"
     }
 
     ngOnInit(): void {

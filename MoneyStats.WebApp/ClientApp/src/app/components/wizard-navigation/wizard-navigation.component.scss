@@ -1,42 +1,45 @@
 @import "./../../../styles/variables.scss";
 
-// HACK unfortunetaly setting these means messing up the style
-// TODO fix css to be truly dynamic (contianer height is knows, use height: percent)
-$line-width: 6px;
-$line-height: 100px;
-$circle-size: 14px;
-$active-color: #ddd;
-$active-text-color: #eee;
-$inactive-color: #555;
-$inactive-circle-color: #595959;
-$background-color: #444;
+// Recommended values:
+// $line-width: 4px;
+// $circle-size: 12px;
+// $tooltip-height: 28px;
+
+$line-width: 4px;
+$circle-size: 12px;
 $tooltip-height: 28px;
+$text-background-color: #444;
+
+$active-line-color: #ddd;
+$active-circle-color: #ddd;
+$active-text-color: #eee;
+
+$inactive-line-color: #595959;
+$inactive-circle-color: #595959;
+$inactive-text-color: #aaa;
 
 .wizard-nav {
+    height: calc(100% - 15px);
 
     .step {
         position: relative;
         text-align: center;
 
         &.first {
+            height: 0 !important;
+
             .line {
                 display: none;
-            }
-
-            .circle {
-                background: $active-color;
-                bottom: -1px;
-            }
-
-            .title {
-                bottom: -($circle-size / 2);
             }
         }
 
         &.active {
-            .line,
+            .line {
+                background: $active-circle-color;
+            }
+
             .circle {
-                background: $active-color;
+                background: $active-line-color;
             }
 
             .title {
@@ -50,8 +53,8 @@ $tooltip-height: 28px;
             left: $side-nav-width + 5px;
             white-space: nowrap;
             padding: 0 12px;
-            background-color: $background-color;
-            color: #aaa;
+            background-color: $text-background-color;
+            color: $inactive-text-color;
             font-size: 12px;
             border-radius: 3px;
             height: $tooltip-height;
@@ -65,7 +68,7 @@ $tooltip-height: 28px;
                 top: 10px;
                 left: -9px;
                 border-width: 0.4rem 0.4rem 0;
-                border-top-color: $background-color;
+                border-top-color: $text-background-color;
                 transform: rotate(90deg);
             }
         }
@@ -82,9 +85,13 @@ $tooltip-height: 28px;
         }
 
         .line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
             width: $line-width;
-            //height: 100px; // default height
-            background: $inactive-color;
+            background: $inactive-line-color;
             margin: auto;
             margin-top: $circle-size - 2;
         }
