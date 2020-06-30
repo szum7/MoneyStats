@@ -4,10 +4,11 @@
 // TODO fix css to be truly dynamic
 $line-width: 6px;
 $line-height: 100px;
-$circle-size: 18px;
-$active-color: #eee;
+$circle-size: 14px;
+$active-color: #ddd;
 $active-text-color: #eee;
-$inactive-color: #666;
+$inactive-color: #555;
+$inactive-circle-color: #595959;
 $background-color: #444;
 $tooltip-height: 28px;
 
@@ -24,7 +25,7 @@ $tooltip-height: 28px;
 
             .circle {
                 background: $active-color;
-                bottom: -2px;
+                bottom: -1px;
             }
 
             .title {
@@ -62,7 +63,7 @@ $tooltip-height: 28px;
                 position: absolute;
                 border-color: transparent;
                 border-style: solid;
-                top: ($circle-size / 2) + 1;
+                top: 10px;
                 left: -9px;
                 border-width: 0.4rem 0.4rem 0;
                 border-top-color: $background-color;
@@ -71,7 +72,7 @@ $tooltip-height: 28px;
         }
 
         .circle {
-            background: $inactive-color;
+            background: $inactive-circle-color;
             border-radius: 20px;
             width: $circle-size;
             height: $circle-size;
