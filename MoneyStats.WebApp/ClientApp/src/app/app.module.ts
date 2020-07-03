@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
-import { faWrench, faCheck, faTimes, faInfoCircle, faEye, faEyeSlash, faCog, faTag, faAlignJustify, faArrowRight, faArrowLeft, faChartBar, faChartPie, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { faMinus, faPlus, faWrench, faCheck, faTimes, faInfoCircle, faEye, faEyeSlash, faCog, faTag, faAlignJustify, faArrowRight, faArrowLeft, faChartBar, faChartPie, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Pages
@@ -79,7 +79,7 @@ export class AppModule {
       faInfoCircle, faCog, faAlignJustify, faTag,
       faArrowLeft, faArrowRight,
       faChartPie, faChartBar,
-      faEye, faEyeSlash, faCheck, faTimes, faWrench
+      faEye, faEyeSlash, faCheck, faTimes, faWrench, faPlus, faMinus
     ];
 
     this.initIcons(library, icons);

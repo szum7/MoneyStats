@@ -3,6 +3,9 @@ import { WizardStep } from 'src/app/models/component-models/wizard-step';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { ReadBankRowForInsertion } from 'src/app/models/component-models/read-bank-row-for-insertion';
+import { BankRow } from 'src/app/models/service-models/bank-row.model';
+import { BankType } from 'src/app/models/service-models/bank-type.enum';
+import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 
 export enum StepAlertType {
     Criteria,
@@ -118,7 +121,7 @@ export class UpdateResults {
     selector: 'app-update-page',
     templateUrl: './update.page.html',
     styleUrls: ['./update.page.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None // TODO write comment why this is needed
 })
 export class UpdatePage implements OnInit, AfterViewInit {
 
@@ -137,10 +140,26 @@ export class UpdatePage implements OnInit, AfterViewInit {
     @ViewChild('btnsElement', null) btnsView: ElementRef;
     wizardNavMaxHeight: number;
 
-    constructor() {
+    constructor(private loadingScreen: LoadingScreenService) {
         this.wizard = new UpdateWizard();
         this.results = new UpdateResults();
-        this.isTooltipsDisabled = false;
+        this.isTooltipsDisabled = true;
+
+        //this.test();
+    }
+
+    test() {
+        this.results.firstResult = [
+            [
+                new ReadInBankRow().get(new BankRow().get('Mon Feb 02 2015 01:00:00 GMT+0100 (Central European Standard Time)', 'ó kamat', 'Kamat', '10401945223571949481012', 'TÉTE BERTALAN', undefined, undefined, '456', 'HUF', '35HUF')),
+                new ReadInBankRow().get(new BankRow().get('2000-01-02 11:00:00', '', '', '', '', '', '', '', '', '')),
+                new ReadInBankRow().get(new BankRow().get('2000-01-03 12:00:00', '', '', '', '', '', '', '', '', '')),
+                new ReadInBankRow().get(new BankRow().get('2000-01-04 13:00:00', '', '', '', '', '', '', '', '', '')),
+                new ReadInBankRow().get(new BankRow().get('2000-01-05 14:00:00', '', '', '', '', '', '', '', '', ''))
+            ]
+        ];
+        this.results.utils.bankMapper = new ExcelBankRowMapper(BankType.KH);
+        this.wizard.stepsAt = 1;
     }
 
     ngAfterViewInit(): void {

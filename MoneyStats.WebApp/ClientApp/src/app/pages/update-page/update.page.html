@@ -1,4 +1,3 @@
-
 <div class="left-side-menu">
     <section class="btns" #btnsElement>
         <!-- Next step btn -->
@@ -72,20 +71,36 @@
         </div>
     </section>
     <section class="wizard-nav-section" #wizardNavElement>
-        <app-wizard-navigation [isTooltipsHidden]="isTooltipsDisabled" [stepsAt]="wizard.stepsAt" [wizardSteps]="wizard.wizardSteps"></app-wizard-navigation>        
+        <app-wizard-navigation [isTooltipsHidden]="isTooltipsDisabled" [stepsAt]="wizard.stepsAt"
+            [wizardSteps]="wizard.wizardSteps"></app-wizard-navigation>
     </section>
 </div>
 
 <div class="update-page-content">
     <div class="dialog-contianer" [ngSwitch]="wizard.stepsAt">
         <div *ngSwitchCase="0">
+            <div class="padd10 center">
+                <h2 class="mt20">{{wizard.wizardSteps[0].title}}</h2>
+                <p>
+                    Import files from your local drive. <br />
+                    Supported format: <strong>.xls, .xlsx</strong>. <br />
+                    Supported transactions: <strong>K&H</strong>.
+                </p>
+            </div>
             <app-choose-file (nextStepChange)="output_firstStep($event)"></app-choose-file>
         </div>
         <div *ngSwitchCase="1">
+            <div class="padd10 center">
+                <h2 class="mt20">{{wizard.wizardSteps[1].title}}</h2>
+                <p>
+                    The program finds the duplicates across multiple files and omits them.
+                </p>
+            </div>
             <app-read-files-component [params]="results.firstResult" [mapper]="results.utils.bankMapper"
                 (nextStepChange)="output_secondStep($event)"></app-read-files-component>
         </div>
         <div *ngSwitchCase="2">
+            <h2>{{wizard.wizardSteps[2].title}}</h2>
             <app-eval-transactions-component [params]="results.secondResult" [mapper]="results.utils.bankMapper">
             </app-eval-transactions-component>
         </div>

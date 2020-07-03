@@ -66,6 +66,8 @@ export class ExcelBankRowMapper {
     }
 
     private formatDate(date: string): string {
+        if (!date || date == "")
+            return null;
         return (new Date(date)).toISOString().substring(0, 10);
     }
 

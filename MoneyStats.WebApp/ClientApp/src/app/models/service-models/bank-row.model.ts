@@ -31,6 +31,20 @@ export class BankRow {
         this.Message = msg;
     }
 
+    get(ad: string, bti: string, ty: string, ac: string, acn: string, pa: string, pn: string, sum: string, curr: string, msg: string): BankRow {
+        this.AccountingDate = ad;
+        this.BankTransactionId = bti;
+        this.Type = ty;
+        this.Account = ac;
+        this.AccountName = acn;
+        this.PartnerAccount = pa;
+        this.PartnerName = pn;
+        this.Sum = sum;
+        this.Currency = curr;
+        this.Message = msg;
+        return this;
+    }
+
     public getContentId(): string {
         return this.AccountingDate 
         + this.BankTransactionId 

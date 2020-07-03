@@ -1,27 +1,59 @@
 <div class="content">
-    <p class="center">The program finds the duplicates across multiple files and omits them.</p>
-
-    <div class="mapped-bank-rows" *ngIf="readInBankRows != null && readInBankRows.length > 0">
-
-        <!-- Header -->
+    <!-- <div class="mapped-bank-rows" *ngIf="readInBankRows != null && readInBankRows.length > 0">
         <div class="bank-row header">
+            <span class="tr-row">Id</span>
             <span class="tr-row {{propertyMap.customClass}}" *ngFor="let propertyMap of mapper.propertyMaps"
                 [ngClass]="{'isClosed': !propertyMap.isOpen}" [ngStyle]="{'width': propertyMap.width}"
                 (click)="click_toggleColumnVisibility(propertyMap)">
-                {{propertyMap.literal}}
+                <span *ngIf="!propertyMap.literal">{{propertyMap.property}}</span>
+                <span *ngIf="propertyMap.literal">{{propertyMap.literal}}</span>
             </span>
         </div>
-        <!-- TODO legyen a táblázat fixed headerrel, mindig lássuk mi micsoda -->
-
-        <!-- Body -->
         <div class="bank-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
             [ngClass]="{'excluded': tr.isExcluded}">
             <button type="button" (click)="click_toggleRowExclusion(tr)">{{tr.isExcluded ? "-" : "+"}}</button>
+            {{tr.uiId}}
+                <span class="tr-row">
+            </span>
             <span class="tr-row {{propertyMap.customClass}}" *ngFor="let propertyMap of mapper.propertyMaps"
                 [ngClass]="{'isClosed': !propertyMap.isOpen}" [ngStyle]="{'min-width': propertyMap.width}">
                 {{mapper.getPropertyValue(tr.bankRow, propertyMap.property)}}
             </span>
         </div>
+    </div> -->
 
+    <div class="padd10">
+        <div class="tr-table">
+            <div class="tr-column">
+                <div class="tr-row header center">
+                    <fa-icon icon="wrench"></fa-icon>
+                </div>
+                <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')">
+                    <div class="tr-btn" (click)="click_toggleRowExclusion(tr)" [ngClass]="{'excluded': tr.isExcluded}">
+                        <fa-icon icon="minus" *ngIf="tr.isExcluded" title="This row will be excluded."></fa-icon>
+                        <fa-icon icon="plus" *ngIf="!tr.isExcluded" title="This row will be included."></fa-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="tr-column">
+                <div class="tr-row header">
+                    Id
+                </div>
+                <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
+                    [ngClass]="{'excluded': tr.isExcluded}">
+                    {{tr.uiId}}
+                </div>
+            </div>
+            <div class="tr-column" *ngFor="let propertyMap of mapper.propertyMaps">
+                <div class="tr-row header">
+                    <span *ngIf="!propertyMap.literal">{{propertyMap.property}}</span>
+                    <span *ngIf="propertyMap.literal">{{propertyMap.literal}}</span>
+                </div>
+                <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
+                    [ngClass]="{'excluded': tr.isExcluded}">
+                    {{mapper.getPropertyValue(tr.bankRow, propertyMap.property)}}
+                </div>
+            </div>
+        </div>
     </div>
 </div>

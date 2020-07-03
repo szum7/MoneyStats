@@ -47,3 +47,49 @@
 .excluded {
     background: #ff9999;
 }
+
+.tr-table {
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    display: inline-block;
+    white-space: nowrap;
+
+    .tr-column {
+        display: inline-block;
+        vertical-align: top;
+
+        .tr-row {
+            padding: 2px 5px;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            height: 30px;
+
+            &.header {
+                font-weight: bold;
+            }
+
+            &.excluded {
+                background-color: #f1f1f1;
+                color: #b6b6b6;
+            }
+        }
+    }
+
+    .tr-btn {
+        display: inline-block;
+        background-color: #444;
+        color: #eee;
+        cursor: pointer;
+        font-size: 15px;
+        height: 25px;
+        line-height: 25px;
+        width: 25px;
+        text-align: center;
+        border-radius: 3px;
+
+        &.excluded {
+            background-color: #666;
+            color: #eee;
+        }
+    }
+}
