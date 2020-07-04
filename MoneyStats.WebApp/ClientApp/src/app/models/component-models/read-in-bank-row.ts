@@ -1,21 +1,41 @@
 import { BankRow } from "src/app/models/service-models/bank-row.model";
+import { InputMessages } from "src/app/utilities/input-messages.static";
+
+export class ReadInBankRowAttribute {
+    message: string;
+    value: boolean;
+}
+
+export class IsExcludedAttribute extends ReadInBankRowAttribute {
+    constructor() {
+        super();
+        this.message = InputMessages.ROW_WILL_BE_EXCLUDED;
+    }
+}
 
 export class ReadInBankRow {
-    
+
     uiId: number;
 
     bankRow: BankRow;
 
-    isExcluded: boolean;
-    inputMessage: string;
+    messages: string[];
+    isExcludedAttr: IsExcludedAttribute;
     isDetailsOpen: boolean;
+    detailsMenuPageAt: number;
 
-    constructor() {
-        this.isExcluded = false;
-        this.isDetailsOpen = false;
+    get hasAnActiveAlert(): boolean {
+        return this.isExcludedAttr.value;
     }
 
-    public get(bankRow): ReadInBankRow{
+    constructor() {
+        this.messages = [];
+        this.isExcludedAttr = new IsExcludedAttribute();
+        this.isDetailsOpen = false;
+        this.detailsMenuPageAt = 0;
+    }
+
+    public get(bankRow): ReadInBankRow {
         this.bankRow = bankRow;
         return this;
     }

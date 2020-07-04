@@ -55,24 +55,43 @@
         vertical-align: top;
         white-space: nowrap;
 
+        .tr-cell:first-child {
+            border-left: 1px solid #ddd;
+        }
+
+        &:last-child .tr-cell {
+            border-bottom: 1px solid #ddd;
+        }
+
         &.header {
             font-weight: bold;
             height: $cell-height;
         }
 
-        &.excluded .tr-row-content {
+        &.excluded .tr-row-content .tr-cell {
             background-color: #f1f1f1;
             color: #b6b6b6;
         }
 
+        &.excluded .tr-row-content .tr-cell:first-child {
+            background-color: transparent;
+            color: initial;
+        }
+
+        &.opened .tr-cell {
+            border-bottom: 1px solid #ddd;
+        }
+
         .tr-cell {
             display: inline-block;
-            border: 1px solid #ddd;
+            border-top: 1px solid #ddd;
+            border-right: 1px solid #ddd;
             padding: 2px 5px;
             height: $cell-height;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            min-width: 76px;
         }
 
         .tr-row-content {
@@ -81,6 +100,7 @@
 
         .tr-details {
             padding: 10px 0;
+            font-size: 12px;
 
             .tr-details-menu {
                 .tr-details-menu-item {
@@ -90,6 +110,7 @@
                     border-bottom: none;
                     cursor: pointer;
 
+                    &:hover,
                     &.active {
                         background: #ddd;
                     }
@@ -101,8 +122,27 @@
             }
 
             .tr-details-content {
-                padding: 8px;
+                padding: 8px 8px 5px 8px;
                 border: 1px solid #ddd;
+
+                p {
+                    padding: 0 0 5px 0;
+                    margin: 0;
+                }
+
+                .title-item {
+                    font-weight: bold;
+                }
+
+                .alert-item {
+                    background: #eee;
+                    padding: 2px 4px;
+                    margin-bottom: 5px;
+                }
+
+                .no-alert-item {
+                    color: #777;
+                }
             }
         }
     }

@@ -28,18 +28,22 @@
                 <fa-icon icon="wrench"></fa-icon>
             </div>
             <div class="tr-cell" style="width: 30px;">Id</div>
-            <div class="tr-cell" *ngFor="let propertyMap of mapper.propertyMaps" [ngStyle]="{'width': propertyMap.width}">
+            <div class="tr-cell" *ngFor="let propertyMap of mapper.propertyMaps"
+                [ngStyle]="{'width': propertyMap.width}">
                 <span *ngIf="!propertyMap.literal">{{propertyMap.property}}</span>
                 <span *ngIf="propertyMap.literal">{{propertyMap.literal}}</span>
             </div>
         </div>
         <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
-            [ngClass]="{'excluded': tr.isExcluded}">
+            [ngClass]="{'excluded': tr.isExcludedAttr.value, 'opened': tr.isDetailsOpen}">
             <div class="tr-row-content">
                 <div class="tr-cell" style="width: 70px;">
-                    <div class="tr-btn" (click)="click_toggleRowExclusion(tr)" [ngClass]="{'excluded': tr.isExcluded}">
-                        <fa-icon icon="minus" *ngIf="tr.isExcluded" title="This row will be excluded."></fa-icon>
-                        <fa-icon icon="plus" *ngIf="!tr.isExcluded" title="This row will be included."></fa-icon>
+                    <div class="tr-btn" (click)="click_toggleRowExclusion(tr)"
+                        [ngClass]="{'excluded': tr.isExcludedAttr.value}">
+                        <fa-icon icon="minus" *ngIf="tr.isExcludedAttr.value" title="This row will be excluded.">
+                        </fa-icon>
+                        <fa-icon icon="plus" *ngIf="!tr.isExcludedAttr.value" title="This row will be included.">
+                        </fa-icon>
                     </div>
                     <div class="tr-btn" (click)="click_toggleDetails(tr)">
                         <fa-icon icon="chevron-down" *ngIf="tr.isDetailsOpen"></fa-icon>
@@ -54,11 +58,24 @@
             </div>
             <div class="tr-details" *ngIf="tr.isDetailsOpen">
                 <div class="tr-details-menu">
-                    <div class="tr-details-menu-item">Actions</div>
-                    <div class="tr-details-menu-item">Data</div>
+                    <div class="tr-details-menu-item" [ngClass]="{'active': tr.detailsMenuPageAt === 0}" (click)="click_switchDetailsMenu(tr, 0)">Actions</div>
+                    <div class="tr-details-menu-item" [ngClass]="{'active': tr.detailsMenuPageAt === 1}" (click)="click_switchDetailsMenu(tr, 1)">Data</div>
                 </div>
-                <div class="tr-details-content">
-                    <p>Test.</p>
+                <div class="tr-details-content" [ngSwitch]="tr.detailsMenuPageAt">
+                    <div *ngSwitchCase="0">
+                        <p class="title-item">Active alerts</p>
+                        <p class="alert-item" *ngIf="tr.isExcludedAttr.value">{{tr.isExcludedAttr.message}}</p>
+                        <p class="no-alert-item" *ngIf="!tr.hasAnActiveAlert">No alerts.</p>
+
+                        <p class="title-item">Alerts from the program</p>
+                        <p class="alert-item" *ngFor="let message of tr.messages">{{message}}</p>
+                        <p class="no-alert-item" *ngIf="tr.messages.length === 0">No alerts.</p>
+                    </div>
+                    <div *ngSwitchCase="1">
+                        <p>TODO</p><!-- TODO -->
+                    </div>
+                    <div *ngSwitchDefault>
+                    </div>
                 </div>
             </div>
         </div>

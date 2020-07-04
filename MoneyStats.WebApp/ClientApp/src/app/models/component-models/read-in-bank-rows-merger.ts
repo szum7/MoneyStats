@@ -11,13 +11,13 @@ export class ReadInBankRowsMerger {
 
                 // Search for duplication
                 let k = 0;
-                while (k < matrix.length && !tr.isExcluded) {
+                while (k < matrix.length && !tr.isExcludedAttr.value) {
                     if (i !== k) { // Only search for duplicates in other sheets
                         let foreignSheet = matrix[k];
                         let l = 0;
-                        while (l < foreignSheet.length && !tr.isExcluded) {
+                        while (l < foreignSheet.length && !tr.isExcludedAttr.value) {
                             let foreignRow = foreignSheet[l];
-                            if (!foreignRow.isExcluded &&  // Only exclude one row per duplication(s)
+                            if (!foreignRow.isExcludedAttr.value &&  // Only exclude one row per duplication(s)
                                 tr.bankRow.getContentId() === foreignRow.bankRow.getContentId()) {
                                 this.setRowForExclusion(tr);
                             }
@@ -31,7 +31,7 @@ export class ReadInBankRowsMerger {
     }
 
     private setRowForExclusion(row: ReadInBankRow): void {
-        row.isExcluded = true;
-        row.inputMessage = InputMessages.READ_FILES_DUPLICATION;
+        row.isExcludedAttr.value = true;
+        row.messages.push(InputMessages.READ_FILES_DUPLICATION);
     }
 }

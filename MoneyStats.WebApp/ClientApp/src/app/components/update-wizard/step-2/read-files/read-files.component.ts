@@ -46,7 +46,7 @@ export class ReadFilesComponent implements OnInit {
     // TODO research and understand why this (loadingScreen part) isn't working!
     // Error: "Expression has changed after it was checked"
     // https://blog.angular-university.io/angular-debugging/
-    this.loadingScreen.start(); 
+    this.loadingScreen.start();
 
     new ReadInBankRowsMerger().searchForDuplicates(mappedExcelMatrix);
     this.readInBankRows = this.flattenReadInBankRows(mappedExcelMatrix);
@@ -83,7 +83,7 @@ export class ReadFilesComponent implements OnInit {
   }
 
   click_toggleRowExclusion(row: ReadInBankRow): void {
-    row.isExcluded = !row.isExcluded;
+    row.isExcludedAttr.value = !row.isExcludedAttr.value;
     this.emitOutput(this.readInBankRows); // TODO optimaze this, don't run the for iteration on the whole array every time
   }
 
@@ -91,12 +91,16 @@ export class ReadFilesComponent implements OnInit {
     row.isDetailsOpen = !row.isDetailsOpen;
   }
 
+  click_switchDetailsMenu(row: ReadInBankRow, i: number): void {
+    row.detailsMenuPageAt = i;
+  }
+
   private emitOutput(bankRows: ReadInBankRow[]): void {
     let output: ReadBankRowForInsertion[] = [];
 
     for (let i = 0; i < this.readInBankRows.length; i++) {
       const el = this.readInBankRows[i];
-      if (!el.isExcluded) {
+      if (!el.isExcludedAttr.value) {
         let tr: ReadBankRowForInsertion = new ReadBankRowForInsertion();
         tr.bankRow = el.bankRow;
         output.push(tr);
