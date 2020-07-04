@@ -100,7 +100,12 @@
                 (nextStepChange)="output_secondStep($event)"></app-read-files-component>
         </div>
         <div *ngSwitchCase="2">
-            <h2>{{wizard.wizardSteps[2].title}}</h2>
+            <div class="padd10 center">
+                <h2 class="mt20">{{wizard.wizardSteps[2].title}}</h2>
+                <p>
+                    Maybe.
+                </p>
+            </div>
             <app-eval-transactions-component [params]="results.secondResult" [mapper]="results.utils.bankMapper">
             </app-eval-transactions-component>
         </div>

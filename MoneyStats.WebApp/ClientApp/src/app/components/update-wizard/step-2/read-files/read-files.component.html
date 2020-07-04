@@ -28,10 +28,25 @@
                 <div class="tr-row header center">
                     <fa-icon icon="wrench"></fa-icon>
                 </div>
-                <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')">
+                <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
+                    [ngClass]="{'opened': tr.isDetailsOpen}">
                     <div class="tr-btn" (click)="click_toggleRowExclusion(tr)" [ngClass]="{'excluded': tr.isExcluded}">
                         <fa-icon icon="minus" *ngIf="tr.isExcluded" title="This row will be excluded."></fa-icon>
                         <fa-icon icon="plus" *ngIf="!tr.isExcluded" title="This row will be included."></fa-icon>
+                    </div>
+                    <div class="tr-btn" (click)="click_toggleDetails(tr)">
+                        <fa-icon icon="chevron-down" *ngIf="tr.isDetailsOpen"></fa-icon>
+                        <fa-icon icon="chevron-up" *ngIf="!tr.isDetailsOpen"></fa-icon>
+                    </div>
+
+                    <div class="tr-details" *ngIf="tr.isDetailsOpen">
+                        <div class="tr-details-menu">
+                            <div class="tr-details-menu-item">Actions</div>
+                            <div class="tr-details-menu-item">Data</div>
+                        </div>
+                        <div class="tr-details-content">
+                            <p>Test.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -40,7 +55,7 @@
                     Id
                 </div>
                 <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
-                    [ngClass]="{'excluded': tr.isExcluded}">
+                    [ngClass]="{'excluded': tr.isExcluded, 'opened': tr.isDetailsOpen}">
                     {{tr.uiId}}
                 </div>
             </div>
@@ -50,7 +65,7 @@
                     <span *ngIf="propertyMap.literal">{{propertyMap.literal}}</span>
                 </div>
                 <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
-                    [ngClass]="{'excluded': tr.isExcluded}">
+                    [ngClass]="{'excluded': tr.isExcluded, 'opened': tr.isDetailsOpen}">
                     {{mapper.getPropertyValue(tr.bankRow, propertyMap.property)}}
                 </div>
             </div>

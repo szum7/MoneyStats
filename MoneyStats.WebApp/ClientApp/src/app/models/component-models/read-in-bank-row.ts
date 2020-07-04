@@ -8,9 +8,11 @@ export class ReadInBankRow {
 
     isExcluded: boolean;
     inputMessage: string;
+    isDetailsOpen: boolean;
 
     constructor() {
         this.isExcluded = false;
+        this.isDetailsOpen = false;
     }
 
     public get(bankRow): ReadInBankRow{

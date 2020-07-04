@@ -87,6 +87,10 @@ export class ReadFilesComponent implements OnInit {
     this.emitOutput(this.readInBankRows); // TODO optimaze this, don't run the for iteration on the whole array every time
   }
 
+  click_toggleDetails(row: ReadInBankRow): void {
+    row.isDetailsOpen = !row.isDetailsOpen;
+  }
+
   private emitOutput(bankRows: ReadInBankRow[]): void {
     let output: ReadBankRowForInsertion[] = [];
 

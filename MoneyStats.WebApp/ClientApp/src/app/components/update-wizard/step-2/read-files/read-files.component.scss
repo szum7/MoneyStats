@@ -50,9 +50,11 @@
 
 .tr-table {
     border-top: 1px solid #ddd;
-    border-left: 1px solid #ddd;
     display: inline-block;
     white-space: nowrap;
+
+    $details-height: 200px;
+    $cell-height: 30px;
 
     .tr-column {
         display: inline-block;
@@ -62,7 +64,8 @@
             padding: 2px 5px;
             border-right: 1px solid #ddd;
             border-bottom: 1px solid #ddd;
-            height: 30px;
+            height: $cell-height;
+            position: relative;
 
             &.header {
                 font-weight: bold;
@@ -72,6 +75,53 @@
                 background-color: #f1f1f1;
                 color: #b6b6b6;
             }
+
+            &.opened {
+                margin-bottom: $details-height;
+            }
+
+            &.opened + .tr-row {
+                border-top: 1px solid #ddd;
+            }
+        }
+
+        &:first-child .tr-row {
+            border-left: 1px solid #ddd;
+        }
+    }
+
+    .tr-details {
+        height: $details-height;
+        position: absolute;
+        top: $cell-height;
+        left: 0;
+        right: 0;
+        min-width: 1000px;
+        padding: 10px 0;
+
+        .tr-details-menu {
+            .tr-details-menu-item {
+                display: inline-block;
+                padding: 5px 8px;
+                border: 1px solid #ddd;
+                border-bottom: none;
+                cursor: pointer;
+
+                &.active {
+                    background: #ddd;
+                }
+            }
+
+            .tr-details-menu-item:first-child {
+                border-right: none;
+            }
+        }
+
+        .tr-details-content {
+            padding: 8px;
+            border: 1px solid #ddd;
+            overflow: auto;
+            max-height: 150px;
         }
     }
 
@@ -86,6 +136,7 @@
         width: 25px;
         text-align: center;
         border-radius: 3px;
+        margin-right: 2px;
 
         &.excluded {
             background-color: #666;

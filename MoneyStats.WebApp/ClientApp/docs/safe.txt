@@ -1,3 +1,41 @@
+
+
+    .tr-column {
+        display: inline-block;
+        vertical-align: top;
+
+        .tr-row {
+            padding: 2px 5px;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            height: 30px;
+
+            &.header {
+                font-weight: bold;
+            }
+
+            &.excluded {
+                background-color: #f1f1f1;
+                color: #b6b6b6;
+            }
+
+            &.opened {
+                margin-bottom: 100px;
+            }
+
+            &.opened + .tr-row {
+                border-top: 1px solid #ddd;
+            }
+        }
+
+        &:last-child .tr-row {
+            border-right: none;
+        }
+    }
+
+
+
+
 Upload() {
         let fileReader = new FileReader();
         fileReader.onload = (e) => {

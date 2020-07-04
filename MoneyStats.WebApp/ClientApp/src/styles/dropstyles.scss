@@ -21,24 +21,23 @@
 .ib{ display:inline-block; vertical-align:top; }
 .ibul{ margin:0px; padding:0px; }
 .ibul li{ display:inline-block; vertical-align:top; padding:5px; }
-.float-none{ float:none !important; }
-.float-none-div div{ float:none !important; }
+.float-none{ float:none; }
+.float-none-div div{ float:none; }
 .line.gray { background:#333; }
 .cLink { color:#0072c6; cursor:pointer; } .cLink:hover { text-decoration:underline; }
 .vertical-top {vertical-align:top;}
 .ofh {overflow:hidden;}
 .ofa {overflow:auto;}
 .nolink:hover { text-decoration:none; }
-button.disabled { transition:none !important; }
 button.disabled:hover { cursor:not-allowed; }
 .full-absolute {position:absolute;top:0px;left:0px;right:0px;bottom:0px;}
 .trans {transition:all 0.2s ease-in-out;}
 .flip-h {transform:scale(-1, 1);}
-.disabled { cursor: not-allowed !important; } 
+.disabled { cursor: not-allowed; } 
 .abs0 {position:absolute;top:0px;left:0px;right:0px;bottom:0px;}
-.show{display:block !important;}
+.show{display:block;}
 .transparent {opacity:0.0;}
-.nobr {border:none !important;}
+.nobr {border:none;}
 
 /* Blocks */
 .custom-help-block{ color:red; }
@@ -78,7 +77,7 @@ button.disabled:hover { cursor:not-allowed; }
 .border-2, .br-2 {border-width:2px;}
 .br-3 {border-width:3px;}
 .border-solid, .br-solid {border-style:solid;}
-.border-square, .border-square * { border-radius: 0px !important;}
+.border-square { border-radius: 0px;}
 .br-lightred { border-color:#FF8586; }
 
 /* Fonts, text */
@@ -99,17 +98,17 @@ button.disabled:hover { cursor:not-allowed; }
 .m-m5 { margin:-5px; }
 .mv-m5 { margin-top:-5px; margin-bottom:-5px; }
 .mh-m5 { margin-left:-5px; margin-right:-5px; }
-.m0 { margin:0px !important; } 
-.mb0i { margin-bottom:0px !important; }
-.mt0i { margin-top:0px !important; }
-.ml0i { margin-left:0px !important; }
-.mr0i { margin-right:0px !important; }
+.m0 { margin:0px; } 
+.mb0i { margin-bottom:0px; }
+.mt0i { margin-top:0px; }
+.ml0i { margin-left:0px; }
+.mr0i { margin-right:0px; }
 .mt-10{ margin-top:-10px; }
 .mt0{ margin-top:0px; }
 .mt5{ margin-top:5px; }
 .mt7{ margin-top:7px; }
 .mt10{ margin-top:10px; }
-.mt10i{ margin-top:10px !important; }
+.mt10i{ margin-top:10px ; }
 .mt15{ margin-top:15px; }
 .mt20{ margin-top:20px; }
 .mt30{ margin-top:30px; }
@@ -142,16 +141,16 @@ button.disabled:hover { cursor:not-allowed; }
 .mr30{ margin-right:30px; }
 .mr40{ margin-right:40px; }
 .mr50{ margin-right:50px; }
-.no-side-m, .no-row {margin-left:0px !important; margin-right:0px !important;}
+.no-side-m, .no-row {margin-left:0px; margin-right:0px;}
 
 /* Paddings */
-.p0, .padd0 { padding:0px !important; }
-.padd5 { padding:5px !important; }
-.padd7 { padding:7px; } /* height of a DDL */
-.padd10 { padding:10px !important; }
-.padd15 { padding:15px !important; }
-.padd20 { padding:20px !important; }
-.padd30 { padding:30px !important; }
+.p0, .padd0 { padding:0px; }
+.padd5 { padding:5px; }
+.padd7 { padding:7px; }
+.padd10 { padding:10px; }
+.padd15 { padding:15px; }
+.padd20 { padding:20px; }
+.padd30 { padding:30px; }
 .pt0 { padding-top:0px; }
 .pt5 { padding-top:5px; }
 .pt7 { padding-top:7px; }
@@ -193,12 +192,12 @@ button.disabled:hover { cursor:not-allowed; }
 .pr30 { padding-right:30px; }
 .pr40 { padding-right:40px; }
 .pr50 { padding-right:50px; }
-.no-side-p {padding-left:0px !important; padding-right:0px !important;}
+.no-side-p {padding-left:0px; padding-right:0px;}
 
 /* Sizes */
-.max-width-none, .no-max-width { max-width:none !important; }
-.width { width:auto !important; }
-.width100 { width:100% !important; }
+.max-width-none, .no-max-width { max-width:none; }
+.width { width:auto; }
+.width100 { width:100%; }
 .width99 { width:calc(100% - 1px); }
 .width85 { width:85%; }
 .width80 { width:80%; }
@@ -219,8 +218,8 @@ button.disabled:hover { cursor:not-allowed; }
 .minwidth500 {min-width:500px;}
 .minwidth250, .min250 {min-width:250px;}
 .height0{
-    padding-top:0px !important;
-    padding-bottom:0px !important;
+    padding-top:0px;
+    padding-bottom:0px;
     height:0px;
     overflow:hidden;
     border-width:0px;

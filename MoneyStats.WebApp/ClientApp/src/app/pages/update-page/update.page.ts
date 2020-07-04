@@ -145,7 +145,7 @@ export class UpdatePage implements OnInit, AfterViewInit {
         this.results = new UpdateResults();
         this.isTooltipsDisabled = true;
 
-        //this.test();
+        this.test();
     }
 
     test() {
