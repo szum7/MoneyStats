@@ -1,8 +1,4 @@
-.file-browser {
-    display: inline-block;
-}
-
-.bank-row {
+.bank-row-x {
     border: 1px solid #ddd;
     margin: 2px 0;
     font-size: 13px;
@@ -42,13 +38,103 @@
             color: #fff;
         }
     }
+
+    .excluded {
+        background: #ff9999;
+    }
 }
 
-.excluded {
-    background: #ff9999;
+.content {
+    padding: 0 10px;
 }
 
 .tr-table {
+    $cell-height: 30px;
+
+    .tr-row {
+        vertical-align: top;
+        white-space: nowrap;
+
+        &.header {
+            font-weight: bold;
+            height: $cell-height;
+        }
+
+        &.excluded .tr-row-content {
+            background-color: #f1f1f1;
+            color: #b6b6b6;
+        }
+
+        .tr-cell {
+            display: inline-block;
+            border: 1px solid #ddd;
+            padding: 2px 5px;
+            height: $cell-height;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tr-row-content {
+            height: $cell-height;
+        }
+
+        .tr-details {
+            padding: 10px 0;
+
+            .tr-details-menu {
+                .tr-details-menu-item {
+                    display: inline-block;
+                    padding: 5px 8px;
+                    border: 1px solid #ddd;
+                    border-bottom: none;
+                    cursor: pointer;
+
+                    &.active {
+                        background: #ddd;
+                    }
+                }
+
+                .tr-details-menu-item:first-child {
+                    border-right: none;
+                }
+            }
+
+            .tr-details-content {
+                padding: 8px;
+                border: 1px solid #ddd;
+            }
+        }
+    }
+
+    .tr-btn {
+        display: inline-block;
+        background-color: #444;
+        color: #eee;
+        cursor: pointer;
+        font-size: 15px;
+        height: 25px;
+        line-height: 25px;
+        width: 25px;
+        text-align: center;
+        border-radius: 3px;
+        margin-right: 2px;
+
+        &.excluded {
+            background-color: #666;
+            color: #eee;
+        }
+    }
+}
+
+table.tr-table-x {
+    td {
+        border: 1px solid #ddd;
+        padding: 5px;
+    }
+}
+
+.tr-table-x {
     border-top: 1px solid #ddd;
     display: inline-block;
     white-space: nowrap;
