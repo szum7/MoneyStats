@@ -8,6 +8,7 @@ $inactive-text-color: rgba(255, 255, 255, 0.7);
 $active-text-color: rgba(255, 255, 255, 0.9);
 $side-nav-border: 1px solid rgba(0, 0, 0, 0.3);
 $disabled-color: #666;
+$banned-color: #ff6161;
 
 .left-side-menu {
     position: fixed;
@@ -24,16 +25,31 @@ $disabled-color: #666;
             border-bottom: $side-nav-border;
             position: relative;
 
+            &.unabled,
+            &.banned {
+                .btn-toggle {
+                    cursor: default;
+                }
+                .sub-menu .sub-item:hover {
+                    background: transparent;
+                }
+            }
+
             &.unabled {
                 .btn-toggle {
                     color: $disabled-color;
-                    cursor: default;
                 }
                 .btn-toggle:hover {
                     color: $disabled-color;
                 }
-                .sub-menu .sub-item:hover {
-                    background: transparent;
+            }
+
+            &.banned {
+                .btn-toggle {
+                    color: $banned-color;
+                }
+                .btn-toggle:hover {
+                    color: $banned-color;
                 }
             }
 

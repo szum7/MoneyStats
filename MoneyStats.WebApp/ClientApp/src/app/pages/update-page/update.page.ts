@@ -9,7 +9,8 @@ import { LoadingScreenService } from 'src/app/services/loading-screen-service/lo
 
 export enum StepAlertType {
     Criteria,
-    Message
+    Message,
+    GreenText
 }
 
 export class StepAlert {
@@ -27,6 +28,11 @@ export class StepAlert {
 
     public setToMessage() {
         this.type = StepAlertType.Message;
+        return this;
+    }
+
+    public setToGreenText() {
+        this.type = StepAlertType.GreenText;
         return this;
     }
 }
@@ -197,5 +203,9 @@ export class UpdatePage implements OnInit, AfterViewInit {
     output_secondStep($output: ReadBankRowForInsertion[]): void {
         // TODO Check if everything is okay and set step-alerts
         this.results.secondResult = $output;
+    }
+
+    output_secondStepAlertChange($output: StepAlert[]): void {
+        this.wizard.currentStep.stepAlerts = $output;
     }
 }

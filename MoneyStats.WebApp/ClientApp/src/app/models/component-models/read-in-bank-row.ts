@@ -2,8 +2,8 @@ import { BankRow } from "src/app/models/service-models/bank-row.model";
 import { InputMessages } from "src/app/utilities/input-messages.static";
 
 export class ReadInBankRowAttribute {
-    message: string;
-    value: boolean;
+    value: boolean; // is it excluded?
+    message: string; // why it's excluded?
 }
 
 export class IsExcludedAttribute extends ReadInBankRowAttribute {

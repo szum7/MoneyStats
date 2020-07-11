@@ -40,9 +40,9 @@
                 <div class="tr-cell" style="width: 70px;">
                     <div class="tr-btn" (click)="click_toggleRowExclusion(tr)"
                         [ngClass]="{'excluded': tr.isExcludedAttr.value}">
-                        <fa-icon icon="minus" *ngIf="tr.isExcludedAttr.value" title="This row will be excluded.">
+                        <fa-icon icon="minus" *ngIf="tr.isExcludedAttr.value">
                         </fa-icon>
-                        <fa-icon icon="plus" *ngIf="!tr.isExcludedAttr.value" title="This row will be included.">
+                        <fa-icon icon="plus" *ngIf="!tr.isExcludedAttr.value">
                         </fa-icon>
                     </div>
                     <div class="tr-btn" (click)="click_toggleDetails(tr)">
@@ -63,11 +63,11 @@
                 </div>
                 <div class="tr-details-content" [ngSwitch]="tr.detailsMenuPageAt">
                     <div *ngSwitchCase="0">
-                        <p class="title-item">Active alerts</p>
+                        <p class="title-item">Active actions</p>
                         <p class="alert-item" *ngIf="tr.isExcludedAttr.value">{{tr.isExcludedAttr.message}}</p>
                         <p class="no-alert-item" *ngIf="!tr.hasAnActiveAlert">No alerts.</p>
 
-                        <p class="title-item">Alerts from the program</p>
+                        <p class="title-item">Actions suggested from the program</p>
                         <p class="alert-item" *ngFor="let message of tr.messages">{{message}}</p>
                         <p class="no-alert-item" *ngIf="tr.messages.length === 0">No alerts.</p>
                     </div>

@@ -4,6 +4,7 @@ import { LoadingScreenService } from 'src/app/services/loading-screen-service/lo
 import { ReadInBankRowsMerger } from 'src/app/models/component-models/read-in-bank-rows-merger';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { ReadBankRowForInsertion } from 'src/app/models/component-models/read-bank-row-for-insertion';
+import { StepAlert } from 'src/app/pages/update-page/update.page';
 
 @Component({
   selector: 'app-read-files-component',
@@ -15,8 +16,10 @@ export class ReadFilesComponent implements OnInit {
   @Input() params: ReadInBankRow[][];
   @Input() mapper: ExcelBankRowMapper;
   @Output() nextStepChange = new EventEmitter();
+  @Output() nextStepAlertsChange = new EventEmitter();
 
   readInBankRows: ReadInBankRow[];
+  nextStepAlerts: StepAlert[];
 
   constructor(private loadingScreen: LoadingScreenService) {
     this.readInBankRows = [];
@@ -84,6 +87,7 @@ export class ReadFilesComponent implements OnInit {
 
   click_toggleRowExclusion(row: ReadInBankRow): void {
     row.isExcludedAttr.value = !row.isExcludedAttr.value;
+    this.checkNextStepPossible();
     this.emitOutput(this.readInBankRows); // TODO optimaze this, don't run the for iteration on the whole array every time
   }
 
@@ -93,6 +97,19 @@ export class ReadFilesComponent implements OnInit {
 
   click_switchDetailsMenu(row: ReadInBankRow, i: number): void {
     row.detailsMenuPageAt = i;
+  }
+
+  private checkNextStepPossible(): void {
+    this.nextStepAlerts = [];
+    
+    if (this.readInBankRows.length === 0) {
+      this.nextStepAlerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
+    }
+    if (!this.readInBankRows.some(x => !x.isExcludedAttr.value)) {
+      this.nextStepAlerts.push(new StepAlert("All bankrows are excluded!").setToCriteria());
+    }
+
+    this.nextStepAlertsChange.emit(this.nextStepAlerts);
   }
 
   private emitOutput(bankRows: ReadInBankRow[]): void {
