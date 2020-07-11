@@ -51,7 +51,7 @@ export class CurrentStep {
         }
         return true;
     }
-    stepAlerts: StepAlert[];
+    stepAlerts: StepAlert[]; // IMPROVE make this a singleton service and modify the messages through that (?)
 
     constructor() {
         this.stepAlerts = [];

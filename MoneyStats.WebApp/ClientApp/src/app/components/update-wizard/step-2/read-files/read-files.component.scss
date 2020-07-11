@@ -114,6 +114,10 @@
                     &.active {
                         background: #ddd;
                     }
+                    
+                    &.active {
+                        cursor: default;                        
+                    }
                 }
 
                 .tr-details-menu-item:first-child {

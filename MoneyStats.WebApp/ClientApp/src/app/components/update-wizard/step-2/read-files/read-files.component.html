@@ -1,43 +1,27 @@
 <div class="content">
-    <!-- <div class="mapped-bank-rows" *ngIf="readInBankRows != null && readInBankRows.length > 0">
-        <div class="bank-row header">
-            <span class="tr-row">Id</span>
-            <span class="tr-row {{propertyMap.customClass}}" *ngFor="let propertyMap of mapper.propertyMaps"
-                [ngClass]="{'isClosed': !propertyMap.isOpen}" [ngStyle]="{'width': propertyMap.width}"
-                (click)="click_toggleColumnVisibility(propertyMap)">
-                <span *ngIf="!propertyMap.literal">{{propertyMap.property}}</span>
-                <span *ngIf="propertyMap.literal">{{propertyMap.literal}}</span>
-            </span>
-        </div>
-        <div class="bank-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
-            [ngClass]="{'excluded': tr.isExcluded}">
-            <button type="button" (click)="click_toggleRowExclusion(tr)">{{tr.isExcluded ? "-" : "+"}}</button>
-            {{tr.uiId}}
-                <span class="tr-row">
-            </span>
-            <span class="tr-row {{propertyMap.customClass}}" *ngFor="let propertyMap of mapper.propertyMaps"
-                [ngClass]="{'isClosed': !propertyMap.isOpen}" [ngStyle]="{'min-width': propertyMap.width}">
-                {{mapper.getPropertyValue(tr.bankRow, propertyMap.property)}}
-            </span>
-        </div>
-    </div> -->
-
     <div class="tr-table" *ngIf="readInBankRows != null && readInBankRows.length > 0">
+        <!-- Header -->
         <div class="tr-row header">
+            <!-- Actions head -->
             <div class="tr-cell center" style="width: 70px;">
                 <fa-icon icon="wrench"></fa-icon>
             </div>
+            <!-- Id head -->
             <div class="tr-cell" style="width: 30px;">Id</div>
+            <!-- BankRow value head -->
             <div class="tr-cell" *ngFor="let propertyMap of mapper.propertyMaps"
                 [ngStyle]="{'width': propertyMap.width}">
                 <span *ngIf="!propertyMap.literal">{{propertyMap.property}}</span>
                 <span *ngIf="propertyMap.literal">{{propertyMap.literal}}</span>
             </div>
         </div>
+        <!-- Content -->
         <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
             [ngClass]="{'excluded': tr.isExcludedAttr.value, 'opened': tr.isDetailsOpen}">
             <div class="tr-row-content">
+                <!-- Actions -->
                 <div class="tr-cell" style="width: 70px;">
+                    <!-- Include/Exclude -->
                     <div class="tr-btn" (click)="click_toggleRowExclusion(tr)"
                         [ngClass]="{'excluded': tr.isExcludedAttr.value}">
                         <fa-icon icon="minus" *ngIf="tr.isExcludedAttr.value">
@@ -45,23 +29,31 @@
                         <fa-icon icon="plus" *ngIf="!tr.isExcludedAttr.value">
                         </fa-icon>
                     </div>
+                    <!-- Toggle details -->
                     <div class="tr-btn" (click)="click_toggleDetails(tr)">
                         <fa-icon icon="chevron-down" *ngIf="tr.isDetailsOpen"></fa-icon>
                         <fa-icon icon="chevron-up" *ngIf="!tr.isDetailsOpen"></fa-icon>
                     </div>
                 </div>
+                <!-- Id -->
                 <div class="tr-cell" style="width: 30px;">{{tr.uiId}}</div>
+                <!-- BankRow value -->
                 <div class="tr-cell {{propertyMap.customClass}}" *ngFor="let propertyMap of mapper.propertyMaps"
-                    [ngClass]="{'isClosed': !propertyMap.isOpen}" [ngStyle]="{'width': propertyMap.width}">
+                    [ngClass]="{'isClosed': !propertyMap.isOpen}" [ngStyle]="{'width': propertyMap.width}"
+                    [title]="mapper.getPropertyValue(tr.bankRow, propertyMap.property)">
                     {{mapper.getPropertyValue(tr.bankRow, propertyMap.property)}}
                 </div>
             </div>
+            <!-- Details menu -->
             <div class="tr-details" *ngIf="tr.isDetailsOpen">
                 <div class="tr-details-menu">
-                    <div class="tr-details-menu-item" [ngClass]="{'active': tr.detailsMenuPageAt === 0}" (click)="click_switchDetailsMenu(tr, 0)">Actions</div>
-                    <div class="tr-details-menu-item" [ngClass]="{'active': tr.detailsMenuPageAt === 1}" (click)="click_switchDetailsMenu(tr, 1)">Data</div>
+                    <div class="tr-details-menu-item" [ngClass]="{'active': tr.detailsMenuPageAt === 0}"
+                        (click)="click_switchDetailsMenu(tr, 0)">Actions</div>
+                    <div class="tr-details-menu-item" [ngClass]="{'active': tr.detailsMenuPageAt === 1}"
+                        (click)="click_switchDetailsMenu(tr, 1)">Data</div>
                 </div>
                 <div class="tr-details-content" [ngSwitch]="tr.detailsMenuPageAt">
+                    <!-- Menu 1: Actions -->
                     <div *ngSwitchCase="0">
                         <p class="title-item">Active actions</p>
                         <p class="alert-item" *ngIf="tr.isExcludedAttr.value">{{tr.isExcludedAttr.message}}</p>
@@ -71,6 +63,7 @@
                         <p class="alert-item" *ngFor="let message of tr.messages">{{message}}</p>
                         <p class="no-alert-item" *ngIf="tr.messages.length === 0">No alerts.</p>
                     </div>
+                    <!-- Menu 2: Data -->
                     <div *ngSwitchCase="1">
                         <p>TODO</p><!-- TODO -->
                     </div>
@@ -80,62 +73,4 @@
             </div>
         </div>
     </div>
-
-    <!-- <table class="tr-table">
-        <tr *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')">
-            <td *ngFor="let propertyMap of mapper.propertyMaps">
-                {{mapper.getPropertyValue(tr.bankRow, propertyMap.property)}}
-            </td>
-        </tr>
-    </table> -->
-
-    <!-- <div class="padd10">
-        <div class="tr-table">
-            <div class="tr-column">
-                <div class="tr-row header center">
-                    <fa-icon icon="wrench"></fa-icon>
-                </div>
-                <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
-                    [ngClass]="{'opened': tr.isDetailsOpen}">
-                    <div class="tr-btn" (click)="click_toggleRowExclusion(tr)" [ngClass]="{'excluded': tr.isExcluded}">
-                        <fa-icon icon="minus" *ngIf="tr.isExcluded" title="This row will be excluded."></fa-icon>
-                        <fa-icon icon="plus" *ngIf="!tr.isExcluded" title="This row will be included."></fa-icon>
-                    </div>
-                    <div class="tr-btn" (click)="click_toggleDetails(tr)">
-                        <fa-icon icon="chevron-down" *ngIf="tr.isDetailsOpen"></fa-icon>
-                        <fa-icon icon="chevron-up" *ngIf="!tr.isDetailsOpen"></fa-icon>
-                    </div>
-
-                    <div class="tr-details" *ngIf="tr.isDetailsOpen">
-                        <div class="tr-details-menu">
-                            <div class="tr-details-menu-item">Actions</div>
-                            <div class="tr-details-menu-item">Data</div>
-                        </div>
-                        <div class="tr-details-content">
-                            <p>Test.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tr-column">
-                <div class="tr-row header">
-                    Id
-                </div>
-                <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
-                    [ngClass]="{'excluded': tr.isExcluded, 'opened': tr.isDetailsOpen}">
-                    {{tr.uiId}}
-                </div>
-            </div>
-            <div class="tr-column" *ngFor="let propertyMap of mapper.propertyMaps">
-                <div class="tr-row header">
-                    <span *ngIf="!propertyMap.literal">{{propertyMap.property}}</span>
-                    <span *ngIf="propertyMap.literal">{{propertyMap.literal}}</span>
-                </div>
-                <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'AccountingDate')"
-                    [ngClass]="{'excluded': tr.isExcluded, 'opened': tr.isDetailsOpen}">
-                    {{mapper.getPropertyValue(tr.bankRow, propertyMap.property)}}
-                </div>
-            </div>
-        </div>
-    </div> -->
 </div>
