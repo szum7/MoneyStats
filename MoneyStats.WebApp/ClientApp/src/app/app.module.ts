@@ -27,9 +27,10 @@ import { WizardNavigationComponent } from './components/wizard-navigation/wizard
 import { WizardTestComponent } from './components/wizard-test/wizard-test.component';
 import { ChooseFileComponent } from './components/update-wizard/step-1/choose-file/choose-file.component';
 import { ReadFilesComponent } from './components/update-wizard/step-2/read-files/read-files.component';
-import { EvalTransactionsComponent } from './components/update-wizard/step-3/eval-transactions/eval-transactions.component';
+import { EvalTransactionsComponent } from './components/update-wizard/step-4/eval-transactions/eval-transactions.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { WizardNavComponent } from './components/wizard-nav/wizard-nav.component';
+import { CompareDbComponent } from './components/update-wizard/step-3/compare-db/compare-db.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { WizardNavComponent } from './components/wizard-nav/wizard-nav.component
     ReadFilesComponent,
     EvalTransactionsComponent,
     WizardNavComponent,
+    CompareDbComponent,
   ],
   imports: [
     BrowserModule,

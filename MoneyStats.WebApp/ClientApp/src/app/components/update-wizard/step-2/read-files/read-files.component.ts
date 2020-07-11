@@ -3,7 +3,7 @@ import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row'
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { ReadInBankRowsMerger } from 'src/app/models/component-models/read-in-bank-rows-merger';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
-import { ReadBankRowForInsertion } from 'src/app/models/component-models/read-bank-row-for-insertion';
+import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
 import { StepAlert } from 'src/app/pages/update-page/update.page';
 
 @Component({
@@ -86,7 +86,7 @@ export class ReadFilesComponent implements OnInit {
   }
 
   click_toggleRowExclusion(row: ReadInBankRow): void {
-    row.isExcludedAttr.value = !row.isExcludedAttr.value;
+    row.toggleExclusion();
     this.checkNextStepPossible();
     this.emitOutput(this.readInBankRows); // TODO optimaze this, don't run the for iteration on the whole array every time
   }
@@ -105,7 +105,7 @@ export class ReadFilesComponent implements OnInit {
     if (this.readInBankRows.length === 0) {
       this.nextStepAlerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
     }
-    if (!this.readInBankRows.some(x => !x.isExcludedAttr.value)) {
+    if (!this.readInBankRows.some(x => !x.isExcluded)) {
       this.nextStepAlerts.push(new StepAlert("All bankrows are excluded!").setToCriteria());
     }
 
@@ -113,12 +113,12 @@ export class ReadFilesComponent implements OnInit {
   }
 
   private emitOutput(bankRows: ReadInBankRow[]): void {
-    let output: ReadBankRowForInsertion[] = [];
+    let output: ReadBankRowForDbCompare[] = [];
 
     for (let i = 0; i < this.readInBankRows.length; i++) {
       const el = this.readInBankRows[i];
-      if (!el.isExcludedAttr.value) {
-        let tr: ReadBankRowForInsertion = new ReadBankRowForInsertion();
+      if (!el.isExcluded) {
+        let tr: ReadBankRowForDbCompare = new ReadBankRowForDbCompare();
         tr.bankRow = el.bankRow;
         output.push(tr);
       }

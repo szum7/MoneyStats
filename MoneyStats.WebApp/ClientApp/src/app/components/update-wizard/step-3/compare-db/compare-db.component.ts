@@ -1,26 +1,27 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
-import { PropertyMapRow } from 'src/app/models/component-models/property-map-row';
-import { ReadBankRowForInsertion } from 'src/app/models/component-models/read-bank-row-for-insertion';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
-import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
+import { BankRow } from 'src/app/models/service-models/bank-row.model';
+import { PropertyMapRow } from 'src/app/models/component-models/property-map-row';
+import { StaticMessages } from 'src/app/utilities/input-messages.static';
 
 @Component({
-  selector: 'app-eval-transactions-component',
-  templateUrl: './eval-transactions.component.html',
-  styleUrls: ['./eval-transactions.component.scss']
+  selector: 'app-compare-db-component',
+  templateUrl: './compare-db.component.html',
+  styleUrls: ['./compare-db.component.scss']
 })
-export class EvalTransactionsComponent implements OnInit {
+export class CompareDbComponent implements OnInit {
 
-  @Input() params: ReadBankRowForInsertion[];
+  @Input() params: ReadBankRowForDbCompare[];
   @Input() mapper: ExcelBankRowMapper;
-  public get bankRows(): ReadBankRowForInsertion[] { return this.params; }
+  public get bankRows(): ReadBankRowForDbCompare[] { return this.params; }
 
   constructor(
     private loadingScreen: LoadingScreenService,
-    private bankRowService: BankRowService) {       
-    }
+    private bankRowService: BankRowService) {
+  }
 
   ngOnInit() {
     this.program();
@@ -50,12 +51,13 @@ export class EvalTransactionsComponent implements OnInit {
     for (let i = 0; i < dbList.length; i++) {
       let dbRow: BankRow = dbList[i];
       for (let j = 0; j < this.bankRows.length; j++) {
-        let fileRow: ReadBankRowForInsertion = this.bankRows[j];
+        let fileRow: ReadBankRowForDbCompare = this.bankRows[j];
 
         if (dbRow.getContentId() === fileRow.bankRow.getContentId()) {
-          fileRow.compareResults.isSameContent = true;
-          fileRow.isExcluded = true;
+          fileRow.messages.push(StaticMessages.MATCHING_READ_BANKROW_WITH_DB);
+          fileRow.setToExclude();
         }
+
       }
     }
   }
@@ -73,8 +75,12 @@ export class EvalTransactionsComponent implements OnInit {
     propertyMap.isOpen = !propertyMap.isOpen;
   }
 
-  click_toggleRowExclusion(row: ReadBankRowForInsertion): void {
-    row.isExcluded = !row.isExcluded;
+  click_toggleDetails(row: ReadBankRowForDbCompare): void {
+    row.isDetailsOpen = !row.isDetailsOpen;
+  }
+
+  click_toggleRowExclusion(row: ReadBankRowForDbCompare): void {
+    row.toggleExclusion();
   }
 
 }

@@ -104,6 +104,16 @@
             <div class="padd10 center">
                 <h2 class="mt20">{{wizard.wizardSteps[2].title}}</h2>
                 <p>
+                    The program will compare the browsed, read-in BankRows from the previous step with what the database already has. Recommends exclusion of duplicates.
+                </p>
+            </div>
+            <app-compare-db-component [params]="results.secondResult" [mapper]="results.utils.bankMapper">
+            </app-compare-db-component>
+        </div>
+        <div *ngSwitchCase="3">
+            <div class="padd10 center">
+                <h2 class="mt20">{{wizard.wizardSteps[3].title}}</h2>
+                <p>
                     Maybe.
                 </p>
             </div>

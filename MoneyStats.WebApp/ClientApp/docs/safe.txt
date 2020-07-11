@@ -1,5 +1,32 @@
 
 
+export class TableRow {
+
+    isExcludedAttr: IsExcludedAttribute;
+    public get isExcluded(): boolean { return this.isExcludedAttr.value; }
+
+    public setToExclude(message?: string): void {
+        this.isExcludedAttr.value = false;
+        if (!!message){
+            this.isExcludedAttr.message = message;
+        }
+    }
+
+    public setToInclude(): void {
+        this.isExcludedAttr.value = false;
+    }
+
+    public toggleExclusion(): void {
+        this.isExcludedAttr.value = !this.isExcludedAttr.value;
+    }
+
+    constructor() {
+        this.isExcludedAttr = new IsExcludedAttribute();
+    }
+}
+
+
+
     .tr-column {
         display: inline-block;
         vertical-align: top;

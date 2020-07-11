@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, AfterConte
 import { WizardStep } from 'src/app/models/component-models/wizard-step';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
-import { ReadBankRowForInsertion } from 'src/app/models/component-models/read-bank-row-for-insertion';
+import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
@@ -114,7 +114,7 @@ export class UpdateResultsUtilities {
 
 export class UpdateResults {
     firstResult: ReadInBankRow[][];
-    secondResult: ReadBankRowForInsertion[];
+    secondResult: ReadBankRowForDbCompare[];
     thirdResult: any; // TODO
     utils: UpdateResultsUtilities;
 
@@ -200,7 +200,7 @@ export class UpdatePage implements OnInit, AfterViewInit {
         this.results.utils.bankMapper = $output.mapper;
     }
 
-    output_secondStep($output: ReadBankRowForInsertion[]): void {
+    output_secondStep($output: ReadBankRowForDbCompare[]): void {
         // TODO Check if everything is okay and set step-alerts
         this.results.secondResult = $output;
     }
