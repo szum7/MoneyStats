@@ -7,8 +7,30 @@ import { BankRow } from '../../models/service-models/bank-row.model';
 
 class BankRowServiceMap {
 
-    protected dummyMap(response: any): any {
-        return response;
+    protected dummyMap(response: any[]): any {
+        let r: BankRow[] = [];
+        for (let i = 0; i < response.length; i++) {
+            const e = response[i];
+            
+            let t = new BankRow();
+
+            t.Id = e.id;
+
+            t.set(
+                e.accountingDate, 
+                e.bankTransactionId, 
+                e.type, 
+                e.account, 
+                e.accountName, 
+                e.partnerAccount, 
+                e.partnerName, 
+                e.sum, 
+                e.currency, 
+                e.message);
+
+            r.push(t);
+        }
+        return r;
     }    
 }
 

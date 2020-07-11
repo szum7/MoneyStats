@@ -2,6 +2,7 @@ import { BankType } from "./bank-type.enum";
 
 export class BankRow {
 
+    Id: number;
     BankType: BankType;
     TransactionGroupId: number;
 

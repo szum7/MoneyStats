@@ -6,6 +6,14 @@ export class ReadBankRowForDbCompare extends TableRow {
 
     public bankRow: BankRow;
 
+    get hasAnActiveAlert(): boolean {
+        if (this.isExcludedAttr.value) {
+            return true;
+        }
+        // ...
+        return false;
+    }
+
     constructor() {
         super();
     }

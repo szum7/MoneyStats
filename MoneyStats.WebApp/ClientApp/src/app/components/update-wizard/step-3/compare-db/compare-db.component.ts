@@ -29,10 +29,10 @@ export class CompareDbComponent implements OnInit {
 
   private program(): void {
     let self = this;
-    self.loadingScreen.start();
+    //self.loadingScreen.start(); // TODO ExpressionChangedAfterItHasBeenCheckedError error
     self.getBankRowsFromDb(function (dbList) {
       self.compareDbToFileRows(dbList);
-      self.loadingScreen.stop();
+      //self.loadingScreen.stop();
       console.log("Compare finished");
     });
   }
