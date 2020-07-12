@@ -110,12 +110,13 @@ export class UpdateWizard {
 /// </summary>
 export class UpdateResultsUtilities {
     bankMapper: ExcelBankRowMapper;
+    // ...
 }
 
 export class UpdateResults {
     firstResult: ReadInBankRow[][];
     secondResult: ReadBankRowForDbCompare[];
-    thirdResult: any; // TODO
+    thirdResult: ReadBankRowForDbCompare[];
     utils: UpdateResultsUtilities;
 
     constructor() {
@@ -196,17 +197,19 @@ export class UpdatePage implements OnInit, AfterViewInit {
     }
 
     output_firstStep($output: { matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper }): void {
-        // TODO Check if everything is okay and set step-alerts
         this.results.firstResult = $output.matrix;
         this.results.utils.bankMapper = $output.mapper;
     }
 
     output_secondStep($output: ReadBankRowForDbCompare[]): void {
-        // TODO Check if everything is okay and set step-alerts
         this.results.secondResult = $output;
     }
 
-    output_secondStepAlertChange($output: StepAlert[]): void {
+    output_thirdStep($output: ReadBankRowForDbCompare[]): void {
+        this.results.thirdResult = $output;
+    }
+
+    output_stepAlertChange($output: StepAlert[]): void {
         this.wizard.currentStep.stepAlerts = $output;
     }
 }

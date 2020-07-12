@@ -22,7 +22,8 @@
                 </p>
                 <ul class="tips" *ngIf="wizard.currentStep.stepAlerts.length > 0">
                     <li class="tip" *ngFor="let tip of wizard.currentStep.stepAlerts"
-                        [ngClass]="{'error': tip.type === stepAlertType.Criteria, 'green-text': tip.type === stepAlertType.GreenText}">{{tip.title}}</li>
+                        [ngClass]="{'error': tip.type === stepAlertType.Criteria, 'green-text': tip.type === stepAlertType.GreenText}">
+                        {{tip.title}}</li>
                 </ul>
             </div>
         </div>
@@ -87,7 +88,8 @@
                     Supported transactions: <strong>K&H</strong>.
                 </p>
             </div>
-            <app-choose-file (nextStepChange)="output_firstStep($event)"></app-choose-file>
+            <app-choose-file (nextStepChange)="output_firstStep($event)"
+                (nextStepAlertsChange)="output_stepAlertChange($event)"></app-choose-file>
         </div>
         <div *ngSwitchCase="1">
             <div class="padd10 center">
@@ -97,17 +99,19 @@
                 </p>
             </div>
             <app-read-files-component [params]="results.firstResult" [mapper]="results.utils.bankMapper"
-                (nextStepChange)="output_secondStep($event)"
-                (nextStepAlertsChange)="output_secondStepAlertChange($event)"></app-read-files-component>
+                (nextStepChange)="output_secondStep($event)" (nextStepAlertsChange)="output_stepAlertChange($event)">
+            </app-read-files-component>
         </div>
         <div *ngSwitchCase="2">
             <div class="padd10 center">
                 <h2 class="mt20">{{wizard.wizardSteps[2].title}}</h2>
                 <p>
-                    The program will compare the browsed, read-in BankRows from the previous step with what the database already has. Recommends exclusion of duplicates.
+                    The program will compare the browsed, read-in BankRows from the previous step with what the database
+                    already has. Recommends exclusion of duplicates.
                 </p>
             </div>
-            <app-compare-db-component [params]="results.secondResult" [mapper]="results.utils.bankMapper">
+            <app-compare-db-component [params]="results.secondResult" [mapper]="results.utils.bankMapper"
+                (nextStepChange)="output_thirdStep($event)" (nextStepAlertsChange)="output_stepAlertChange($event)">
             </app-compare-db-component>
         </div>
         <div *ngSwitchCase="3">

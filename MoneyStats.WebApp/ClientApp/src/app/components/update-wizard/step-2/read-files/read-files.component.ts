@@ -19,7 +19,6 @@ export class ReadFilesComponent implements OnInit {
   @Output() nextStepAlertsChange = new EventEmitter();
 
   readInBankRows: ReadInBankRow[];
-  nextStepAlerts: StepAlert[];
 
   constructor(private loadingScreen: LoadingScreenService) {
     this.readInBankRows = [];
@@ -56,7 +55,7 @@ export class ReadFilesComponent implements OnInit {
 
     this.loadingScreen.stop();
 
-    this.emitOutput(this.readInBankRows);
+    this.emitOutput();
   }
 
   private flattenReadInBankRows(matrix: ReadInBankRow[][]): ReadInBankRow[] {
@@ -88,7 +87,7 @@ export class ReadFilesComponent implements OnInit {
   click_toggleRowExclusion(row: ReadInBankRow): void {
     row.toggleExclusion();
     this.checkNextStepPossible();
-    this.emitOutput(this.readInBankRows); // TODO optimaze this, don't run the for iteration on the whole array every time
+    this.emitOutput(); // TODO optimaze this, don't run the for iteration on the whole array every time
   }
 
   click_toggleDetails(row: ReadInBankRow): void {
@@ -100,26 +99,30 @@ export class ReadFilesComponent implements OnInit {
   }
 
   private checkNextStepPossible(): void {
-    this.nextStepAlerts = [];
+    let alerts = [];
     
     if (this.readInBankRows.length === 0) {
-      this.nextStepAlerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
+      alerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
     }
     if (!this.readInBankRows.some(x => !x.isExcluded)) {
-      this.nextStepAlerts.push(new StepAlert("All bankrows are excluded!").setToCriteria());
+      alerts.push(new StepAlert("All bankrows are excluded!").setToCriteria());
     }
 
-    this.nextStepAlertsChange.emit(this.nextStepAlerts);
+    this.nextStepAlertsChange.emit(alerts);
   }
 
-  private emitOutput(bankRows: ReadInBankRow[]): void {
+  private emitOutput(): void {
     let output: ReadBankRowForDbCompare[] = [];
 
     for (let i = 0; i < this.readInBankRows.length; i++) {
       const el = this.readInBankRows[i];
       if (!el.isExcluded) {
+
         let tr: ReadBankRowForDbCompare = new ReadBankRowForDbCompare();
+
+        tr.uiId = el.uiId;
         tr.bankRow = el.bankRow;
+        
         output.push(tr);
       }
     }

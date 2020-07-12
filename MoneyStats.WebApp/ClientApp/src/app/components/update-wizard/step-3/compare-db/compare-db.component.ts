@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
-import { PropertyMapRow } from 'src/app/models/component-models/property-map-row';
 import { StaticMessages } from 'src/app/utilities/input-messages.static';
+import { StepAlert } from 'src/app/pages/update-page/update.page';
 
 @Component({
   selector: 'app-compare-db-component',
@@ -16,6 +16,9 @@ export class CompareDbComponent implements OnInit {
 
   @Input() params: ReadBankRowForDbCompare[];
   @Input() mapper: ExcelBankRowMapper;
+  @Output() nextStepChange = new EventEmitter();
+  @Output() nextStepAlertsChange = new EventEmitter();
+
   public get bankRows(): ReadBankRowForDbCompare[] { return this.params; }
 
   constructor(
@@ -34,6 +37,9 @@ export class CompareDbComponent implements OnInit {
       self.compareDbToFileRows(dbList);
       //self.loadingScreen.stop();
       console.log("Compare finished");
+
+      self.nextStepChange.emit(self.bankRows);
+      self.checkNextStepPossible();
     });
   }
 
@@ -64,6 +70,19 @@ export class CompareDbComponent implements OnInit {
     }
   }
 
+  private checkNextStepPossible(): void {
+    let alerts = [];
+    
+    if (this.bankRows.length === 0) {
+      alerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
+    }
+    if (!this.bankRows.some(x => !x.isExcluded)) {
+      alerts.push(new StepAlert("All bankrows are excluded!").setToCriteria());
+    }
+
+    this.nextStepAlertsChange.emit(alerts);
+  }
+
   sortBy_bankRows(arr: any[], property: string) {
     return arr.sort((a, b) => this.dateComparer(a.bankRow[property], b.bankRow[property]));
   }
@@ -73,16 +92,15 @@ export class CompareDbComponent implements OnInit {
     return d1 > d2 ? 1 : d1 === d2 ? 0 : -1;
   }
 
-  click_toggleColumnVisibility(propertyMap: PropertyMapRow): void {
-    propertyMap.isOpen = !propertyMap.isOpen;
-  }
-
   click_toggleDetails(row: ReadBankRowForDbCompare): void {
     row.isDetailsOpen = !row.isDetailsOpen;
   }
 
   click_toggleRowExclusion(row: ReadBankRowForDbCompare): void {
     row.toggleExclusion();
+    
+    this.nextStepChange.emit(this.bankRows);
+    this.checkNextStepPossible();
   }
 
 }

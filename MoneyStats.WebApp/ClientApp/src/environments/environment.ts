@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   mock: {
-    all: false,
+    all: true,
     bankRow: false
   }
 };

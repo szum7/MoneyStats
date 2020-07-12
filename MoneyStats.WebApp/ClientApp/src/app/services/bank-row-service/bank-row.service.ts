@@ -7,7 +7,7 @@ import { BankRow } from '../../models/service-models/bank-row.model';
 
 class BankRowServiceMap {
 
-    protected dummyMap(response: any[]): any {
+    protected mapBankRow(response: any[]): any {
         let r: BankRow[] = [];
         for (let i = 0; i < response.length; i++) {
             const e = response[i];
@@ -52,11 +52,11 @@ export class BankRowService extends BankRowServiceLogic {
 
     get(): Observable<BankRow[]> {
         if (this.base.isMocked()) {
-            return this.getMock().pipe(map(this.dummyMap));
+            return this.getMock();
         }
         return this.http
             .get<any>(this.base.url + 'get')
-            .pipe(map(this.dummyMap));
+            .pipe(map(this.mapBankRow));
     }
 
     private getMock(): Observable<BankRow[]> {

@@ -4,6 +4,7 @@ import { TableRow } from "./read-in-bank-row";
 
 export class ReadBankRowForDbCompare extends TableRow {
 
+    public uiId: number;
     public bankRow: BankRow;
 
     get hasAnActiveAlert(): boolean {
