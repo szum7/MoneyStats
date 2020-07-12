@@ -39,7 +39,9 @@ export class CompareDbComponent implements OnInit {
 
   private getBankRowsFromDb(callback: (response: Array<BankRow>) => void): void {
     this.bankRowService.get().subscribe(response => {
+      console.log("=> getBankRowsFromDb:");
       console.log(response);
+      console.log("<=");
       callback(response);
     }, error => {
       console.error("Couldn't get bank rows from database!");

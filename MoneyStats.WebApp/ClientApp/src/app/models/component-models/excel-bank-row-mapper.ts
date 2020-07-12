@@ -65,10 +65,10 @@ export class ExcelBankRowMapper {
         return array;
     }
 
-    private formatDate(date: string): string {
-        if (!date || date == "")
+    private formatDate(date: Date): string {
+        if (!date)
             return null;
-        return (new Date(date)).toISOString().substring(0, 10);
+        return date.toISOString().substring(0, 10);
     }
 
     private mapBankRow(obj: any): BankRow {
@@ -76,11 +76,11 @@ export class ExcelBankRowMapper {
 
         for (let i = 0; i < this.propertyMaps.length; i++) {
             const propertyMap = this.propertyMaps[i];
-            let value = obj[propertyMap.literal];
+            let value = obj[propertyMap.literal]; // Get the value
             if (propertyMap.parser != null) {
-                value = propertyMap.parser(value);
+                value = propertyMap.parser(value); // Parse value if parse function is specified
             }
-            cast[propertyMap.property] = value;
+            cast[propertyMap.property] = value; // Set the value
         }
 
         cast = this.setAdditionalProperties(cast);
@@ -93,13 +93,15 @@ export class ExcelBankRowMapper {
         return m;
     }
 
-    private getJsDateFromExcel(excelDate): string {
+    private getJsDateFromExcel(excelDate): Date {
+        // Dates in excel are stored in a weird number format
+
         // JavaScript dates can be constructed by passing milliseconds
         // since the Unix epoch (January 1, 1970) example: new Date(12312512312);
         
         // 1. Subtract number of days between Jan 1, 1900 and Jan 1, 1970, plus 1  (Google "excel leap year bug")
-        // Neet to add +1 for some reason - Sz. Aron
+        // Neet to add +1 for some reason - szum7
         // 2. Convert to milliseconds.
-        return (new Date((excelDate - (25567 + 1 + 1)) * 86400 * 1000)).toString(); // HACK hour is at 01:00:00. Should be at 00:00:00
+        return new Date((excelDate - (25567 + 1 + 1)) * 86400 * 1000); // HACK hour is at 01:00:00. Should be at 00:00:00
     }
 }

@@ -54,7 +54,7 @@ export class ChooseFileComponent implements OnInit {
       console.log("No files uploaded.");
       return;
     }
-    let mappedExcelMatrix: Array<Array<ReadInBankRow>> = this.reader.getBankRowMatrix(files);
+    let mappedExcelMatrix: ReadInBankRow[][] = this.reader.getBankRowMatrix(files);
 
     // Wait for reader to read files
     var self = this;
@@ -77,7 +77,7 @@ export class ChooseFileComponent implements OnInit {
     }, 10);
   }
 
-  private emitOutput(mappedExcelMatrix: Array<Array<ReadInBankRow>>, mapper: ExcelBankRowMapper): void {
+  private emitOutput(mappedExcelMatrix: ReadInBankRow[][], mapper: ExcelBankRowMapper): void {
     this.nextStepChange.emit({ matrix: mappedExcelMatrix, mapper: mapper });
   }
 }
