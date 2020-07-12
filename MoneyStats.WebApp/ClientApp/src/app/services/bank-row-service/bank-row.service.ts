@@ -17,7 +17,7 @@ class BankRowServiceMap {
             t.Id = e.id;
 
             t.set(
-                e.accountingDate, 
+                new Date(e.accountingDate), 
                 e.bankTransactionId, 
                 e.type, 
                 e.account, 

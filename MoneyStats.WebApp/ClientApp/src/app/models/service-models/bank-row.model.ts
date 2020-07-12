@@ -47,14 +47,14 @@ export class BankRow {
     }
 
     public getContentId(): string {
-        return this.AccountingDate 
+        return this.AccountingDate.toISOString() 
         + this.BankTransactionId 
         + this.Type 
         + this.Account 
         + this.AccountName 
         + this.PartnerAccount 
         + this.PartnerName 
-        + this.Sum 
+        + this.Sum.toString() 
         + this.Currency 
         + this.Message;
     }

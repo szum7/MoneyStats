@@ -22,7 +22,7 @@ namespace MoneyStats.ExampleData
                     // null|undefined test
                     new BankRow() { Id = 1, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 2000, Currency = null, Message = "" }.SetNew(),
                     // other tests
-                    new BankRow() { Id = 1, AccountingDate = new DateTime(2010, 10, 10), BankTransactionId = "bankTransactionId", Type = "type", Account = "account", AccountName = "accountName", PartnerAccount = "partnerAccount", PartnerName = "partnerName", Sum = 1, Currency = "currency", Message = "message" }.SetNew(),
+                    new BankRow() { Id = 2, AccountingDate = new DateTime(2010, 10, 10), BankTransactionId = "bankTransactionId", Type = "type", Account = "account", AccountName = "accountName", PartnerAccount = "partnerAccount", PartnerName = "partnerName", Sum = 1, Currency = "currency", Message = "message" }.SetNew(),
                 }
             },
         };

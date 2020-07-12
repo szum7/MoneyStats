@@ -161,8 +161,8 @@ export class UpdatePage implements OnInit, AfterViewInit {
                 new ReadInBankRow().get(new BankRow().get(new Date(1999, 0, 1), null, null, null, null, null, null, 2000, null, '')),
                 new ReadInBankRow().get(new BankRow().get(new Date(2010, 9, 10), 'bankTransactionId', 'type', 'account', 'accountName', 'partnerAccount', 'partnerName', 1, 'currency', 'message')),
                 // Not yet in db
-                new ReadInBankRow().get(new BankRow().get(new Date(1999, 0, 1), '', '', '', '', '', '', 0, '', '')),
-                new ReadInBankRow().get(new BankRow().get(new Date(1999, 0, 1), '', '', '', '', '', '', 0, '', ''))
+                new ReadInBankRow().get(new BankRow().get(new Date(2013, 0, 1), '', '', '', '', '', '', 0, '', 'test1')),
+                new ReadInBankRow().get(new BankRow().get(new Date(2014, 0, 1), '', '', '', '', '', '', 0, '', 'test2'))
             ]
         ];
         this.results.utils.bankMapper = new ExcelBankRowMapper(BankType.KH);

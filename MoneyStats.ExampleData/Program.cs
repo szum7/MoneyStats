@@ -6,17 +6,17 @@ namespace MoneyStats.ExampleData
     {
         static void Main(string[] args)
         {
-            var global = new Global(CustomData.BasicValues);
+            var global = new Global(CustomData.UpdateWorkflowTest);
 
 #if true
-            global.InsertAllExamples(); // INSERT
             global.ReadRowCounts(); // READ
 #endif
 
 #if false
             global.DeleteAllFromDatabase(); // DELETE
+            global.InsertAllExamples(); // INSERT
             global.ReadRowCounts(); // READ
-            global.DropAllTables(); // DROP
+            global.DropAllTables(); // DROP!
 #endif
 
             Console.WriteLine("Program ended.");
