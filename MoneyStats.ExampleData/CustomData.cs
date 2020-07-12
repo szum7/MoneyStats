@@ -12,6 +12,21 @@ namespace MoneyStats.ExampleData
     /// </summary>
     public static class CustomData
     {
+        public static readonly Dictionary<string, object> UpdateWorkflowTest = new Dictionary<string, object>()
+        {            
+            // BankRow
+            {
+                nameof(BankRow),
+                new List<BankRow>
+                {
+                    // null|undefined test
+                    new BankRow() { Id = 1, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 2000, Currency = null, Message = "" }.SetNew(),
+                    // other tests
+                    new BankRow() { Id = 1, AccountingDate = new DateTime(2010, 10, 10), BankTransactionId = "bankTransactionId", Type = "type", Account = "account", AccountName = "accountName", PartnerAccount = "partnerAccount", PartnerName = "partnerName", Sum = 1, Currency = "currency", Message = "message" }.SetNew(),
+                }
+            },
+        };
+
         public static readonly Dictionary<string, object> BasicValues = new Dictionary<string, object>
         {
             // Tag

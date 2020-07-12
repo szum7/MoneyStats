@@ -157,11 +157,12 @@ export class UpdatePage implements OnInit, AfterViewInit {
     test() {
         this.results.firstResult = [
             [
-                new ReadInBankRow().get(new BankRow().get('Mon Feb 02 2015 01:00:00 GMT+0100 (Central European Standard Time)', 'ó kamat', 'Kamat', '10401945223571949481012', 'TÉTE BERTALAN', undefined, undefined, '456', 'HUF', '35HUF')),
-                new ReadInBankRow().get(new BankRow().get('2000-01-02 11:00:00', '', '', '', '', '', '', '', '', '')),
-                new ReadInBankRow().get(new BankRow().get('2000-01-03 12:00:00', '', '', '', '', '', '', '', '', '')),
-                new ReadInBankRow().get(new BankRow().get('2000-01-04 13:00:00', '', '', '', '', '', '', '', '', '')),
-                new ReadInBankRow().get(new BankRow().get('2000-01-05 14:00:00', '', '', '', '', '', '', '', '', ''))
+                // Already in db
+                new ReadInBankRow().get(new BankRow().get(new Date(1999, 0, 1).toString(), null, null, null, null, null, null, '2000', null, '')),
+                new ReadInBankRow().get(new BankRow().get(new Date(2010, 9, 10).toString(), 'bankTransactionId', 'type', 'account', 'accountName', 'partnerAccount', 'partnerName', '1', 'currency', 'message')),
+                // Not yet in db
+                new ReadInBankRow().get(new BankRow().get(new Date(1999, 0, 1).toString(), '', '', '', '', '', '', '', '', '')),
+                new ReadInBankRow().get(new BankRow().get(new Date(1999, 0, 1).toString(), '', '', '', '', '', '', '', '', ''))
             ]
         ];
         this.results.utils.bankMapper = new ExcelBankRowMapper(BankType.KH);
