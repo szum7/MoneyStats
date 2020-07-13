@@ -116,7 +116,7 @@ export class UpdateResultsUtilities {
 export class UpdateResults {
     firstResult: ReadInBankRow[][];
     secondResult: ReadBankRowForDbCompare[];
-    thirdResult: ReadBankRowForDbCompare[];
+    thirdResult: BankRow[];
     utils: UpdateResultsUtilities;
 
     constructor() {
@@ -205,7 +205,7 @@ export class UpdatePage implements OnInit, AfterViewInit {
         this.results.secondResult = $output;
     }
 
-    output_thirdStep($output: ReadBankRowForDbCompare[]): void {
+    output_thirdStep($output: BankRow[]): void {
         this.results.thirdResult = $output;
     }
 

@@ -267,5 +267,10 @@ namespace MoneyStats.BL.Modules
             // save transactionTagConns
             new TransactionTagConnRepository().SaveTransactionTagConns(Transactions);
         }
+
+        public void GetResultsToClientSide()
+        {
+            // TODO workflow is: user chooses the ruleset -> program runs -> program sends back results -> user edits if it wants -> save tr.s
+        }
     }
 }

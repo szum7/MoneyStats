@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   mock: {
     all: true,
-    bankRow: false
+    bankRow: false,
+    ruleEvaluator: false
   }
 };
 

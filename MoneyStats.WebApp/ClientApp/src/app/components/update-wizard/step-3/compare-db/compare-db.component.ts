@@ -38,7 +38,7 @@ export class CompareDbComponent implements OnInit {
       //self.loadingScreen.stop();
       console.log("Compare finished");
 
-      self.nextStepChange.emit(self.bankRows);
+      self.emitOutput();
       self.checkNextStepPossible();
     });
   }
@@ -52,7 +52,7 @@ export class CompareDbComponent implements OnInit {
     }, error => {
       console.error("Couldn't get bank rows from database!");
       console.log(error);
-    })
+    });
   }
 
   private compareDbToFileRows(dbList: Array<BankRow>): void {
@@ -99,8 +99,16 @@ export class CompareDbComponent implements OnInit {
   click_toggleRowExclusion(row: ReadBankRowForDbCompare): void {
     row.toggleExclusion();
     
-    this.nextStepChange.emit(this.bankRows);
+    this.emitOutput();
     this.checkNextStepPossible();
+  }
+
+  private emitOutput(): void {
+    let output: BankRow[] = [];
+    for (let i = 0; i < this.bankRows.length; i++) {
+      output.push(this.bankRows[i].bankRow);
+    }
+    this.nextStepChange.emit(output);
   }
 
 }

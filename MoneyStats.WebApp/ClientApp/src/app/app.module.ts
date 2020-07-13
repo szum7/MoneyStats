@@ -18,6 +18,8 @@ import { RouterService } from './services/router-service/router.service';
 import { TestTableService } from './services/test-table-service/test-table.service';
 import { BaseHttpService } from './services/base-http.service';
 import { BankRowService } from './services/bank-row-service/bank-row.service';
+import { RuleEvaluatorService } from './services/rule-evaluator-service/rule-evaluator.service';
+import { RuleService } from './services/rule-service/rule.service';
 
 // Components
 import { AppComponent } from './app.component';
@@ -69,7 +71,9 @@ import { CompareDbComponent } from './components/update-wizard/step-3/compare-db
     RouterService,
     BaseHttpService,
     TestTableService,
-    BankRowService
+    BankRowService,
+    RuleEvaluatorService,
+    RuleService
   ],
   bootstrap: [AppComponent]
 })

@@ -121,7 +121,7 @@
                     Maybe.
                 </p>
             </div>
-            <app-eval-transactions-component [params]="results.secondResult" [mapper]="results.utils.bankMapper">
+            <app-eval-transactions-component [params]="results.thirdResult" (nextStepAlertsChange)="output_stepAlertChange($event)">
             </app-eval-transactions-component>
         </div>
         <div *ngSwitchDefault>

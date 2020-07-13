@@ -1,11 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
-import { PropertyMapRow } from 'src/app/models/component-models/property-map-row';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
-import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
 import { StaticMessages } from 'src/app/utilities/input-messages.static';
+import { StepAlert } from 'src/app/pages/update-page/update.page';
+import { Transaction } from 'src/app/models/service-models/transaction.model';
+import { RuleEvaluatorService } from 'src/app/services/rule-evaluator-service/rule-evaluator.service';
+import { Rule } from 'src/app/models/service-models/rule.model';
+import { RuleService } from 'src/app/services/rule-service/rule.service';
 
 @Component({
   selector: 'app-eval-transactions-component',
@@ -14,51 +16,73 @@ import { StaticMessages } from 'src/app/utilities/input-messages.static';
 })
 export class EvalTransactionsComponent implements OnInit {
 
-  @Input() params: ReadBankRowForDbCompare[];
-  @Input() mapper: ExcelBankRowMapper;
-  public get bankRows(): ReadBankRowForDbCompare[] { return this.params; }
+  @Input() params: BankRow[];
+  @Output() nextStepAlertsChange = new EventEmitter();
+
+  public get bankRows(): BankRow[] { return this.params; }
+
+  public rules: Rule[];
 
   constructor(
     private loadingScreen: LoadingScreenService,
-    private bankRowService: BankRowService) {       
-    }
+    private ruleService: RuleService,
+    private ruleEvaluatorService: RuleEvaluatorService) {
+  }
 
   ngOnInit() {
-    this.program();
+    this.getDataProgram();
   }
 
-  private program(): void {
+  private getDataProgram(): void {
     let self = this;
-    self.loadingScreen.start();
-    self.getBankRowsFromDb(function (dbList) {
-      self.compareDbToFileRows(dbList);
-      self.loadingScreen.stop();
-      console.log("Compare finished");
-    });
-  }
-
-  private getBankRowsFromDb(callback: (response: Array<BankRow>) => void): void {
-    this.bankRowService.get().subscribe(response => {
-      console.log(response);
-      callback(response);
-    }, error => {
-      console.error("Couldn't get bank rows from database!");
-      console.log(error);
+    
+    self.getRules(function(rules: Rule[]){
+      self.rules = rules;
     })
   }
 
-  private compareDbToFileRows(dbList: Array<BankRow>): void {
-    for (let i = 0; i < dbList.length; i++) {
-      let dbRow: BankRow = dbList[i];
-      for (let j = 0; j < this.bankRows.length; j++) {
-        let fileRow: ReadBankRowForDbCompare = this.bankRows[j];
+  evaluateProgram(): void {
+    let self = this;
 
-        if (dbRow.getContentId() === fileRow.bankRow.getContentId()) {
-          fileRow.messages.push(StaticMessages.MATCHING_READ_BANKROW_WITH_DB);
-          fileRow.setToExclude();
-        }
-      }
+    self.getEvaluatedTransactions(self.rules, self.bankRows, function (response) {
+      
+    });
+  }
+
+  private getRules(callback: (response: Rule[]) => void): void {
+    this.ruleService.get().subscribe(response => {
+      console.log("=> getRules:");
+      console.log(response);
+      console.log("<=");
+      callback(response);
+    }, error => {
+      console.error("Error: getRules");
+      console.log(error);
+    });
+  }
+
+  private getEvaluatedTransactions(rules: Rule[], bankRows: BankRow[], callback: (response: any[]/* TODO */) => void): void {
+    this.ruleEvaluatorService.getEvaluatedTransactions(rules, bankRows).subscribe(response => {
+      console.log("=> getEvaluatedTransactions:");
+      console.log(response);
+      console.log("<=");
+      callback(response);
+    }, error => {
+      console.error("Error: getEvaluatedTransactions");
+      console.log(error);
+    });
+  }
+
+  private checkNextStepPossible(): void {
+    let alerts = [];
+    
+    if (this.bankRows.length === 0) {
+      alerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
     }
+
+    // TODO ...
+
+    this.nextStepAlertsChange.emit(alerts);
   }
 
   sortBy_bankRows(arr: any[], property: string) {
@@ -70,12 +94,14 @@ export class EvalTransactionsComponent implements OnInit {
     return d1 > d2 ? 1 : d1 === d2 ? 0 : -1;
   }
 
-  click_toggleColumnVisibility(propertyMap: PropertyMapRow): void {
-    propertyMap.isOpen = !propertyMap.isOpen;
+  click_toggleDetails(row: ReadBankRowForDbCompare): void {
+    row.isDetailsOpen = !row.isDetailsOpen;
   }
 
   click_toggleRowExclusion(row: ReadBankRowForDbCompare): void {
     row.toggleExclusion();
+    
+    this.checkNextStepPossible();
   }
 
 }
