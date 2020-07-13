@@ -30,6 +30,10 @@ export class CompareDbComponent implements OnInit {
     this.program();
   }
 
+  saveBankRows(): void {
+    // TODO need to save the bankRows
+  }
+
   private program(): void {
     let self = this;
     //self.loadingScreen.start(); // TODO ExpressionChangedAfterItHasBeenCheckedError error

@@ -134,6 +134,7 @@ namespace MoneyStats.BL.Modules
         {
             var item = new TransactionCreatedWithRule()
             {
+                Rule = rule,
                 RuleId = rule.Id,
                 Transaction = transaction // no transaction.Id yet.
             }.SetNew();
@@ -249,6 +250,25 @@ namespace MoneyStats.BL.Modules
                 return;
             }
 
+            /* What to send to client side:
+             * 
+             * TransactionCreatedWithRules[]
+             * {
+             *  Transaction: *transactionReference
+             *  Rule: *ruleReference
+             * }
+             * 
+             * Transaction[]
+             * {
+             *  Title,
+             *  Description,
+             *  Date,
+             *  Sum,
+             *  BankRowId,
+             *  Tags: Tags[] // TODO
+             * }
+             */
+
             // save transactions
             new TransactionRepository().InsertRange(Transactions);
 
@@ -256,6 +276,7 @@ namespace MoneyStats.BL.Modules
             {
                 item.TransactionId = item.Transaction.Id;
                 item.Transaction = null; // TODO investigate why this is needed
+                item.Rule = null; // TODO investigate why this is needed
             }
 
             // save transactionCreatedWithRule
