@@ -6,14 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace MoneyStats.BL.Modules
-{
-    public class RuleEvaluator
+{    
+    public class RuleEvaluatorDeprecated
     {
         public List<BankRow> BankRows { get; set; }
         public List<Transaction> Transactions { get; set; }
         public List<TransactionCreatedWithRule> TransactionCreatedWithRules { get; set; }
 
-        public RuleEvaluator()
+        public RuleEvaluatorDeprecated()
         {
             this.Transactions = new List<Transaction>();
             this.TransactionCreatedWithRules = new List<TransactionCreatedWithRule>();
@@ -62,6 +62,16 @@ namespace MoneyStats.BL.Modules
                 Date = bankRow.AccountingDate,
                 Sum = bankRow.Sum
             }.SetNew();
+            return item;
+        }
+
+        SuggestedTransaction GetSuggestedTransaction(BankRow bankRow)
+        {
+            var item = new SuggestedTransaction()
+            {
+                Date = bankRow.AccountingDate,
+                Sum = bankRow.Sum
+            };
             return item;
         }
 
@@ -250,25 +260,6 @@ namespace MoneyStats.BL.Modules
                 return;
             }
 
-            /* What to send to client side:
-             * 
-             * TransactionCreatedWithRules[]
-             * {
-             *  Transaction: *transactionReference
-             *  Rule: *ruleReference
-             * }
-             * 
-             * Transaction[]
-             * {
-             *  Title,
-             *  Description,
-             *  Date,
-             *  Sum,
-             *  BankRowId,
-             *  Tags: Tags[] // TODO
-             * }
-             */
-
             // save transactions
             new TransactionRepository().InsertRange(Transactions);
 
@@ -287,11 +278,6 @@ namespace MoneyStats.BL.Modules
 
             // save transactionTagConns
             new TransactionTagConnRepository().SaveTransactionTagConns(Transactions);
-        }
-
-        public void GetResultsToClientSide()
-        {
-            // TODO workflow is: user chooses the ruleset -> program runs -> program sends back results -> user edits if it wants -> save tr.s
         }
     }
 }
