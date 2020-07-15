@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace MoneyStats.BL.Modules
-{    
+{
     public class RuleEvaluatorDeprecated
     {
         public List<BankRow> BankRows { get; set; }
@@ -62,16 +62,6 @@ namespace MoneyStats.BL.Modules
                 Date = bankRow.AccountingDate,
                 Sum = bankRow.Sum
             }.SetNew();
-            return item;
-        }
-
-        SuggestedTransaction GetSuggestedTransaction(BankRow bankRow)
-        {
-            var item = new SuggestedTransaction()
-            {
-                Date = bankRow.AccountingDate,
-                Sum = bankRow.Sum
-            };
             return item;
         }
 

@@ -1,5 +1,4 @@
 ﻿using MoneyStats.BL.Common;
-using MoneyStats.BL.Repositories;
 using MoneyStats.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -7,94 +6,6 @@ using System.Linq;
 
 namespace MoneyStats.BL.Modules
 {
-    public class SuggestedTransaction
-    {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public DateTime? Date { get; set; }
-        public decimal? Sum { get; set; }
-
-        public List<Tag> Tags { get; set; }
-        public List<Rule> AppliedRules { get; set; }
-        public BankRow BankRowReference { get; set; }
-        public List<BankRow> AggregatedBankRowReferences { get; set; }
-
-        public SuggestedTransaction()
-        {
-            this.Tags = new List<Tag>();
-            this.AppliedRules = new List<Rule>();
-            this.AggregatedBankRowReferences = new List<BankRow>();
-        }
-    }
-
-    public class RuleEvaluator
-    {
-        static bool IsConditionTrue(Condition condition, object rowValue)
-        {
-            if (condition.ConditionType == ConditionType.TrueRule)
-            {
-                return true;
-            }
-            else if (condition.ConditionType == ConditionType.IsEqualTo)
-            {
-                return (rowValue?.ToString() == condition.Value);
-            }
-            else if (condition.ConditionType == ConditionType.IsGreaterThan)
-            {
-                var convertedValue = (IComparable)Convert.ChangeType(condition.Value, rowValue.GetType());
-                return ConditionRepository.Compare(convertedValue, "<", (IComparable)rowValue);
-            }
-            else if (condition.ConditionType == ConditionType.IsLesserThan)
-            {
-                var convertedValue = (IComparable)Convert.ChangeType(condition.Value, rowValue.GetType());
-                return ConditionRepository.Compare(convertedValue, ">", (IComparable)rowValue);
-            }
-            else if (condition.ConditionType == ConditionType.IsPropertyNull)
-            {
-                return (rowValue == null);
-            }
-            else if (condition.ConditionType == ConditionType.IsPropertyNotNull)
-            {
-                return (rowValue != null);
-            }
-            else if (condition.ConditionType == ConditionType.ContainsValueOfProperty)
-            {
-                return rowValue.ToString().Contains(condition.Value);
-            }
-
-            throw new Exception($"Unexpected RuleTypeId: {condition.ConditionType}");
-        }
-
-        public static bool CheckIfBankRowValidatesToRule(Rule rule, BankRow bankRow)
-        {
-            var i = 0;
-            var oneOrRulesValidate = false;
-            while (i < rule.AndConditionGroups.Count && !oneOrRulesValidate)
-            {
-                var andRule = rule.AndConditionGroups[i];  // = (a & b & c)
-                var allAndRulesValidate = true;
-                var j = 0;
-                while (j < andRule.Conditions.Count && allAndRulesValidate)
-                {
-                    var condition = andRule.Conditions[j]; // = a
-                    var rowValue = typeof(BankRow).GetProperty(condition.Property).GetValue(bankRow);
-
-                    allAndRulesValidate = RuleEvaluator.IsConditionTrue(condition, rowValue);
-
-                    j++;
-                }
-
-                if (allAndRulesValidate)
-                {
-                    oneOrRulesValidate = true;
-                }
-
-                i++;
-            }
-            return oneOrRulesValidate;
-        }
-    }
-
     public class GeneratedTransactionWorker
     {
         public List<SuggestedTransaction> Get(List<Rule> rules, List<BankRow> bankRows)

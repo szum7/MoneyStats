@@ -47,6 +47,32 @@ namespace MoneyStats.BL.Repositories
             }
         }
 
+        public bool UpdateMany(List<TEntity> entities)
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                var i = 0;
+                foreach (var entity in entities)
+                {
+                    var obj = context.Set<TEntity>().SingleOrDefault(x => x.Id == entity.Id);
+                    if (obj != null)
+                    {
+                        context.Entry(obj).CurrentValues.SetValues(entity);
+                        obj.ModifiedDate = DateTime.Now;
+                        i++;
+                    }
+                }
+
+                if (i > 0)
+                {
+                    context.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
         public bool Update(TEntity entity)
         {
             using (var context = new MoneyStatsContext())
