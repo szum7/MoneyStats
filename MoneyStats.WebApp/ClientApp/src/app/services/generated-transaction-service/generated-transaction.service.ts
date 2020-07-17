@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Rule } from "src/app/models/service-models/rule.model";
 import { BankRow } from "src/app/models/service-models/bank-row.model";
-import { GeneratedTransaction } from "src/app/models/service-models/suggested-transaction.model";
+import { GeneratedTransaction } from "src/app/models/service-models/generated-transaction.model";
 import { GenericResponse } from "src/app/models/service-models/generic-response.model";
 
 class GeneratedTransactionServiceMap {

@@ -8,7 +8,7 @@ import { Transaction } from 'src/app/models/service-models/transaction.model';
 import { Rule } from 'src/app/models/service-models/rule.model';
 import { RuleService } from 'src/app/services/rule-service/rule.service';
 import { GeneratedTransactionService } from 'src/app/services/generated-transaction-service/generated-transaction.service';
-import { GeneratedTransaction } from 'src/app/models/service-models/suggested-transaction.model';
+import { GeneratedTransaction } from 'src/app/models/service-models/generated-transaction.model';
 import { GenericResponse } from 'src/app/models/service-models/generic-response.model';
 
 @Component({
