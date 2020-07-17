@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Rule } from "src/app/models/service-models/rule.model";
 import { BankRow } from "src/app/models/service-models/bank-row.model";
-import { SuggestedTransaction } from "src/app/models/service-models/suggested-transaction.model";
+import { GeneratedTransaction } from "src/app/models/service-models/suggested-transaction.model";
+import { GenericResponse } from "src/app/models/service-models/generic-response.model";
 
 class GeneratedTransactionServiceMap {
 }
@@ -25,17 +26,34 @@ export class GeneratedTransactionService extends GeneratedTransactionServiceLogi
         this.base.set('generatedTransaction', this.baseUrl, 'api/generatedtransaction/');
     }
 
-    getSuggesteds(data: { rules: Rule[], bankRows: BankRow[] }): Observable<SuggestedTransaction[]> {
+    getGenerated(data: { rules: Rule[], bankRows: BankRow[] }): Observable<GeneratedTransaction[]> {
         if (this.base.isMocked()) {
-            return this.getMock();
+            return this.getGeneratedMock();
         }
         return this.http
-            .post<SuggestedTransaction[]>(this.base.url + 'getsuggesteds', data, this.base.getOptions());
+            .post<GeneratedTransaction[]>(this.base.url + 'getgenerated', data, this.base.getOptions());
     }
 
-    private getMock(): Observable<SuggestedTransaction[]> {
+    private getGeneratedMock(): Observable<GeneratedTransaction[]> {
         return new Observable((observer) => {
             let res = [];
+
+            observer.next(res);
+            observer.complete();
+        });
+    }
+
+    save(data: GeneratedTransaction[]): Observable<GenericResponse> {
+        if (this.base.isMocked()) {
+            return this.saveMock();
+        }
+        return this.http
+            .post<GenericResponse>(this.base.url + 'save', data, this.base.getOptions());
+    }
+
+    private saveMock(): Observable<GenericResponse> {
+        return new Observable((observer) => {
+            let res = new GenericResponse();
 
             observer.next(res);
             observer.complete();

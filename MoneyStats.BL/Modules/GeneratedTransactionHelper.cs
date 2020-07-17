@@ -6,11 +6,11 @@ using System.Collections.Generic;
 
 namespace MoneyStats.BL.Modules
 {
-    public class SuggestedTransactionHelper : ISuggestedTransactionService
+    public class GeneratedTransactionHelper
     {
-        public GenericResponse<bool> SaveAll(List<SuggestedTransaction> suggestedTransactions)
+        public GenericResponse<bool> SaveAll(List<GeneratedTransaction> generatedTransactions)
         {
-            if (suggestedTransactions == null || suggestedTransactions.Count == 0)
+            if (generatedTransactions == null || generatedTransactions.Count == 0)
             {
                 return new ErrorResponse("There's nothing to save!").Pulse();
             }
@@ -24,7 +24,7 @@ namespace MoneyStats.BL.Modules
             var bankRows = new List<BankRow>();
             var transactionTagConns = new List<TransactionTagConn>();
 
-            foreach (var tr in suggestedTransactions)
+            foreach (var tr in generatedTransactions)
             {
                 var transaction = new Transaction()
                 {
@@ -71,7 +71,7 @@ namespace MoneyStats.BL.Modules
             new BankRowRepository().UpdateMany(bankRows);
         }
 
-        List<BankRow> GetBankRows(Transaction transaction, SuggestedTransaction tr)
+        List<BankRow> GetBankRows(Transaction transaction, GeneratedTransaction tr)
         {
             var bankRows = new List<BankRow>();
 
@@ -94,7 +94,7 @@ namespace MoneyStats.BL.Modules
             return bankRows;
         }
 
-        List<TransactionTagConn> GetTransactionTagConns(Transaction transaction, SuggestedTransaction tr)
+        List<TransactionTagConn> GetTransactionTagConns(Transaction transaction, GeneratedTransaction tr)
         {
             var transactionTagConns = new List<TransactionTagConn>();
 
@@ -111,7 +111,7 @@ namespace MoneyStats.BL.Modules
             return transactionTagConns;
         }
 
-        List<TransactionCreatedWithRule> GetTransactionCreatedWithRules(Transaction transaction, SuggestedTransaction tr)
+        List<TransactionCreatedWithRule> GetTransactionCreatedWithRules(Transaction transaction, GeneratedTransaction tr)
         {
             var transactionCreatedWithRules = new List<TransactionCreatedWithRule>();
 

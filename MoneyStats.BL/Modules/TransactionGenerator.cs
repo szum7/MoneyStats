@@ -7,18 +7,18 @@ using System.Linq;
 
 namespace MoneyStats.BL.Modules
 {
-    public class GeneratedTransactionWorker : IGeneratedTransactionService
+    public class TransactionGenerator
     {
-        public List<SuggestedTransaction> Get(List<Rule> rules, List<BankRow> bankRows)
+        public List<GeneratedTransaction> Generate(List<Rule> rules, List<BankRow> bankRows)
         {
-            var aggregatedTransactions = new Dictionary<DateTime, SuggestedTransaction>();
-            var transactions = new List<SuggestedTransaction>();
+            var aggregatedTransactions = new Dictionary<DateTime, GeneratedTransaction>();
+            var transactions = new List<GeneratedTransaction>();
 
             rules = this.GetSortedRules(rules);
 
             foreach (var bankRow in bankRows)
             {
-                SuggestedTransaction transaction = this.GetSuggestedTransaction(bankRow);
+                GeneratedTransaction transaction = this.GetSuggestedTransaction(bankRow);
                 transactions.Add(transaction);
 
                 foreach (Rule rule in rules) // item = (a & b & c) || d || (e & f) => action
@@ -34,7 +34,7 @@ namespace MoneyStats.BL.Modules
                     // Apply RuleAction if Rule is valid
                     if (oneOrRulesValidate)
                     {
-                        SuggestedTransaction validTransaction = transaction;
+                        GeneratedTransaction validTransaction = transaction;
 
                         if (rule.RuleActions.Any(x => x.RuleActionType == RuleActionType.Omit))
                         {
@@ -48,10 +48,10 @@ namespace MoneyStats.BL.Modules
                         if (rule.RuleActions.Any(x => x.RuleActionType == RuleActionType.AggregateToMonthlyTransaction))
                         {
                             var month = new DateTime(bankRow.AccountingDate.Value.Year, bankRow.AccountingDate.Value.Month, 1);
-                            SuggestedTransaction monthlyTr = null;
+                            GeneratedTransaction monthlyTr = null;
                             if (!aggregatedTransactions.TryGetValue(month, out monthlyTr)) // New monthly aggregated transaction
                             {
-                                monthlyTr = new SuggestedTransaction()
+                                monthlyTr = new GeneratedTransaction()
                                 {
                                     Date = month.AddMonths(1).AddDays(-1),
                                     Sum = 0,
@@ -138,9 +138,9 @@ namespace MoneyStats.BL.Modules
             return sortedArray.ToList();
         }
 
-        SuggestedTransaction GetSuggestedTransaction(BankRow bankRow)
+        GeneratedTransaction GetSuggestedTransaction(BankRow bankRow)
         {
-            var item = new SuggestedTransaction()
+            var item = new GeneratedTransaction()
             {
                 Date = bankRow.AccountingDate,
                 Sum = bankRow.Sum,

@@ -2,8 +2,8 @@ import { BankRow } from "./bank-row.model";
 import { Tag } from "./tag.model";
 import { Rule } from "./rule.model";
 
-export class SuggestedTransaction {
-    
+export class GeneratedTransaction {
+
     title: string;
     description: string;
     date: Date;

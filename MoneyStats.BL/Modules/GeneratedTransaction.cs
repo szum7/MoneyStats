@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MoneyStats.BL.Modules
 {
-    public class SuggestedTransaction
+    public class GeneratedTransaction
     {
         public string Title { get; set; }
         public string Description { get; set; }
@@ -18,7 +18,7 @@ namespace MoneyStats.BL.Modules
         public List<Rule> AppliedRules { get; set; }
         public List<BankRow> AggregatedBankRowReferences { get; set; }
 
-        public SuggestedTransaction()
+        public GeneratedTransaction()
         {
             this.IsCustom = false;
 

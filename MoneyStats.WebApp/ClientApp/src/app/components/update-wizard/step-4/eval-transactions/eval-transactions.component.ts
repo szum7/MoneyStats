@@ -5,9 +5,11 @@ import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { StaticMessages } from 'src/app/utilities/input-messages.static';
 import { StepAlert } from 'src/app/pages/update-page/update.page';
 import { Transaction } from 'src/app/models/service-models/transaction.model';
-import { RuleEvaluatorService } from 'src/app/services/rule-evaluator-service/rule-evaluator.service';
 import { Rule } from 'src/app/models/service-models/rule.model';
 import { RuleService } from 'src/app/services/rule-service/rule.service';
+import { GeneratedTransactionService } from 'src/app/services/generated-transaction-service/generated-transaction.service';
+import { GeneratedTransaction } from 'src/app/models/service-models/suggested-transaction.model';
+import { GenericResponse } from 'src/app/models/service-models/generic-response.model';
 
 @Component({
   selector: 'app-eval-transactions-component',
@@ -22,11 +24,12 @@ export class EvalTransactionsComponent implements OnInit {
   public get bankRows(): BankRow[] { return this.params; }
 
   public rules: Rule[];
+  public generatedTransactions: GeneratedTransaction[];
 
   constructor(
     private loadingScreen: LoadingScreenService,
     private ruleService: RuleService,
-    private ruleEvaluatorService: RuleEvaluatorService) {
+    private generatedTransactionService: GeneratedTransactionService) {
   }
 
   ngOnInit() {
@@ -35,17 +38,27 @@ export class EvalTransactionsComponent implements OnInit {
 
   private getDataProgram(): void {
     let self = this;
-    
-    self.getRules(function(rules: Rule[]){
+
+    self.getRules(function (rules: Rule[]) {
       self.rules = rules;
     })
   }
 
-  evaluateProgram(): void {
+  click_generatedTransactionsProgram(): void {
     let self = this;
+    self.getGeneratedTransactions(self.rules, self.bankRows, function (response: GeneratedTransaction[]) {
+      self.generatedTransactions = response;
+    });
+  }
 
-    self.getEvaluatedTransactions(self.rules, self.bankRows, function (response) {
-      
+  click_saveTransactionsProgram(): void {
+    let self = this;
+    self.saveTransactions(self.generatedTransactions, function (response: GenericResponse) {
+      if (!response.isError) {
+        console.log(response.message);
+      } else {
+        console.error(response.message);
+      }
     });
   }
 
@@ -61,21 +74,36 @@ export class EvalTransactionsComponent implements OnInit {
     });
   }
 
-  private getEvaluatedTransactions(rules: Rule[], bankRows: BankRow[], callback: (response: any[]/* TODO */) => void): void {
-    this.ruleEvaluatorService.getEvaluatedTransactions(rules, bankRows).subscribe(response => {
-      console.log("=> getEvaluatedTransactions:");
+  private getGeneratedTransactions(rules: Rule[], bankRows: BankRow[], callback: (response: GeneratedTransaction[]) => void): void {
+    this.generatedTransactionService.getGenerated({
+      rules: rules,
+      bankRows: bankRows
+    }).subscribe(response => {
+      console.log("=> getGeneratedTransactions:");
       console.log(response);
       console.log("<=");
       callback(response);
     }, error => {
-      console.error("Error: getEvaluatedTransactions");
+      console.error("Error: getGeneratedTransactions");
+      console.log(error);
+    });
+  }
+
+  private saveTransactions(generatedTransactions: GeneratedTransaction[], callback: (response: GenericResponse) => void): void {
+    this.generatedTransactionService.save(generatedTransactions).subscribe(response => {
+      console.log("=> getRules:");
+      console.log(response);
+      console.log("<=");
+      callback(response);
+    }, error => {
+      console.error("Error: getRules");
       console.log(error);
     });
   }
 
   private checkNextStepPossible(): void {
     let alerts = [];
-    
+
     if (this.bankRows.length === 0) {
       alerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
     }
@@ -100,7 +128,7 @@ export class EvalTransactionsComponent implements OnInit {
 
   click_toggleRowExclusion(row: ReadBankRowForDbCompare): void {
     row.toggleExclusion();
-    
+
     this.checkNextStepPossible();
   }
 
