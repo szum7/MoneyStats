@@ -1,5 +1,5 @@
 import { Injectable, Inject } from "@angular/core";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BaseHttpService } from '../base-http.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -33,6 +33,16 @@ export class TestTableService extends TestTableServiceLogic {
     get(): Observable<any> {
         return this.http
             .get<any>(this.baseUrl + 'api/TestTable/get')
+            .pipe(map(this.dummyPipe));
+    }
+
+    postTest(data: any): Observable<any> {
+        const header: HttpHeaders = new HttpHeaders({
+            'Content-Type':  'application/json',
+            'Authorization': 'Bearer xyz'
+        });
+        return this.http
+            .post<any>(this.baseUrl + 'api/TestTable/mypost', data, this.base.getOptions())
             .pipe(map(this.dummyPipe));
     }
 

@@ -61,7 +61,7 @@ import { CompareDbComponent } from './components/update-wizard/step-3/compare-db
     NgbModule,
     RouterModule.forRoot([
       { path: '', component: HomePage },
-      { path: 'testtable', component: TestTablePage },
+      { path: 'test', component: TestTablePage },
       { path: 'update', component: UpdatePage },
       { path: 'excel', component: ExcelTestPage },
     ], { useHash: true })

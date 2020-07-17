@@ -1,4 +1,5 @@
 ﻿using MoneyStats.BL.Common;
+using MoneyStats.BL.Interfaces;
 using MoneyStats.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 
 namespace MoneyStats.BL.Modules
 {
-    public class GeneratedTransactionWorker
+    public class GeneratedTransactionWorker : IGeneratedTransactionService
     {
         public List<SuggestedTransaction> Get(List<Rule> rules, List<BankRow> bankRows)
         {

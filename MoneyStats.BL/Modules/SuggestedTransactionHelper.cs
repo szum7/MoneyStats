@@ -1,19 +1,18 @@
-﻿using MoneyStats.BL.Repositories;
+﻿using MoneyStats.BL.Common;
+using MoneyStats.BL.Interfaces;
+using MoneyStats.BL.Repositories;
 using MoneyStats.DAL.Models;
-using System;
 using System.Collections.Generic;
 
 namespace MoneyStats.BL.Modules
 {
-    public class SuggestedTransactionHelper
+    public class SuggestedTransactionHelper : ISuggestedTransactionService
     {
-        public void Save(List<SuggestedTransaction> suggestedTransactions)
+        public GenericResponse<bool> SaveAll(List<SuggestedTransaction> suggestedTransactions)
         {
-            if (suggestedTransactions == null ||
-                suggestedTransactions.Count == 0)
+            if (suggestedTransactions == null || suggestedTransactions.Count == 0)
             {
-                Console.WriteLine("There's nothing to save!");
-                return;
+                return new ErrorResponse("There's nothing to save!").Pulse();
             }
 
             var transactions = new List<Transaction>();
@@ -21,6 +20,7 @@ namespace MoneyStats.BL.Modules
             // TODO grouped bankRows and single bankRows are collected into one list for update.
             // grouped BankRows: GroupedTransactionId and IsTransactionCreated is changed
             // single BankRows: IsTransactionCreated is changed
+            // Test if its okay (?)
             var bankRows = new List<BankRow>();
             var transactionTagConns = new List<TransactionTagConn>();
 
@@ -58,6 +58,8 @@ namespace MoneyStats.BL.Modules
 
             // update bankrows (IsTransactionCreated [and GroupedTransactionId])
             this.UpdateBankRows(bankRows);
+
+            return new SuccessResponse();
         }
 
         void UpdateBankRows(List<BankRow> bankRows)
