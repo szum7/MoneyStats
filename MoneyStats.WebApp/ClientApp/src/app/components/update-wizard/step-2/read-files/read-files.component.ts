@@ -48,12 +48,12 @@ export class ReadFilesComponent implements OnInit {
     // TODO research and understand why this (loadingScreen part) isn't working!
     // Error: "Expression has changed after it was checked"
     // https://blog.angular-university.io/angular-debugging/
-    this.loadingScreen.start();
+    //this.loadingScreen.start();
 
     new ReadInBankRowsMerger().searchForDuplicates(mappedExcelMatrix);
     this.readInBankRows = this.flattenReadInBankRows(mappedExcelMatrix);
 
-    this.loadingScreen.stop();
+    //this.loadingScreen.stop();
 
     this.emitOutput();
   }

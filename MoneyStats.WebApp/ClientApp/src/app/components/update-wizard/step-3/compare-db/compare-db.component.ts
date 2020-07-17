@@ -115,4 +115,6 @@ export class CompareDbComponent implements OnInit {
     this.nextStepChange.emit(output);
   }
 
+  // NEXT save bankrows with IsTr.Created=false
+
 }
