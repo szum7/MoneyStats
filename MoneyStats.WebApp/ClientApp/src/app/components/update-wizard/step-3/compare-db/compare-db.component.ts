@@ -5,7 +5,7 @@ import { LoadingScreenService } from 'src/app/services/loading-screen-service/lo
 import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { StaticMessages } from 'src/app/utilities/input-messages.static';
-import { StepAlert } from 'src/app/pages/update-page/update.page';
+import { StepAlert } from "src/app/models/component-models/step-alert.model";
 
 @Component({
   selector: 'app-compare-db-component',

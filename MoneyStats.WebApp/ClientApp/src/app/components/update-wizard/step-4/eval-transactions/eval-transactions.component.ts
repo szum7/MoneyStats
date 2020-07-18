@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
-import { StepAlert } from 'src/app/pages/update-page/update.page';
+import { StepAlert } from "src/app/models/component-models/step-alert.model";
 import { Rule } from 'src/app/models/service-models/rule.model';
 import { RuleService } from 'src/app/services/rule-service/rule.service';
 import { GeneratedTransactionService } from 'src/app/services/generated-transaction-service/generated-transaction.service';

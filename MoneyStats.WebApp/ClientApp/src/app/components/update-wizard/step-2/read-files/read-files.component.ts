@@ -3,7 +3,7 @@ import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row'
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { ReadInBankRowsMerger } from 'src/app/models/component-models/read-in-bank-rows-merger';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
-import { StepAlert } from 'src/app/pages/update-page/update.page';
+import { StepAlert } from "src/app/models/component-models/step-alert.model";
 
 @Component({
   selector: 'app-read-files-component',

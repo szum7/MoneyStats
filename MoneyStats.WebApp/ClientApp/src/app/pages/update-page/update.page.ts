@@ -8,61 +8,10 @@ import { LoadingScreenService } from 'src/app/services/loading-screen-service/lo
 import { GeneratedTransaction } from 'src/app/models/service-models/generated-transaction.model';
 import { GeneratedTransactionService } from 'src/app/services/generated-transaction-service/generated-transaction.service';
 import { GenericResponse } from 'src/app/models/service-models/generic-response.model';
-
-export enum StepAlertType {
-    Criteria,
-    Message,
-    GreenText
-}
-
-export class StepAlert {
-    title: string;
-    type: StepAlertType;
-
-    constructor(title: string) {
-        this.title = title;
-    }
-
-    public setToCriteria() {
-        this.type = StepAlertType.Criteria;
-        return this;
-    }
-
-    public setToMessage() {
-        this.type = StepAlertType.Message;
-        return this;
-    }
-
-    public setToGreenText() {
-        this.type = StepAlertType.GreenText;
-        return this;
-    }
-}
-
-export abstract class WizardStep {
-
-    public title: string;
-    public stepAlerts: StepAlert[];
-    public $output: any;
-
-    public get isProgressable(): boolean {
-        if (!this.stepAlerts) {
-            return true;
-        }
-        if (this.stepAlerts.some(x => x.type == StepAlertType.Criteria)) {
-            return false;
-        }
-        return true;
-    }
-
-    constructor(title: string) {
-        this.title = title;
-        this.stepAlerts = [];
-    }
-
-    abstract getOutput(): any;
-    abstract setInput($input: any): void;
-}
+import { StepAlertType } from '../../models/component-models/step-alert-type.enum';
+import { StepAlert } from '../../models/component-models/step-alert.model';
+import { WizardStep } from '../../models/component-models/wizard-step.moel';
+import { UpdateResultsUtilities } from '../../models/component-models/update-results-utilities.model';
 
 export class ImportFilesStep extends WizardStep {
 
@@ -251,14 +200,6 @@ export class UpdateWizard {
             console.log(error);
         });
     }
-}
-
-/// <summary>
-/// A class for utilities used throughout multiple steps.
-/// </summary>
-export class UpdateResultsUtilities {
-    bankMapper: ExcelBankRowMapper;
-    // ...
 }
 
 @Component({
