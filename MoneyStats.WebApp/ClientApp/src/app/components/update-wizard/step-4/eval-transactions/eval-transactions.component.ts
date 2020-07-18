@@ -30,6 +30,11 @@ export class EvalTransactionsComponent implements OnInit {
     private loadingScreen: LoadingScreenService,
     private ruleService: RuleService,
     private generatedTransactionService: GeneratedTransactionService) {
+    // 1. get rules
+    // 2. run the program on the shown BankRows
+    // 3. get the GeneratedTransactions
+    // 4. edit the transactions if needed
+    // 5. save transactions
   }
 
   ngOnInit() {

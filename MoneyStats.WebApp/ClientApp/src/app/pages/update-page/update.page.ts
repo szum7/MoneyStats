@@ -5,6 +5,8 @@ import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-ba
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
+import { GeneratedTransaction } from 'src/app/models/service-models/generated-transaction.model';
+import { GeneratedTransactionService } from 'src/app/services/generated-transaction-service/generated-transaction.service';
 
 export enum StepAlertType {
     Criteria,
@@ -36,20 +38,17 @@ export class StepAlert {
     }
 }
 
-export class WizardStep {
+export abstract class WizardStep {
 
     public title: string;
-    stepAlerts: StepAlert[];
+    public stepAlerts: StepAlert[];
 
-    get isProgressable(): boolean {
-
-        if (!this.stepAlerts)
+    public get isProgressable(): boolean {
+        if (!this.stepAlerts) {
             return true;
-
-        for (let i = 0; i < this.stepAlerts.length; i++) {
-            const element = this.stepAlerts[i];
-            if (element.type == StepAlertType.Criteria)
-                return false;
+        }
+        if (this.stepAlerts.some(x => x.type == StepAlertType.Criteria)) {
+            return false;
         }
         return true;
     }
@@ -58,17 +57,100 @@ export class WizardStep {
         this.title = title;
         this.stepAlerts = [];
     }
+
+    abstract getOutput(): any;
+    abstract setInput($input: any): void;
 }
 
 export class ImportFilesStep extends WizardStep {
 
+    $output: ReadInBankRow[][];
+
     constructor() {
         super("Step 1 - Import files");
+    }
+
+    setInput($input: any): void {
+        throw new Error("The first step has no input!");
+    }
+
+    getOutput(): ReadInBankRow[][] {
+        return this.$output;
     }
 }
 
 export class ManageReadFilesStep extends WizardStep {
-    
+
+    $input: ReadInBankRow[];
+    $output: ReadBankRowForDbCompare[];
+
+    constructor() {
+        super("Step 2 - Manage read files");
+    }
+
+    setInput($input: ReadInBankRow[]): void {
+        this.$input = $input;
+    }
+
+    getOutput(): ReadBankRowForDbCompare[] {
+        let ret: ReadBankRowForDbCompare[] = [];
+
+        for (let i = 0; i < this.$input.length; i++) {
+            const el = this.$input[i];
+            if (!el.isExcluded) {
+
+                let tr: ReadBankRowForDbCompare = new ReadBankRowForDbCompare();
+
+                tr.uiId = el.uiId;
+                tr.bankRow = el.bankRow;
+
+                ret.push(tr);
+            }
+        }
+        return ret;
+    }
+}
+
+export class CompareWithDatabaseStep extends WizardStep {
+
+    $input: ReadBankRowForDbCompare[];
+    $output: BankRow[];
+
+    constructor() {
+        super("Step 3 - Compare with database");
+    }
+
+    setInput($input: ReadBankRowForDbCompare[]): void {
+        this.$input = $input;
+    }
+
+    getOutput(): BankRow[] {
+        let ret: BankRow[] = [];
+        for (let i = 0; i < this.$input.length; i++) {
+            if (!this.$input[i].isExcluded) {
+                ret.push(this.$input[i].bankRow);
+            }
+        }
+        return ret;
+    }
+}
+
+export class EvalTransactionsStep extends WizardStep {
+
+    $input: BankRow[];
+    $output: GeneratedTransaction[];
+
+    constructor() {
+        super("Step 4 - Create transactions");
+    }
+
+    setInput($input: any): void {
+        this.$input = $input;
+    }
+
+    getOutput(): GeneratedTransaction[] {
+        return this.$output;
+    }
 }
 
 export class Wizard {
@@ -104,18 +186,22 @@ export class Wizard {
 
 export class UpdateWizard extends Wizard {
 
+    public utils: UpdateResultsUtilities;
+
     constructor() {
         super();
 
         this.wizardSteps = [
             new ImportFilesStep(),
-            new WizardStep("Step 2 - Manage read files"),
-            new WizardStep("Step 3 - Compare with database"),
-            new WizardStep("Step 4 - Create transactions")
+            new ManageReadFilesStep(),
+            new CompareWithDatabaseStep(),
+            new EvalTransactionsStep()
         ];
 
         this.stepsAt = 0;
         this.currentStep = this.wizardSteps[this.stepsAt];
+
+        this.utils = new UpdateResultsUtilities();
     }
 }
 
@@ -142,7 +228,7 @@ export class UpdateResults {
     selector: 'app-update-page',
     templateUrl: './update.page.html',
     styleUrls: ['./update.page.scss'],
-    encapsulation: ViewEncapsulation.None // TODO write comment why this is needed
+    encapsulation: ViewEncapsulation.None // TODO add comment why this is needed (?)
 })
 export class UpdatePage implements OnInit, AfterViewInit {
 
@@ -210,7 +296,13 @@ export class UpdatePage implements OnInit, AfterViewInit {
         this.isTooltipsDisabled = !this.isTooltipsDisabled;
     }
 
-    output_firstStep($output: { matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper }): void {
+    output_firstStep($output: { isValid: boolean, matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper, alerts: [] }): void {
+        if (!$output.isValid){
+            this.wizard.currentStep.stepAlerts = $output.alerts;
+            return;
+        }
+
+        //...
         this.results.firstResult = $output.matrix;
         this.results.utils.bankMapper = $output.mapper;
     }
