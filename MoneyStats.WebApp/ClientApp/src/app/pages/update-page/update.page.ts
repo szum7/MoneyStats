@@ -7,7 +7,6 @@ import { BankType } from 'src/app/models/service-models/bank-type.enum';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { GeneratedTransaction } from 'src/app/models/service-models/generated-transaction.model';
 import { GeneratedTransactionService } from 'src/app/services/generated-transaction-service/generated-transaction.service';
-import { ThrowStmt } from '@angular/compiler';
 import { GenericResponse } from 'src/app/models/service-models/generic-response.model';
 
 export enum StepAlertType {
@@ -262,17 +261,6 @@ export class UpdateResultsUtilities {
     // ...
 }
 
-export class UpdateResults {
-    firstResult: ReadInBankRow[][];
-    secondResult: ReadBankRowForDbCompare[];
-    thirdResult: BankRow[];
-    utils: UpdateResultsUtilities;
-
-    constructor() {
-        this.utils = new UpdateResultsUtilities();
-    }
-}
-
 @Component({
     selector: 'app-update-page',
     templateUrl: './update.page.html',
@@ -282,7 +270,6 @@ export class UpdateResults {
 export class UpdatePage implements OnInit, AfterViewInit {
 
     wizard: UpdateWizard;
-    results: UpdateResults;
     isTooltipsDisabled: boolean;
     get stepAlertType() { return StepAlertType; }
     get isStepReadyToProgress() {
@@ -301,14 +288,13 @@ export class UpdatePage implements OnInit, AfterViewInit {
         private generatedTransactionService: GeneratedTransactionService) {
 
         this.wizard = new UpdateWizard(generatedTransactionService);
-        this.results = new UpdateResults();
         this.isTooltipsDisabled = true;
 
         //this.test();
     }
 
     test() { // TEST
-        this.results.firstResult = [
+        (this.wizard.wizardSteps[1] as ManageReadFilesStep).$input = [
             [
                 // Already in db
                 new ReadInBankRow().get(new BankRow().get(new Date(1999, 0, 1), null, null, null, null, null, null, 2000, null, '')),
@@ -318,7 +304,7 @@ export class UpdatePage implements OnInit, AfterViewInit {
                 new ReadInBankRow().get(new BankRow().get(new Date(2014, 0, 1), '', '', '', '', '', '', 0, '', 'test2'))
             ]
         ];
-        this.results.utils.bankMapper = new ExcelBankRowMapper(BankType.KH);
+        this.wizard.utils.bankMapper = new ExcelBankRowMapper(BankType.KH);
         this.wizard.stepsAt = 1;
     }
 
@@ -355,24 +341,4 @@ export class UpdatePage implements OnInit, AfterViewInit {
     output_stepAlertChange($output: StepAlert[]): void {
         this.wizard.currentStep.stepAlerts = $output;
     }
-
-    // output_firstStep($output: { isValid: boolean, matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper, alerts: [] }): void {
-    //     if (!$output.isValid) {
-    //         this.wizard.currentStep.stepAlerts = $output.alerts;
-    //         return;
-    //     }
-
-    //     //...
-    //     this.results.firstResult = $output.matrix;
-    //     this.results.utils.bankMapper = $output.mapper;
-    // }
-
-    // output_secondStep($output: ReadBankRowForDbCompare[]): void {
-    //     this.results.secondResult = $output;
-    // }
-
-    // output_thirdStep($output: BankRow[]): void {
-    //     this.results.thirdResult = $output;
-    // }
-
 }

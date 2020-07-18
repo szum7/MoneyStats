@@ -19,10 +19,9 @@ export class CompareDbComponent implements OnInit {
   @Output() nextStepChange = new EventEmitter<ReadBankRowForDbCompare[]>();
   @Output() nextStepAlertsChange = new EventEmitter<string[]>();
 
-  bb: BankRow[];
+  bb: BankRow[]; // TODO create this from params
 
   public get bankRows(): ReadBankRowForDbCompare[] { return this.params; }
-
 
   constructor(
     private loadingScreen: LoadingScreenService,
@@ -121,16 +120,4 @@ export class CompareDbComponent implements OnInit {
       console.error(error);
     })
   }
-
-  // TODO delete this
-  private emitOutput(): void {
-    let output: BankRow[] = [];
-    for (let i = 0; i < this.bankRows.length; i++) {
-      if (!this.bankRows[i].isExcluded) {
-        output.push(this.bankRows[i].bankRow);
-      }
-    }
-    //this.nextStepChange.emit(output);
-  }
-
 }

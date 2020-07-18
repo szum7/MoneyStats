@@ -2,14 +2,11 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
-import { StaticMessages } from 'src/app/utilities/input-messages.static';
 import { StepAlert } from 'src/app/pages/update-page/update.page';
-import { Transaction } from 'src/app/models/service-models/transaction.model';
 import { Rule } from 'src/app/models/service-models/rule.model';
 import { RuleService } from 'src/app/services/rule-service/rule.service';
 import { GeneratedTransactionService } from 'src/app/services/generated-transaction-service/generated-transaction.service';
 import { GeneratedTransaction } from 'src/app/models/service-models/generated-transaction.model';
-import { GenericResponse } from 'src/app/models/service-models/generic-response.model';
 
 @Component({
   selector: 'app-eval-transactions-component',

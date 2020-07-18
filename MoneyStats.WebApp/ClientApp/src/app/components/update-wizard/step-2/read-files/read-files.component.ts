@@ -3,7 +3,6 @@ import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row'
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { ReadInBankRowsMerger } from 'src/app/models/component-models/read-in-bank-rows-merger';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
-import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
 import { StepAlert } from 'src/app/pages/update-page/update.page';
 
 @Component({
@@ -100,7 +99,7 @@ export class ReadFilesComponent implements OnInit {
 
   private emitNextStepAlerts(): void {
     let alerts = [];
-    
+
     if (this.readInBankRows.length === 0) {
       alerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
     }
@@ -109,25 +108,6 @@ export class ReadFilesComponent implements OnInit {
     }
 
     this.nextStepAlertsChange.emit(alerts);
-  }
-
-  // TODO delete
-  private emitOutputDeprecated(): void {
-    let output: ReadBankRowForDbCompare[] = [];
-
-    for (let i = 0; i < this.readInBankRows.length; i++) {
-      const el = this.readInBankRows[i];
-      if (!el.isExcluded) {
-
-        let tr: ReadBankRowForDbCompare = new ReadBankRowForDbCompare();
-
-        tr.uiId = el.uiId;
-        tr.bankRow = el.bankRow;
-        
-        output.push(tr);
-      }
-    }
-    //this.nextStepChange.emit(output);
   }
 
   // TODO https://stackblitz.com/edit/flex-table-column-resize
