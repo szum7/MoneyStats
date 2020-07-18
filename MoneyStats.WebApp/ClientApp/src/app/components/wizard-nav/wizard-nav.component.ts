@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { WizardStep } from 'src/app/models/component-models/wizard-step';
 import { RouterService } from 'src/app/services/router-service/router.service';
+import { WizardStep } from 'src/app/pages/update-page/update.page';
 
 @Component({
   selector: 'app-wizard-nav-component',

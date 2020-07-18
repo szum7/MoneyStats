@@ -19,7 +19,10 @@ export class CompareDbComponent implements OnInit {
   @Output() nextStepChange = new EventEmitter();
   @Output() nextStepAlertsChange = new EventEmitter();
 
+  bb: BankRow[];
+
   public get bankRows(): ReadBankRowForDbCompare[] { return this.params; }
+
 
   constructor(
     private loadingScreen: LoadingScreenService,
@@ -28,10 +31,6 @@ export class CompareDbComponent implements OnInit {
 
   ngOnInit() {
     this.program();
-  }
-
-  saveBankRows(): void {
-    // TODO need to save the bankRows
   }
 
   private program(): void {
@@ -76,7 +75,7 @@ export class CompareDbComponent implements OnInit {
 
   private checkNextStepPossible(): void {
     let alerts = [];
-    
+
     if (this.bankRows.length === 0) {
       alerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
     }
@@ -102,19 +101,35 @@ export class CompareDbComponent implements OnInit {
 
   click_toggleRowExclusion(row: ReadBankRowForDbCompare): void {
     row.toggleExclusion();
-    
+
     this.emitOutput();
     this.checkNextStepPossible();
+  }
+
+  click_saveBankRows(): void {
+    let self = this;
+    self.saveBankRows(self.bb, function (response: BankRow[]) {
+      self.bb = response;
+    });
+  }
+
+  private saveBankRows(bankRows: BankRow[], callback: (bankRows: BankRow[]) => void): void {
+    this.bankRowService.save(bankRows).subscribe(response => {
+      console.log(response);
+      callback(response);
+    }, error => {
+      console.error(error);
+    })
   }
 
   private emitOutput(): void {
     let output: BankRow[] = [];
     for (let i = 0; i < this.bankRows.length; i++) {
-      output.push(this.bankRows[i].bankRow);
+      if (!this.bankRows[i].isExcluded) {
+        output.push(this.bankRows[i].bankRow);
+      }
     }
     this.nextStepChange.emit(output);
   }
-
-  // NEXT save bankrows with IsTr.Created=false
 
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, AfterContentInit, AfterViewInit } from '@angular/core';
-import { WizardStep } from 'src/app/models/component-models/wizard-step';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
@@ -37,7 +36,10 @@ export class StepAlert {
     }
 }
 
-export class CurrentStep {
+export class WizardStep {
+
+    public title: string;
+    stepAlerts: StepAlert[];
 
     get isProgressable(): boolean {
 
@@ -51,47 +53,42 @@ export class CurrentStep {
         }
         return true;
     }
-    stepAlerts: StepAlert[]; // IMPROVE make this a singleton service and modify the messages through that (?)
 
-    constructor() {
-        this.stepAlerts = [];
-    }
-
-    public clearAlerts(): void {
+    constructor(title: string) {
+        this.title = title;
         this.stepAlerts = [];
     }
 }
 
-export class UpdateWizard {
+export class ImportFilesStep extends WizardStep {
+
+    constructor() {
+        super("Step 1 - Import files");
+    }
+}
+
+export class ManageReadFilesStep extends WizardStep {
+    
+}
+
+export class Wizard {
 
     stepsAt: number;
     wizardSteps: WizardStep[];
-    currentStep: CurrentStep;
+    currentStep: WizardStep;
 
     constructor() {
-        this.wizardSteps = [
-            new WizardStep("Step 1 - Import files", null),
-            new WizardStep("Step 2 - Manage read files", null),
-            new WizardStep("Step 3 - Compare with database", null),
-            new WizardStep("Step 4 - Create transactions", null)
-        ];
-
-        this.stepsAt = 0;
-
-        this.currentStep = new CurrentStep();
     }
 
-    public next(): boolean {        
+    public next(): void {
         if (this.stepsAt >= this.wizardSteps.length - 1)
-            return false;
+            return;
 
         if (!this.currentStep.isProgressable)
-            return false;
+            return;
 
         this.stepsAt++;
-        this.currentStep = new CurrentStep();
-
-        return true;
+        this.currentStep = this.wizardSteps[this.stepsAt];
     }
 
     public previous(): boolean {
@@ -99,9 +96,26 @@ export class UpdateWizard {
             return false;
 
         this.stepsAt--;
-        this.currentStep = new CurrentStep();
+        this.currentStep = this.wizardSteps[this.stepsAt];
 
         return true;
+    }
+}
+
+export class UpdateWizard extends Wizard {
+
+    constructor() {
+        super();
+
+        this.wizardSteps = [
+            new ImportFilesStep(),
+            new WizardStep("Step 2 - Manage read files"),
+            new WizardStep("Step 3 - Compare with database"),
+            new WizardStep("Step 4 - Create transactions")
+        ];
+
+        this.stepsAt = 0;
+        this.currentStep = this.wizardSteps[this.stepsAt];
     }
 }
 

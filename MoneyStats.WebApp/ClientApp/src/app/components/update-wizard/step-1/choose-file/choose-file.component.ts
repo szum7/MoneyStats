@@ -76,7 +76,7 @@ export class ChooseFileComponent implements OnInit {
         self.emitOutput(mappedExcelMatrix, self.mapper);
         self.checkNextStepPossible();
       }
-    }, 100);
+    }, 10);
   }
 
   private checkNextStepPossible(): void {
