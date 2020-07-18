@@ -15,8 +15,8 @@ export class ReadFilesComponent implements OnInit {
 
   @Input() params: ReadInBankRow[][];
   @Input() mapper: ExcelBankRowMapper;
-  @Output() nextStepChange = new EventEmitter();
-  @Output() nextStepAlertsChange = new EventEmitter();
+  @Output() nextStepChange = new EventEmitter<ReadInBankRow[]>();
+  @Output() nextStepAlertsChange = new EventEmitter<string[]>();
 
   readInBankRows: ReadInBankRow[];
 
@@ -55,7 +55,7 @@ export class ReadFilesComponent implements OnInit {
 
     //this.loadingScreen.stop();
 
-    this.emitOutput();
+    this.nextStepChange.emit(this.readInBankRows);
   }
 
   private flattenReadInBankRows(matrix: ReadInBankRow[][]): ReadInBankRow[] {
@@ -86,8 +86,8 @@ export class ReadFilesComponent implements OnInit {
 
   click_toggleRowExclusion(row: ReadInBankRow): void {
     row.toggleExclusion();
-    this.checkNextStepPossible();
-    this.emitOutput(); // TODO optimaze this, don't run the for iteration on the whole array every time
+    this.emitNextStepAlerts();
+    this.nextStepChange.emit(this.readInBankRows);
   }
 
   click_toggleDetails(row: ReadInBankRow): void {
@@ -98,7 +98,7 @@ export class ReadFilesComponent implements OnInit {
     row.detailsMenuPageAt = i;
   }
 
-  private checkNextStepPossible(): void {
+  private emitNextStepAlerts(): void {
     let alerts = [];
     
     if (this.readInBankRows.length === 0) {
@@ -111,7 +111,8 @@ export class ReadFilesComponent implements OnInit {
     this.nextStepAlertsChange.emit(alerts);
   }
 
-  private emitOutput(): void {
+  // TODO delete
+  private emitOutputDeprecated(): void {
     let output: ReadBankRowForDbCompare[] = [];
 
     for (let i = 0; i < this.readInBankRows.length; i++) {
@@ -126,7 +127,7 @@ export class ReadFilesComponent implements OnInit {
         output.push(tr);
       }
     }
-    this.nextStepChange.emit(output);
+    //this.nextStepChange.emit(output);
   }
 
   // TODO https://stackblitz.com/edit/flex-table-column-resize

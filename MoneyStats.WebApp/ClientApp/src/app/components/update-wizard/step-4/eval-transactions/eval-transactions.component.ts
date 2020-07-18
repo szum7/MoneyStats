@@ -19,7 +19,8 @@ import { GenericResponse } from 'src/app/models/service-models/generic-response.
 export class EvalTransactionsComponent implements OnInit {
 
   @Input() params: BankRow[];
-  @Output() nextStepAlertsChange = new EventEmitter();
+  @Output() nextStepChange = new EventEmitter<GeneratedTransaction[]>();
+  @Output() nextStepAlertsChange = new EventEmitter<string[]>();
 
   public get bankRows(): BankRow[] { return this.params; }
 
@@ -56,17 +57,6 @@ export class EvalTransactionsComponent implements OnInit {
     });
   }
 
-  click_saveTransactionsProgram(): void {
-    let self = this;
-    self.saveTransactions(self.generatedTransactions, function (response: GenericResponse) {
-      if (!response.isError) {
-        console.log(response.message);
-      } else {
-        console.error(response.message);
-      }
-    });
-  }
-
   private getRules(callback: (response: Rule[]) => void): void {
     this.ruleService.get().subscribe(response => {
       console.log("=> getRules:");
@@ -94,19 +84,7 @@ export class EvalTransactionsComponent implements OnInit {
     });
   }
 
-  private saveTransactions(generatedTransactions: GeneratedTransaction[], callback: (response: GenericResponse) => void): void {
-    this.generatedTransactionService.save(generatedTransactions).subscribe(response => {
-      console.log("=> getRules:");
-      console.log(response);
-      console.log("<=");
-      callback(response);
-    }, error => {
-      console.error("Error: getRules");
-      console.log(error);
-    });
-  }
-
-  private checkNextStepPossible(): void {
+  private emitNextStepAlerts(): void {
     let alerts = [];
 
     if (this.bankRows.length === 0) {
@@ -116,6 +94,10 @@ export class EvalTransactionsComponent implements OnInit {
     // TODO ...
 
     this.nextStepAlertsChange.emit(alerts);
+  }
+
+  private emitOutput(): void {
+    this.nextStepChange.emit(this.generatedTransactions);
   }
 
   sortBy_bankRows(arr: any[], property: string) {
@@ -134,7 +116,7 @@ export class EvalTransactionsComponent implements OnInit {
   click_toggleRowExclusion(row: ReadBankRowForDbCompare): void {
     row.toggleExclusion();
 
-    this.checkNextStepPossible();
+    this.emitNextStepAlerts();
   }
 
 }

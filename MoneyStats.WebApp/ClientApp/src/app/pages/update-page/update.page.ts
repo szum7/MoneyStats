@@ -7,6 +7,8 @@ import { BankType } from 'src/app/models/service-models/bank-type.enum';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { GeneratedTransaction } from 'src/app/models/service-models/generated-transaction.model';
 import { GeneratedTransactionService } from 'src/app/services/generated-transaction-service/generated-transaction.service';
+import { ThrowStmt } from '@angular/compiler';
+import { GenericResponse } from 'src/app/models/service-models/generic-response.model';
 
 export enum StepAlertType {
     Criteria,
@@ -42,6 +44,7 @@ export abstract class WizardStep {
 
     public title: string;
     public stepAlerts: StepAlert[];
+    public $output: any;
 
     public get isProgressable(): boolean {
         if (!this.stepAlerts) {
@@ -64,8 +67,6 @@ export abstract class WizardStep {
 
 export class ImportFilesStep extends WizardStep {
 
-    $output: ReadInBankRow[][];
-
     constructor() {
         super("Step 1 - Import files");
     }
@@ -81,22 +82,23 @@ export class ImportFilesStep extends WizardStep {
 
 export class ManageReadFilesStep extends WizardStep {
 
-    $input: ReadInBankRow[];
-    $output: ReadBankRowForDbCompare[];
+    $input: ReadInBankRow[][];
 
     constructor() {
         super("Step 2 - Manage read files");
     }
 
-    setInput($input: ReadInBankRow[]): void {
+    setInput($input: ReadInBankRow[][]): void {
         this.$input = $input;
     }
 
     getOutput(): ReadBankRowForDbCompare[] {
-        let ret: ReadBankRowForDbCompare[] = [];
 
-        for (let i = 0; i < this.$input.length; i++) {
-            const el = this.$input[i];
+        let ret: ReadBankRowForDbCompare[] = [];
+        let cast: ReadBankRowForDbCompare[] = this.$output;
+
+        for (let i = 0; i < cast.length; i++) {
+            const el = cast[i];
             if (!el.isExcluded) {
 
                 let tr: ReadBankRowForDbCompare = new ReadBankRowForDbCompare();
@@ -114,7 +116,6 @@ export class ManageReadFilesStep extends WizardStep {
 export class CompareWithDatabaseStep extends WizardStep {
 
     $input: ReadBankRowForDbCompare[];
-    $output: BankRow[];
 
     constructor() {
         super("Step 3 - Compare with database");
@@ -125,10 +126,13 @@ export class CompareWithDatabaseStep extends WizardStep {
     }
 
     getOutput(): BankRow[] {
+
         let ret: BankRow[] = [];
-        for (let i = 0; i < this.$input.length; i++) {
-            if (!this.$input[i].isExcluded) {
-                ret.push(this.$input[i].bankRow);
+        let cast: ReadBankRowForDbCompare[] = this.$output;
+
+        for (let i = 0; i < cast.length; i++) {
+            if (!cast[i].isExcluded) {
+                ret.push(cast[i].bankRow);
             }
         }
         return ret;
@@ -138,7 +142,6 @@ export class CompareWithDatabaseStep extends WizardStep {
 export class EvalTransactionsStep extends WizardStep {
 
     $input: BankRow[];
-    $output: GeneratedTransaction[];
 
     constructor() {
         super("Step 4 - Create transactions");
@@ -153,43 +156,28 @@ export class EvalTransactionsStep extends WizardStep {
     }
 }
 
-export class Wizard {
+export class UpdateWizard {
 
-    stepsAt: number;
-    wizardSteps: WizardStep[];
-    currentStep: WizardStep;
-
-    constructor() {
-    }
-
-    public next(): void {
-        if (this.stepsAt >= this.wizardSteps.length - 1)
-            return;
-
-        if (!this.currentStep.isProgressable)
-            return;
-
-        this.stepsAt++;
-        this.currentStep = this.wizardSteps[this.stepsAt];
-    }
-
-    public previous(): boolean {
-        if (this.stepsAt <= 0)
-            return false;
-
-        this.stepsAt--;
-        this.currentStep = this.wizardSteps[this.stepsAt];
-
-        return true;
-    }
-}
-
-export class UpdateWizard extends Wizard {
-
+    public stepsAt: number;
+    public wizardSteps: WizardStep[];
     public utils: UpdateResultsUtilities;
 
-    constructor() {
-        super();
+    private generatedTransactionService: GeneratedTransactionService;
+
+    public get currentStep(): WizardStep {
+        return this.wizardSteps[this.stepsAt];
+    }
+
+    public get nextStep(): WizardStep {
+        if (this.stepsAt + 1 <= this.wizardSteps.length - 1) {
+            return this.wizardSteps[this.stepsAt + 1];
+        }
+        return null;
+    }
+
+    constructor(generatedTransactionService: GeneratedTransactionService) {
+
+        this.generatedTransactionService = generatedTransactionService;
 
         this.wizardSteps = [
             new ImportFilesStep(),
@@ -199,9 +187,70 @@ export class UpdateWizard extends Wizard {
         ];
 
         this.stepsAt = 0;
-        this.currentStep = this.wizardSteps[this.stepsAt];
 
         this.utils = new UpdateResultsUtilities();
+    }
+
+    public next(): void {
+        if (this.stepsAt >= this.wizardSteps.length - 1)
+            return;
+
+        if (!this.currentStep.isProgressable)
+            return;
+
+        this.nextStepActions();
+        this.stepsAt++;
+    }
+
+    public previous(): boolean {
+        if (this.stepsAt <= 0)
+            return false;
+
+        this.stepsAt--;
+
+        return true;
+    }
+
+    private nextStepActions(): void { // TODO make the outputs strongly types somehow (?)
+        switch (this.stepsAt) {
+            case 0:
+                let o: { matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper } = this.currentStep.getOutput();
+                this.utils.bankMapper = o.mapper;
+                this.nextStep.setInput(o.matrix);
+                break;
+            case 1:
+                this.nextStep.setInput(this.currentStep.getOutput());
+                break;
+            case 2:
+                this.nextStep.setInput(this.currentStep.getOutput());
+                break;
+            case 3:
+                let self = this;
+                self.saveTransactions(self.currentStep.getOutput(), function (response: GenericResponse) {
+                    if (response.isError) {
+                        console.error(response.message);
+                    } else {
+                        console.log(response.message);
+                        // NEXT this is the end, transactions are saved. Some endscreen (?)
+                        // NEXT test and remove unused, old code
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+    }
+
+    private saveTransactions(generatedTransactions: GeneratedTransaction[], callback: (response: GenericResponse) => void): void {
+        this.generatedTransactionService.save(generatedTransactions).subscribe(response => {
+            console.log("=> getRules:");
+            console.log(response);
+            console.log("<=");
+            callback(response);
+        }, error => {
+            console.error("Error: getRules");
+            console.log(error);
+        });
     }
 }
 
@@ -247,8 +296,11 @@ export class UpdatePage implements OnInit, AfterViewInit {
     @ViewChild('btnsElement', null) btnsView: ElementRef;
     wizardNavMaxHeight: number;
 
-    constructor(private loadingScreen: LoadingScreenService) {
-        this.wizard = new UpdateWizard();
+    constructor(
+        private loadingScreen: LoadingScreenService,
+        private generatedTransactionService: GeneratedTransactionService) {
+
+        this.wizard = new UpdateWizard(generatedTransactionService);
         this.results = new UpdateResults();
         this.isTooltipsDisabled = true;
 
@@ -296,26 +348,31 @@ export class UpdatePage implements OnInit, AfterViewInit {
         this.isTooltipsDisabled = !this.isTooltipsDisabled;
     }
 
-    output_firstStep($output: { isValid: boolean, matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper, alerts: [] }): void {
-        if (!$output.isValid){
-            this.wizard.currentStep.stepAlerts = $output.alerts;
-            return;
-        }
-
-        //...
-        this.results.firstResult = $output.matrix;
-        this.results.utils.bankMapper = $output.mapper;
-    }
-
-    output_secondStep($output: ReadBankRowForDbCompare[]): void {
-        this.results.secondResult = $output;
-    }
-
-    output_thirdStep($output: BankRow[]): void {
-        this.results.thirdResult = $output;
+    output_change($output: any): void {
+        this.wizard.currentStep.$output = $output;
     }
 
     output_stepAlertChange($output: StepAlert[]): void {
         this.wizard.currentStep.stepAlerts = $output;
     }
+
+    // output_firstStep($output: { isValid: boolean, matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper, alerts: [] }): void {
+    //     if (!$output.isValid) {
+    //         this.wizard.currentStep.stepAlerts = $output.alerts;
+    //         return;
+    //     }
+
+    //     //...
+    //     this.results.firstResult = $output.matrix;
+    //     this.results.utils.bankMapper = $output.mapper;
+    // }
+
+    // output_secondStep($output: ReadBankRowForDbCompare[]): void {
+    //     this.results.secondResult = $output;
+    // }
+
+    // output_thirdStep($output: BankRow[]): void {
+    //     this.results.thirdResult = $output;
+    // }
+
 }

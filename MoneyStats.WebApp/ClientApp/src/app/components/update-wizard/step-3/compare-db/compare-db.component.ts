@@ -16,8 +16,8 @@ export class CompareDbComponent implements OnInit {
 
   @Input() params: ReadBankRowForDbCompare[];
   @Input() mapper: ExcelBankRowMapper;
-  @Output() nextStepChange = new EventEmitter();
-  @Output() nextStepAlertsChange = new EventEmitter();
+  @Output() nextStepChange = new EventEmitter<ReadBankRowForDbCompare[]>();
+  @Output() nextStepAlertsChange = new EventEmitter<string[]>();
 
   bb: BankRow[];
 
@@ -41,8 +41,8 @@ export class CompareDbComponent implements OnInit {
       //self.loadingScreen.stop();
       console.log("Compare finished");
 
-      self.emitOutput();
-      self.checkNextStepPossible();
+      self.nextStepChange.emit(self.bankRows);
+      self.emitNextStepAlerts();
     });
   }
 
@@ -73,7 +73,7 @@ export class CompareDbComponent implements OnInit {
     }
   }
 
-  private checkNextStepPossible(): void {
+  private emitNextStepAlerts(): void {
     let alerts = [];
 
     if (this.bankRows.length === 0) {
@@ -102,8 +102,8 @@ export class CompareDbComponent implements OnInit {
   click_toggleRowExclusion(row: ReadBankRowForDbCompare): void {
     row.toggleExclusion();
 
-    this.emitOutput();
-    this.checkNextStepPossible();
+    this.nextStepChange.emit(this.bankRows);
+    this.emitNextStepAlerts();
   }
 
   click_saveBankRows(): void {
@@ -122,6 +122,7 @@ export class CompareDbComponent implements OnInit {
     })
   }
 
+  // TODO delete this
   private emitOutput(): void {
     let output: BankRow[] = [];
     for (let i = 0; i < this.bankRows.length; i++) {
@@ -129,7 +130,7 @@ export class CompareDbComponent implements OnInit {
         output.push(this.bankRows[i].bankRow);
       }
     }
-    this.nextStepChange.emit(output);
+    //this.nextStepChange.emit(output);
   }
 
 }
