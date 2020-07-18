@@ -70,10 +70,10 @@ export class UpdateWizard {
 
     constructor() {
         this.wizardSteps = [
-            new WizardStep("Step 1 - Import files", "#"),
-            new WizardStep("Step 2 - Manage read files", "#"),
-            new WizardStep("Step 3 - Compare with database", "#"),
-            new WizardStep("Step 4 - Create transactions", "#")
+            new WizardStep("Step 1 - Import files", null),
+            new WizardStep("Step 2 - Manage read files", null),
+            new WizardStep("Step 3 - Compare with database", null),
+            new WizardStep("Step 4 - Create transactions", null)
         ];
 
         this.stepsAt = 0;
@@ -81,7 +81,7 @@ export class UpdateWizard {
         this.currentStep = new CurrentStep();
     }
 
-    public next(): boolean {
+    public next(): boolean {        
         if (this.stepsAt >= this.wizardSteps.length - 1)
             return false;
 

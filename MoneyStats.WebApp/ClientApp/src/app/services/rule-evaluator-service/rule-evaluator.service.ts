@@ -41,6 +41,8 @@ export class RuleEvaluatorService extends RuleEvaluatorServiceLogic {
     private getEvaluatedTransactionsMock(): Observable<any> { // TODO
         return new Observable((observer) => {
             let res: any = {};
+            
+            // TODO mock
 
             observer.next(res);
             observer.complete();

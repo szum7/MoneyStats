@@ -37,6 +37,8 @@ export class GeneratedTransactionService extends GeneratedTransactionServiceLogi
     private getGeneratedMock(): Observable<GeneratedTransaction[]> {
         return new Observable((observer) => {
             let res = [];
+            
+            // TODO mock
 
             observer.next(res);
             observer.complete();
@@ -54,6 +56,8 @@ export class GeneratedTransactionService extends GeneratedTransactionServiceLogi
     private saveMock(): Observable<GenericResponse> {
         return new Observable((observer) => {
             let res = new GenericResponse();
+
+            // TODO mock
 
             observer.next(res);
             observer.complete();

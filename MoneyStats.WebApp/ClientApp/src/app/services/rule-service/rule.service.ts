@@ -40,6 +40,8 @@ export class RuleService extends RuleServiceLogic {
     private getMock(): Observable<Rule[]> {
         return new Observable((observer) => {
             let res: Rule[] = [];
+            
+            // TODO mock
 
             res.push(new Rule());
 

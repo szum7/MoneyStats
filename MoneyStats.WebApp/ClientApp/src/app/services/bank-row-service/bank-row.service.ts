@@ -79,4 +79,22 @@ export class BankRowService extends BankRowServiceLogic {
             observer.complete();
         });
     }
+
+    save(data: BankRow[]): Observable<BankRow[]> {
+        if (this.base.isMocked()) {
+            return this.saveMock();
+        }
+        return this.http.post<BankRow[]>(this.base.url + 'save', data, this.base.getOptions());
+    }
+
+    private saveMock(): Observable<BankRow[]> {
+        return new Observable((observer) => {
+            let res: BankRow[] = [];
+
+            // TODO mock
+
+            observer.next(res);
+            observer.complete();
+        });
+    }
 }

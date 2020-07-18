@@ -10,23 +10,23 @@ namespace MoneyStats.BL.Repositories
 {
     public abstract class EntityBaseRepository<TEntity> : IEntityBaseRepository<TEntity> where TEntity : EntityBase
     {
-        public IEnumerable<int> InsertRange(IEnumerable<TEntity> entities)
+        public IEnumerable<TEntity> InsertRange(IEnumerable<TEntity> entities)
         {
             using (var context = new MoneyStatsContext())
             {
                 context.Set<TEntity>().AddRange(entities);
                 context.SaveChanges();
-                return entities.Select(x => x.Id);
+                return entities;
             }
         }
 
-        public int Insert(TEntity entity)
+        public TEntity Insert(TEntity entity)
         {
             using (var context = new MoneyStatsContext())
             {
                 context.Set<TEntity>().Add(entity);
                 context.SaveChanges();
-                return entity.Id;
+                return entity;
             }
         }
 

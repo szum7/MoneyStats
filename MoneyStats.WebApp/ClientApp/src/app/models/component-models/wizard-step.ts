@@ -1,9 +1,9 @@
 export class WizardStep {
     public title: string;
-    public link: string;
+    public nextStepFunction: Function;
 
-    constructor(title: string, link: string){
+    constructor(title: string, nextStepFunction: Function){
         this.title = title;
-        this.link = link;
+        this.nextStepFunction = nextStepFunction;
     }
 }
