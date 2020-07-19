@@ -3,11 +3,9 @@ import { StepAlert } from './step-alert.model';
 
 export abstract class WizardStep {
 
-
     public title: string;
     public stepAlerts: StepAlert[];
     public $output: any;
-
 
     public get isProgressable(): boolean {
         if (!this.stepAlerts) {

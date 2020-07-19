@@ -4,7 +4,7 @@ import { ExcelReader } from 'src/app/models/component-models/excel-reader';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
-import { StepAlert } from "src/app/models/component-models/step-alert.model";
+import { StepAlert } from 'src/app/models/component-models/step-alert.model';
 
 /// <summary>
 /// This component let's you browse for multiple files on your local machine, 
@@ -20,7 +20,7 @@ import { StepAlert } from "src/app/models/component-models/step-alert.model";
 export class ChooseFileComponent implements OnInit {
 
   @Output() nextStepChange = new EventEmitter<{ matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper }>();
-  @Output() nextStepAlertsChange = new EventEmitter();
+  @Output() nextStepAlertsChange = new EventEmitter<string[]>();
 
   public readFiles: any[];
 
@@ -34,7 +34,10 @@ export class ChooseFileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.checkNextStepPossible();
+    let self = this;
+    setTimeout(function(){
+      self.emitNextStepAlerts();
+    });
   }
 
   private getBankType(): BankType {
@@ -74,12 +77,12 @@ export class ChooseFileComponent implements OnInit {
         console.log(mappedExcelMatrix);
 
         self.emitOutput(mappedExcelMatrix, self.mapper);
-        self.checkNextStepPossible();
+        self.emitNextStepAlerts();
       }
-    }, 10);
+    }, 50);
   }
 
-  private checkNextStepPossible(): void {
+  private emitNextStepAlerts(): void {
     let alerts = [];
     
     if (this.readFiles.length === 0) {

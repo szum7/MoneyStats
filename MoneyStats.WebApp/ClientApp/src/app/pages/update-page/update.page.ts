@@ -106,6 +106,20 @@ export class EvalTransactionsStep extends WizardStep {
     }
 }
 
+export class EmptyStep extends WizardStep {
+
+    constructor() {
+        super("");
+    }
+
+    setInput($input: any): void {
+    }
+
+    getOutput(): GeneratedTransaction[] {
+        return null;
+    }
+}
+
 export class UpdateWizard {
 
     public stepsAt: number;
@@ -116,6 +130,9 @@ export class UpdateWizard {
     private bankRowService: BankRowService;
 
     public get currentStep(): WizardStep {
+        if (this.stepsAt < 0) {
+            return new EmptyStep();
+        }
         return this.wizardSteps[this.stepsAt];
     }
 
@@ -138,9 +155,13 @@ export class UpdateWizard {
             new EvalTransactionsStep()
         ];
 
-        this.stepsAt = 0;
+        this.stepsAt = -1;
 
         this.utils = new UpdateResultsUtilities();
+    }
+
+    public setFirstStep(): void {
+        this.stepsAt = 0;
     }
 
     public next(): void {
@@ -247,10 +268,8 @@ export class UpdatePage implements OnInit, AfterViewInit {
         private loadingScreen: LoadingScreenService,
         private bankRowService: BankRowService,
         private generatedTransactionService: GeneratedTransactionService) {
-
         this.wizard = new UpdateWizard(bankRowService, generatedTransactionService);
         this.isTooltipsDisabled = true;
-
         //this.test();
     }
 
@@ -279,6 +298,7 @@ export class UpdatePage implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.wizard.setFirstStep();
     }
 
     click_NextStep() {
