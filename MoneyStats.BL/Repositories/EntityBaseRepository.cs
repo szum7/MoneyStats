@@ -14,6 +14,11 @@ namespace MoneyStats.BL.Repositories
         {
             using (var context = new MoneyStatsContext())
             {
+                foreach (var item in entities)
+                {
+                    item.SetNew();
+                }
+
                 context.Set<TEntity>().AddRange(entities);
                 context.SaveChanges();
                 return entities;
@@ -24,6 +29,8 @@ namespace MoneyStats.BL.Repositories
         {
             using (var context = new MoneyStatsContext())
             {
+                entity.SetNew();
+
                 context.Set<TEntity>().Add(entity);
                 context.SaveChanges();
                 return entity;
@@ -51,18 +58,24 @@ namespace MoneyStats.BL.Repositories
         {
             using (var context = new MoneyStatsContext())
             {
+                // Set each
                 var i = 0;
                 foreach (var entity in entities)
                 {
                     var obj = context.Set<TEntity>().SingleOrDefault(x => x.Id == entity.Id);
                     if (obj != null)
                     {
+                        // Update values
                         context.Entry(obj).CurrentValues.SetValues(entity);
+
+                        // Update modified date
                         obj.ModifiedDate = DateTime.Now;
+
                         i++;
                     }
                 }
 
+                // Save changes
                 if (i > 0)
                 {
                     context.SaveChanges();
