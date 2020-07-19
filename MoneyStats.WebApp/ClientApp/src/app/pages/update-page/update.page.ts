@@ -12,6 +12,8 @@ import { StepAlertType } from '../../models/component-models/step-alert-type.enu
 import { StepAlert } from '../../models/component-models/step-alert.model';
 import { WizardStep } from '../../models/component-models/wizard-step.moel';
 import { UpdateResultsUtilities } from '../../models/component-models/update-results-utilities.model';
+import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
+import { Common } from 'src/app/utilities/common.static';
 
 export class ImportFilesStep extends WizardStep {
 
@@ -111,6 +113,7 @@ export class UpdateWizard {
     public utils: UpdateResultsUtilities;
 
     private generatedTransactionService: GeneratedTransactionService;
+    private bankRowService: BankRowService;
 
     public get currentStep(): WizardStep {
         return this.wizardSteps[this.stepsAt];
@@ -123,9 +126,10 @@ export class UpdateWizard {
         return null;
     }
 
-    constructor(generatedTransactionService: GeneratedTransactionService) {
+    constructor(bankRowService: BankRowService, generatedTransactionService: GeneratedTransactionService) {
 
         this.generatedTransactionService = generatedTransactionService;
+        this.bankRowService = bankRowService;
 
         this.wizardSteps = [
             new ImportFilesStep(),
@@ -160,6 +164,7 @@ export class UpdateWizard {
     }
 
     private nextStepActions(): void { // TODO make the outputs strongly types somehow (?)
+        let self = this;
         switch (this.stepsAt) {
             case 0:
                 let o: { matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper } = this.currentStep.getOutput();
@@ -170,10 +175,13 @@ export class UpdateWizard {
                 this.nextStep.setInput(this.currentStep.getOutput());
                 break;
             case 2:
-                this.nextStep.setInput(this.currentStep.getOutput());
+                let cast: BankRow[] = this.currentStep.getOutput();
+                self.saveBankRows(cast, function (response) {
+                    cast = response;
+                    self.nextStep.setInput(response);
+                });
                 break;
             case 3:
-                let self = this;
                 self.saveTransactions(self.currentStep.getOutput(), function (response: GenericResponse) {
                     if (response.isError) {
                         console.error(response.message);
@@ -191,14 +199,20 @@ export class UpdateWizard {
 
     private saveTransactions(generatedTransactions: GeneratedTransaction[], callback: (response: GenericResponse) => void): void {
         this.generatedTransactionService.save(generatedTransactions).subscribe(response => {
-            console.log("=> getRules:");
-            console.log(response);
-            console.log("<=");
+            Common.ConsoleResponse("saveTransactions", response);
             callback(response);
         }, error => {
-            console.error("Error: getRules");
             console.log(error);
         });
+    }
+
+    private saveBankRows(bankRows: BankRow[], callback: (bankRows: BankRow[]) => void): void {
+        this.bankRowService.save(bankRows).subscribe(response => {
+            Common.ConsoleResponse("saveBankRows", response);
+            callback(response);
+        }, error => {
+            console.error(error);
+        })
     }
 }
 
@@ -226,9 +240,10 @@ export class UpdatePage implements OnInit, AfterViewInit {
 
     constructor(
         private loadingScreen: LoadingScreenService,
+        private bankRowService: BankRowService,
         private generatedTransactionService: GeneratedTransactionService) {
 
-        this.wizard = new UpdateWizard(generatedTransactionService);
+        this.wizard = new UpdateWizard(bankRowService, generatedTransactionService);
         this.isTooltipsDisabled = true;
 
         //this.test();

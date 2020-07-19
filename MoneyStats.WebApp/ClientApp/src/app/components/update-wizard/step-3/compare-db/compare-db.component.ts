@@ -75,11 +75,17 @@ export class CompareDbComponent implements OnInit {
   private emitNextStepAlerts(): void {
     let alerts = [];
 
+    // Error messages
     if (this.bankRows.length === 0) {
       alerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
     }
     if (!this.bankRows.some(x => !x.isExcluded)) {
       alerts.push(new StepAlert("All bankrows are excluded!").setToCriteria());
+    }
+
+    // Success messages
+    if (alerts.length === 0) {
+      alerts.push(new StepAlert("By clicking next step, the new BankRows will be saved to database!"));
     }
 
     this.nextStepAlertsChange.emit(alerts);
@@ -103,21 +109,5 @@ export class CompareDbComponent implements OnInit {
 
     this.nextStepChange.emit(this.bankRows);
     this.emitNextStepAlerts();
-  }
-
-  click_saveBankRows(): void {
-    let self = this;
-    self.saveBankRows(self.bb, function (response: BankRow[]) {
-      self.bb = response;
-    });
-  }
-
-  private saveBankRows(bankRows: BankRow[], callback: (bankRows: BankRow[]) => void): void {
-    this.bankRowService.save(bankRows).subscribe(response => {
-      console.log(response);
-      callback(response);
-    }, error => {
-      console.error(error);
-    })
   }
 }
