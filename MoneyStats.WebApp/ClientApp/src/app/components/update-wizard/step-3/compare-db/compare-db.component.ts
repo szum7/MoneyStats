@@ -5,7 +5,7 @@ import { LoadingScreenService } from 'src/app/services/loading-screen-service/lo
 import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { StaticMessages } from 'src/app/utilities/input-messages.static';
-import { StepAlert } from 'src/app/pages/update-page/update.page';
+import { StepAlert } from "src/app/models/component-models/step-alert.model";
 
 @Component({
   selector: 'app-compare-db-component',
@@ -16,8 +16,10 @@ export class CompareDbComponent implements OnInit {
 
   @Input() params: ReadBankRowForDbCompare[];
   @Input() mapper: ExcelBankRowMapper;
-  @Output() nextStepChange = new EventEmitter();
-  @Output() nextStepAlertsChange = new EventEmitter();
+  @Output() nextStepChange = new EventEmitter<ReadBankRowForDbCompare[]>();
+  @Output() nextStepAlertsChange = new EventEmitter<string[]>();
+
+  bb: BankRow[]; // TODO create this from params
 
   public get bankRows(): ReadBankRowForDbCompare[] { return this.params; }
 
@@ -30,10 +32,6 @@ export class CompareDbComponent implements OnInit {
     this.program();
   }
 
-  saveBankRows(): void {
-    // TODO need to save the bankRows
-  }
-
   private program(): void {
     let self = this;
     //self.loadingScreen.start(); // TODO ExpressionChangedAfterItHasBeenCheckedError error
@@ -42,8 +40,8 @@ export class CompareDbComponent implements OnInit {
       //self.loadingScreen.stop();
       console.log("Compare finished");
 
-      self.emitOutput();
-      self.checkNextStepPossible();
+      self.nextStepChange.emit(self.bankRows);
+      self.emitNextStepAlerts();
     });
   }
 
@@ -74,9 +72,9 @@ export class CompareDbComponent implements OnInit {
     }
   }
 
-  private checkNextStepPossible(): void {
+  private emitNextStepAlerts(): void {
     let alerts = [];
-    
+
     if (this.bankRows.length === 0) {
       alerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
     }
@@ -102,19 +100,24 @@ export class CompareDbComponent implements OnInit {
 
   click_toggleRowExclusion(row: ReadBankRowForDbCompare): void {
     row.toggleExclusion();
-    
-    this.emitOutput();
-    this.checkNextStepPossible();
+
+    this.nextStepChange.emit(this.bankRows);
+    this.emitNextStepAlerts();
   }
 
-  private emitOutput(): void {
-    let output: BankRow[] = [];
-    for (let i = 0; i < this.bankRows.length; i++) {
-      output.push(this.bankRows[i].bankRow);
-    }
-    this.nextStepChange.emit(output);
+  click_saveBankRows(): void {
+    let self = this;
+    self.saveBankRows(self.bb, function (response: BankRow[]) {
+      self.bb = response;
+    });
   }
 
-  // NEXT save bankrows with IsTr.Created=false
-
+  private saveBankRows(bankRows: BankRow[], callback: (bankRows: BankRow[]) => void): void {
+    this.bankRowService.save(bankRows).subscribe(response => {
+      console.log(response);
+      callback(response);
+    }, error => {
+      console.error(error);
+    })
+  }
 }

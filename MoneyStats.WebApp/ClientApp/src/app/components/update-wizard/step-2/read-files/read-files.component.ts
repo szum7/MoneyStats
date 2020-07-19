@@ -3,8 +3,7 @@ import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row'
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { ReadInBankRowsMerger } from 'src/app/models/component-models/read-in-bank-rows-merger';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
-import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
-import { StepAlert } from 'src/app/pages/update-page/update.page';
+import { StepAlert } from "src/app/models/component-models/step-alert.model";
 
 @Component({
   selector: 'app-read-files-component',
@@ -15,8 +14,8 @@ export class ReadFilesComponent implements OnInit {
 
   @Input() params: ReadInBankRow[][];
   @Input() mapper: ExcelBankRowMapper;
-  @Output() nextStepChange = new EventEmitter();
-  @Output() nextStepAlertsChange = new EventEmitter();
+  @Output() nextStepChange = new EventEmitter<ReadInBankRow[]>();
+  @Output() nextStepAlertsChange = new EventEmitter<string[]>();
 
   readInBankRows: ReadInBankRow[];
 
@@ -55,7 +54,7 @@ export class ReadFilesComponent implements OnInit {
 
     //this.loadingScreen.stop();
 
-    this.emitOutput();
+    this.nextStepChange.emit(this.readInBankRows);
   }
 
   private flattenReadInBankRows(matrix: ReadInBankRow[][]): ReadInBankRow[] {
@@ -86,8 +85,8 @@ export class ReadFilesComponent implements OnInit {
 
   click_toggleRowExclusion(row: ReadInBankRow): void {
     row.toggleExclusion();
-    this.checkNextStepPossible();
-    this.emitOutput(); // TODO optimaze this, don't run the for iteration on the whole array every time
+    this.emitNextStepAlerts();
+    this.nextStepChange.emit(this.readInBankRows);
   }
 
   click_toggleDetails(row: ReadInBankRow): void {
@@ -98,9 +97,9 @@ export class ReadFilesComponent implements OnInit {
     row.detailsMenuPageAt = i;
   }
 
-  private checkNextStepPossible(): void {
+  private emitNextStepAlerts(): void {
     let alerts = [];
-    
+
     if (this.readInBankRows.length === 0) {
       alerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
     }
@@ -109,24 +108,6 @@ export class ReadFilesComponent implements OnInit {
     }
 
     this.nextStepAlertsChange.emit(alerts);
-  }
-
-  private emitOutput(): void {
-    let output: ReadBankRowForDbCompare[] = [];
-
-    for (let i = 0; i < this.readInBankRows.length; i++) {
-      const el = this.readInBankRows[i];
-      if (!el.isExcluded) {
-
-        let tr: ReadBankRowForDbCompare = new ReadBankRowForDbCompare();
-
-        tr.uiId = el.uiId;
-        tr.bankRow = el.bankRow;
-        
-        output.push(tr);
-      }
-    }
-    this.nextStepChange.emit(output);
   }
 
   // TODO https://stackblitz.com/edit/flex-table-column-resize

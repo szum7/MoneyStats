@@ -4,7 +4,7 @@ import { ExcelReader } from 'src/app/models/component-models/excel-reader';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
-import { StepAlert } from 'src/app/pages/update-page/update.page';
+import { StepAlert } from "src/app/models/component-models/step-alert.model";
 
 /// <summary>
 /// This component let's you browse for multiple files on your local machine, 
@@ -76,7 +76,7 @@ export class ChooseFileComponent implements OnInit {
         self.emitOutput(mappedExcelMatrix, self.mapper);
         self.checkNextStepPossible();
       }
-    }, 100);
+    }, 10);
   }
 
   private checkNextStepPossible(): void {

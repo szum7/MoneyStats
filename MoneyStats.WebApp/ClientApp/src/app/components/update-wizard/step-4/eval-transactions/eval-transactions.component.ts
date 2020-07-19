@@ -2,14 +2,11 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
-import { StaticMessages } from 'src/app/utilities/input-messages.static';
-import { StepAlert } from 'src/app/pages/update-page/update.page';
-import { Transaction } from 'src/app/models/service-models/transaction.model';
+import { StepAlert } from "src/app/models/component-models/step-alert.model";
 import { Rule } from 'src/app/models/service-models/rule.model';
 import { RuleService } from 'src/app/services/rule-service/rule.service';
 import { GeneratedTransactionService } from 'src/app/services/generated-transaction-service/generated-transaction.service';
 import { GeneratedTransaction } from 'src/app/models/service-models/generated-transaction.model';
-import { GenericResponse } from 'src/app/models/service-models/generic-response.model';
 
 @Component({
   selector: 'app-eval-transactions-component',
@@ -19,7 +16,8 @@ import { GenericResponse } from 'src/app/models/service-models/generic-response.
 export class EvalTransactionsComponent implements OnInit {
 
   @Input() params: BankRow[];
-  @Output() nextStepAlertsChange = new EventEmitter();
+  @Output() nextStepChange = new EventEmitter<GeneratedTransaction[]>();
+  @Output() nextStepAlertsChange = new EventEmitter<string[]>();
 
   public get bankRows(): BankRow[] { return this.params; }
 
@@ -30,6 +28,11 @@ export class EvalTransactionsComponent implements OnInit {
     private loadingScreen: LoadingScreenService,
     private ruleService: RuleService,
     private generatedTransactionService: GeneratedTransactionService) {
+    // 1. get rules
+    // 2. run the program on the shown BankRows
+    // 3. get the GeneratedTransactions
+    // 4. edit the transactions if needed
+    // 5. save transactions
   }
 
   ngOnInit() {
@@ -48,17 +51,6 @@ export class EvalTransactionsComponent implements OnInit {
     let self = this;
     self.getGeneratedTransactions(self.rules, self.bankRows, function (response: GeneratedTransaction[]) {
       self.generatedTransactions = response;
-    });
-  }
-
-  click_saveTransactionsProgram(): void {
-    let self = this;
-    self.saveTransactions(self.generatedTransactions, function (response: GenericResponse) {
-      if (!response.isError) {
-        console.log(response.message);
-      } else {
-        console.error(response.message);
-      }
     });
   }
 
@@ -89,19 +81,7 @@ export class EvalTransactionsComponent implements OnInit {
     });
   }
 
-  private saveTransactions(generatedTransactions: GeneratedTransaction[], callback: (response: GenericResponse) => void): void {
-    this.generatedTransactionService.save(generatedTransactions).subscribe(response => {
-      console.log("=> getRules:");
-      console.log(response);
-      console.log("<=");
-      callback(response);
-    }, error => {
-      console.error("Error: getRules");
-      console.log(error);
-    });
-  }
-
-  private checkNextStepPossible(): void {
+  private emitNextStepAlerts(): void {
     let alerts = [];
 
     if (this.bankRows.length === 0) {
@@ -111,6 +91,10 @@ export class EvalTransactionsComponent implements OnInit {
     // TODO ...
 
     this.nextStepAlertsChange.emit(alerts);
+  }
+
+  private emitOutput(): void {
+    this.nextStepChange.emit(this.generatedTransactions);
   }
 
   sortBy_bankRows(arr: any[], property: string) {
@@ -129,7 +113,7 @@ export class EvalTransactionsComponent implements OnInit {
   click_toggleRowExclusion(row: ReadBankRowForDbCompare): void {
     row.toggleExclusion();
 
-    this.checkNextStepPossible();
+    this.emitNextStepAlerts();
   }
 
 }
