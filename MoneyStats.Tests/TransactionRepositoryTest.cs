@@ -29,7 +29,7 @@ namespace MoneyStats.Tests
             var originalGetResult = repo.ForceGet().ToList().Count;
             var insertRangeResult = repo.InsertRange(inserts);
             var actualGetResult = repo.ForceGet().ToList().Count;
-            var deleteResult = repo.DestroyRange(insertRangeResult);
+            var deleteResult = repo.DestroyRange(insertRangeResult.Select(x => x.Id));
 
             // Assert
             Assert.AreEqual(10, insertRangeResult.ToList().Count);

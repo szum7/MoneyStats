@@ -14,6 +14,8 @@ import { WizardStep } from '../../models/component-models/wizard-step.moel';
 import { UpdateResultsUtilities } from '../../models/component-models/update-results-utilities.model';
 import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
 import { Common } from 'src/app/utilities/common.static';
+import { Rule } from 'src/app/models/service-models/rule.model';
+import { RuleService } from 'src/app/services/rule-service/rule.service';
 
 export class ImportFilesStep extends WizardStep {
 
@@ -267,7 +269,8 @@ export class UpdatePage implements OnInit, AfterViewInit {
     constructor(
         private loadingScreen: LoadingScreenService,
         private bankRowService: BankRowService,
-        private generatedTransactionService: GeneratedTransactionService) {
+        private generatedTransactionService: GeneratedTransactionService,
+        private ruleService: RuleService) {
         this.wizard = new UpdateWizard(bankRowService, generatedTransactionService);
         this.isTooltipsDisabled = true;
         //this.test();
@@ -298,7 +301,10 @@ export class UpdatePage implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.wizard.setFirstStep();
+        //this.wizard.setFirstStep();
+        this.getRules(function(r){
+            
+        });
     }
 
     click_NextStep() {
@@ -321,5 +327,14 @@ export class UpdatePage implements OnInit, AfterViewInit {
 
     output_stepAlertChange($output: StepAlert[]): void {
         this.wizard.currentStep.stepAlerts = $output;
+    }
+
+    private getRules(callback: (response: Rule[]) => void): void {
+        this.ruleService.get().subscribe(response => {
+            Common.ConsoleResponse("getRules", response);
+            callback(response);
+        }, error => {
+            console.log(error);
+        });
     }
 }

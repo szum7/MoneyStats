@@ -8,7 +8,8 @@ export const environment = {
     all: false,
     bankRow: false,
     ruleEvaluator: false,
-    generatedTransaction: false
+    generatedTransaction: false,
+    test: false
   }
 };
 
