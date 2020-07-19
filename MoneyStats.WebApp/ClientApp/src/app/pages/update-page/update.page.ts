@@ -150,8 +150,10 @@ export class UpdateWizard {
         if (!this.currentStep.isProgressable)
             return;
 
-        this.nextStepActions();
-        this.stepsAt++;
+        let self = this;
+        this.nextStepActions(() => {
+            self.stepsAt++;
+        });
     }
 
     public previous(): boolean {
@@ -163,22 +165,25 @@ export class UpdateWizard {
         return true;
     }
 
-    private nextStepActions(): void { // TODO make the outputs strongly types somehow (?)
+    private nextStepActions(callback: () => void): void { // TODO make the outputs strongly types somehow (?)
         let self = this;
         switch (this.stepsAt) {
             case 0:
                 let o: { matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper } = this.currentStep.getOutput();
                 this.utils.bankMapper = o.mapper;
                 this.nextStep.setInput(o.matrix);
+                callback();
                 break;
             case 1:
                 this.nextStep.setInput(this.currentStep.getOutput());
+                callback();
                 break;
             case 2:
                 let cast: BankRow[] = this.currentStep.getOutput();
                 self.saveBankRows(cast, function (response) {
                     cast = response;
                     self.nextStep.setInput(response);
+                    callback();
                 });
                 break;
             case 3:

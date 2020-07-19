@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Rule } from "src/app/models/service-models/rule.model";
 
-class RuleServiceMap {
+class RuleServiceMap extends BaseHttpService {
 
     protected dummyMap(response: any[]): any {
         return response;
@@ -20,20 +20,19 @@ class RuleServiceLogic extends RuleServiceMap {
 export class RuleService extends RuleServiceLogic {
 
     constructor(
-        @Inject('BASE_URL') private baseUrl: string,
-        private base: BaseHttpService,
+        @Inject('BASE_URL') baseUrl: string,
         private http: HttpClient) {
 
         super();
-        this.base.set('rule', this.baseUrl, 'api/rule/');
+        this.set('rule', baseUrl, 'api/rule/');
     }
 
     get(): Observable<Rule[]> {
-        if (this.base.isMocked()) {
+        if (this.isMocked()) {
             return this.getMock();
         }
         return this.http
-            .get<Rule[]>(this.base.url + 'get')
+            .get<Rule[]>(this.url + 'get')
             .pipe(map(this.dummyMap));
     }
 
