@@ -7,6 +7,7 @@ import { Rule } from 'src/app/models/service-models/rule.model';
 import { RuleService } from 'src/app/services/rule-service/rule.service';
 import { GeneratedTransactionService } from 'src/app/services/generated-transaction-service/generated-transaction.service';
 import { GeneratedTransaction } from 'src/app/models/service-models/generated-transaction.model';
+import { Common } from 'src/app/utilities/common.static';
 
 @Component({
   selector: 'app-eval-transactions-component',
@@ -51,17 +52,15 @@ export class EvalTransactionsComponent implements OnInit {
     let self = this;
     self.getGeneratedTransactions(self.rules, self.bankRows, function (response: GeneratedTransaction[]) {
       self.generatedTransactions = response;
+      self.emitOutput();
     });
   }
 
   private getRules(callback: (response: Rule[]) => void): void {
     this.ruleService.get().subscribe(response => {
-      console.log("=> getRules:");
-      console.log(response);
-      console.log("<=");
+      Common.ConsoleResponse("getRules", response);
       callback(response);
     }, error => {
-      console.error("Error: getRules");
       console.log(error);
     });
   }
@@ -71,12 +70,9 @@ export class EvalTransactionsComponent implements OnInit {
       rules: rules,
       bankRows: bankRows
     }).subscribe(response => {
-      console.log("=> getGeneratedTransactions:");
-      console.log(response);
-      console.log("<=");
+      Common.ConsoleResponse("getGeneratedTransactions", response);
       callback(response);
     }, error => {
-      console.error("Error: getGeneratedTransactions");
       console.log(error);
     });
   }

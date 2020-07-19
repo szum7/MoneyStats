@@ -20,8 +20,6 @@ namespace MoneyStats.BL.Repositories
                     .Include(x => x.AndConditionGroups).ThenInclude(x => x.Conditions)
                     .ToList();
 
-                // TODO + test
-
                 return list;
             }
         }

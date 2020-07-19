@@ -17,7 +17,7 @@ namespace MoneyStats.WebApp.Controllers
         [HttpGet("get")]
         public ActionResult Get()
         {            
-            return Ok(_repo.Get());
+            return Ok(_repo.GetWithEntities());
         }
     }
 }
