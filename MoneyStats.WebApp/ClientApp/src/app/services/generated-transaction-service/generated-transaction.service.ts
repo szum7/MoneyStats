@@ -1,5 +1,5 @@
 import { Injectable, Inject } from "@angular/core";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponseBase } from '@angular/common/http';
 import { BaseHttpService } from '../base-http.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -8,7 +8,7 @@ import { BankRow } from "src/app/models/service-models/bank-row.model";
 import { GeneratedTransaction } from "src/app/models/service-models/generated-transaction.model";
 import { GenericResponse } from "src/app/models/service-models/generic-response.model";
 
-class GeneratedTransactionServiceMap {
+class GeneratedTransactionServiceMap extends BaseHttpService {
 }
 
 class GeneratedTransactionServiceLogic extends GeneratedTransactionServiceMap {
@@ -18,20 +18,19 @@ class GeneratedTransactionServiceLogic extends GeneratedTransactionServiceMap {
 export class GeneratedTransactionService extends GeneratedTransactionServiceLogic {
 
     constructor(
-        @Inject('BASE_URL') private baseUrl: string,
-        private base: BaseHttpService,
+        @Inject('BASE_URL') baseUrl: string,
         private http: HttpClient) {
 
         super();
-        this.base.set('generatedTransaction', this.baseUrl, 'api/generatedtransaction/');
+        this.set('generatedTransaction', baseUrl, 'api/generatedtransaction/');
     }
 
     getGenerated(data: { rules: Rule[], bankRows: BankRow[] }): Observable<GeneratedTransaction[]> {
-        if (this.base.isMocked()) {
+        if (this.isMocked()) {
             return this.getGeneratedMock();
         }
         return this.http
-            .post<GeneratedTransaction[]>(this.base.url + 'getgenerated', data, this.base.getOptions());
+            .post<GeneratedTransaction[]>(this.url + 'getgenerated', data, this.getOptions());
     }
 
     private getGeneratedMock(): Observable<GeneratedTransaction[]> {
@@ -46,11 +45,11 @@ export class GeneratedTransactionService extends GeneratedTransactionServiceLogi
     }
 
     save(data: GeneratedTransaction[]): Observable<GenericResponse> {
-        if (this.base.isMocked()) {
+        if (this.isMocked()) {
             return this.saveMock();
         }
         return this.http
-            .post<GenericResponse>(this.base.url + 'save', data, this.base.getOptions());
+            .post<GenericResponse>(this.url + 'save', data, this.getOptions());
     }
 
     private saveMock(): Observable<GenericResponse> {
