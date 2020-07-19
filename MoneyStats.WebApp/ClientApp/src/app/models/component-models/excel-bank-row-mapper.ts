@@ -100,7 +100,7 @@ export class ExcelBankRowMapper {
         // since the Unix epoch (January 1, 1970) example: new Date(12312512312);
         
         // 1. Subtract number of days between Jan 1, 1900 and Jan 1, 1970, plus 1  (Google "excel leap year bug")
-        // Neet to add +1 for some reason - szum7
+        // Need to add +1 for some reason - szum7
         // 2. Convert to milliseconds.
         return new Date((excelDate - (25567 + 1 + 1)) * 86400 * 1000); // HACK hour is at 01:00:00. Should be at 00:00:00
     }

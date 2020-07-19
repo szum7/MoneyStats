@@ -47,15 +47,19 @@ export class BankRow {
     }
 
     public getContentId(): string {
-        return this.AccountingDate.toISOString() 
-        + this.BankTransactionId 
-        + this.Type 
-        + this.Account 
-        + this.AccountName 
-        + this.PartnerAccount 
-        + this.PartnerName 
+        return this.AccountingDate.toDateString() 
+        + this.nullCheck(this.BankTransactionId)
+        + this.nullCheck(this.Type)
+        + this.nullCheck(this.Account)
+        + this.nullCheck(this.AccountName) 
+        + this.nullCheck(this.PartnerAccount) 
+        + this.nullCheck(this.PartnerName) 
         + this.Sum.toString() 
-        + this.Currency 
-        + this.Message;
+        + this.nullCheck(this.Currency) 
+        + this.nullCheck(this.Message);
+    }
+
+    private nullCheck(prop: any): any {
+        return prop ? prop : "";
     }
 }
