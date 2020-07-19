@@ -10,23 +10,30 @@ namespace MoneyStats.BL.Repositories
 {
     public abstract class EntityBaseRepository<TEntity> : IEntityBaseRepository<TEntity> where TEntity : EntityBase
     {
-        public IEnumerable<int> InsertRange(IEnumerable<TEntity> entities)
+        public IEnumerable<TEntity> InsertRange(IEnumerable<TEntity> entities)
         {
             using (var context = new MoneyStatsContext())
             {
+                foreach (var item in entities)
+                {
+                    item.SetNew();
+                }
+
                 context.Set<TEntity>().AddRange(entities);
                 context.SaveChanges();
-                return entities.Select(x => x.Id);
+                return entities;
             }
         }
 
-        public int Insert(TEntity entity)
+        public TEntity Insert(TEntity entity)
         {
             using (var context = new MoneyStatsContext())
             {
+                entity.SetNew();
+
                 context.Set<TEntity>().Add(entity);
                 context.SaveChanges();
-                return entity.Id;
+                return entity;
             }
         }
 
@@ -44,6 +51,38 @@ namespace MoneyStats.BL.Repositories
             {
                 // TODO "context.Set<TEntity>().ToList().Where(x => x.IsActive);" works, but why do we need it?
                 return context.Set<TEntity>().ToList().Where(x => x.IsActive);
+            }
+        }
+
+        public bool UpdateMany(List<TEntity> entities)
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                // Set each
+                var i = 0;
+                foreach (var entity in entities)
+                {
+                    var obj = context.Set<TEntity>().SingleOrDefault(x => x.Id == entity.Id);
+                    if (obj != null)
+                    {
+                        // Update values
+                        context.Entry(obj).CurrentValues.SetValues(entity);
+
+                        // Update modified date
+                        obj.ModifiedDate = DateTime.Now;
+
+                        i++;
+                    }
+                }
+
+                // Save changes
+                if (i > 0)
+                {
+                    context.SaveChanges();
+                    return true;
+                }
+
+                return false;
             }
         }
 

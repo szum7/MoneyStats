@@ -43,6 +43,7 @@ namespace MoneyStats.BL.Repositories
 
             using (var context = new MoneyStatsContext())
             {
+                // TODO this shouldn't work!
                 list.ForEach(x => x.GroupedTransactionId = x.GroupedTransaction.Id);
                 context.SaveChanges();
             }

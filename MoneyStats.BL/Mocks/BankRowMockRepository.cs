@@ -44,12 +44,12 @@ namespace MoneyStats.BL.Mocks
             throw new NotImplementedException();
         }
 
-        public int Insert(BankRow transaction)
+        public BankRow Insert(BankRow transaction)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<int> InsertRange(IEnumerable<BankRow> entities)
+        public IEnumerable<BankRow> InsertRange(IEnumerable<BankRow> entities)
         {
             throw new NotImplementedException();
         }

@@ -20,6 +20,7 @@ import { BaseHttpService } from './services/base-http.service';
 import { BankRowService } from './services/bank-row-service/bank-row.service';
 import { RuleEvaluatorService } from './services/rule-evaluator-service/rule-evaluator.service';
 import { RuleService } from './services/rule-service/rule.service';
+import { GeneratedTransactionService } from './services/generated-transaction-service/generated-transaction.service';
 
 // Components
 import { AppComponent } from './app.component';
@@ -61,7 +62,7 @@ import { CompareDbComponent } from './components/update-wizard/step-3/compare-db
     NgbModule,
     RouterModule.forRoot([
       { path: '', component: HomePage },
-      { path: 'testtable', component: TestTablePage },
+      { path: 'test', component: TestTablePage },
       { path: 'update', component: UpdatePage },
       { path: 'excel', component: ExcelTestPage },
     ], { useHash: true })
@@ -73,7 +74,8 @@ import { CompareDbComponent } from './components/update-wizard/step-3/compare-db
     TestTableService,
     BankRowService,
     RuleEvaluatorService,
-    RuleService
+    RuleService,
+    GeneratedTransactionService
   ],
   bootstrap: [AppComponent]
 })

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BankRow } from '../../models/service-models/bank-row.model';
 
-class BankRowServiceMap {
+class BankRowServiceMap extends BaseHttpService {
 
     protected mapBankRow(response: any[]): any {
         let r: BankRow[] = [];
@@ -42,20 +42,18 @@ class BankRowServiceLogic extends BankRowServiceMap {
 export class BankRowService extends BankRowServiceLogic {
 
     constructor(
-        @Inject('BASE_URL') private baseUrl: string,
-        private base: BaseHttpService,
+        @Inject('BASE_URL') baseUrl: string,
         private http: HttpClient) {
-
         super();
-        this.base.set('bankRow', this.baseUrl, 'api/bankrow/');
+        this.set('bankRow', baseUrl, 'api/bankrow/');
     }
 
     get(): Observable<BankRow[]> {
-        if (this.base.isMocked()) {
+        if (this.isMocked()) {
             return this.getMock();
         }
         return this.http
-            .get<any>(this.base.url + 'get')
+            .get<any>(this.url + 'get')
             .pipe(map(this.mapBankRow));
     }
 
@@ -74,6 +72,24 @@ export class BankRowService extends BankRowServiceLogic {
             res[2].set(new Date(2015, 0, 4), '', '', '', '', '', '', 0, '', '');
             res[3].set(new Date(2015, 0, 5), '', '', '', '', '', '', 0, '', '');
             res[4].set(new Date(2015, 0, 6), '', '', '', '', '', '', 0, '', '');
+
+            observer.next(res);
+            observer.complete();
+        });
+    }
+
+    save(data: BankRow[]): Observable<BankRow[]> {
+        if (this.isMocked()) {
+            return this.saveMock();
+        }
+        return this.http.post<BankRow[]>(this.url + 'save', data, this.getOptions());
+    }
+
+    private saveMock(): Observable<BankRow[]> {
+        return new Observable((observer) => {
+            let res: BankRow[] = [];
+
+            // TODO mock
 
             observer.next(res);
             observer.complete();

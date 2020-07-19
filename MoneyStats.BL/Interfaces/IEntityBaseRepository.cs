@@ -12,9 +12,9 @@ namespace MoneyStats.BL.Interfaces
 
         TEntity Select(int id);
 
-        int Insert(TEntity transaction);
+        TEntity Insert(TEntity transaction);
 
-        IEnumerable<int> InsertRange(IEnumerable<TEntity> entities);
+        IEnumerable<TEntity> InsertRange(IEnumerable<TEntity> entities);
         
         bool Update(TEntity transaction);
 

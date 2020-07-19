@@ -2,6 +2,40 @@
 // Create DB with Entity Framework Core, Code first
 ...TODO
 
+-------------------------
+Backend <-> Frontend POST
+-------------------------
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+postTest(data: any): Observable<any> {
+    const header: HttpHeaders = new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': 'Bearer xyz'
+    });
+    return this.http
+        .post<any>(this.baseUrl + 'api/TestTable/mypost', data, { headers: header })
+        .pipe(map(this.dummyPipe));
+}
+
+
+using Microsoft.AspNetCore.Mvc;
+
+[HttpPost("mypost"), Produces("application/json")]
+public ActionResult MyPost(MyPostWrap data)
+{
+    return Ok(new { message = "ok" });
+}
+
+IMPORTANT!
+- HttpPost("mypost") -> must have a name, matching the url in post's 1st parameter
+
+Not important
+(These might be important in some sense, but I'm unaware what it is.)
+- the 3rd parameter "{ headers: header }"
+- Produces("application/json")
+- ".pipe(map(this.dummyPipe))" and it's imports
 
 ---------------------
 Update database model 

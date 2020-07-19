@@ -13,7 +13,18 @@ namespace MoneyStats.ExampleData
     public static class CustomData
     {
         public static readonly Dictionary<string, object> UpdateWorkflowTest = new Dictionary<string, object>()
-        {            
+        {        
+            // Tag
+            {
+                nameof(Tag),
+                new List<Tag>
+                {
+                    new Tag() { Id = 1, Description = "", Title = "K&H" }.SetNew(),
+                    new Tag() { Id = 2, Description = "", Title = "Kamat" }.SetNew(),
+                    new Tag() { Id = 3, Description = "", Title = "OE" }.SetNew(),
+                    new Tag() { Id = 4, Description = "", Title = "Scholarship" }.SetNew(),
+                }
+            },    
             // BankRow
             {
                 nameof(BankRow),
@@ -23,6 +34,54 @@ namespace MoneyStats.ExampleData
                     new BankRow() { Id = 1, AccountingDate = new DateTime(1999, 1, 1), BankTransactionId = null, Type = null, Account = null, AccountName = null, PartnerAccount = null, PartnerName = null, Sum = 2000, Currency = null, Message = "" }.SetNew(),
                     // other tests
                     new BankRow() { Id = 2, AccountingDate = new DateTime(2010, 10, 10), BankTransactionId = "bankTransactionId", Type = "type", Account = "account", AccountName = "accountName", PartnerAccount = "partnerAccount", PartnerName = "partnerName", Sum = 1, Currency = "currency", Message = "message" }.SetNew(),
+                }
+            },
+            // Rule
+            {
+                nameof(Rule),
+                new List<Rule>
+                {
+                    // Rule#1 : Típus == "Kamat" => addTags("K&H", "Kamat")
+                    new Rule() { Id = 1, Title = "K&H kamat" }.SetNew(),
+                    // Rule#2 : PartnerName == "Óbudai Egyetem" && Sum > 0 => addTags("OE", "Scholarship")
+                    new Rule() { Id = 2, Title = "OE ösztöndíj" }.SetNew(),
+                }
+            },
+            // AndConditionGroup
+            {
+                nameof(AndConditionGroup),
+                new List<AndConditionGroup>
+                {
+                    // Rule#1
+                    new AndConditionGroup() { Id = 1, RuleId = 1 }.SetNew(),
+                    // Rule#2
+                    new AndConditionGroup() { Id = 2, RuleId = 2 }.SetNew(),
+                    new AndConditionGroup() { Id = 3, RuleId = 2 }.SetNew(), 
+                }
+            },
+            // Condition
+            {
+                nameof(Condition),
+                new List<Condition>
+                {
+                    // Rule#1
+                    new Condition() { Id = 1, AndConditionGroupId = 1, Property = "Type", Value = "Kamat", ConditionType = ConditionType.IsEqualTo }.SetNew(),
+                    // Rule#2
+                    new Condition() { Id = 2, AndConditionGroupId = 2, Property = "PartnerName", Value = "Óbudai Egyetem", ConditionType = ConditionType.IsEqualTo }.SetNew(),
+                    new Condition() { Id = 3, AndConditionGroupId = 2, Property = "Sum", Value = "0", ConditionType = ConditionType.IsGreaterThan }.SetNew(),
+                }
+            },
+            // RuleAction
+            {
+                nameof(RuleAction),
+                new List<RuleAction>
+                {
+                    // Rule#1
+                    new RuleAction() { Id = 1, RuleId = 1, Property = null, Value = null, TagId = 1, RuleActionType = RuleActionType.AddTag }.SetNew(),
+                    new RuleAction() { Id = 2, RuleId = 1, Property = null, Value = null, TagId = 2, RuleActionType = RuleActionType.AddTag }.SetNew(),
+                    // Rule#2
+                    new RuleAction() { Id = 3, RuleId = 2, Property = null, Value = null, TagId = 3, RuleActionType = RuleActionType.AddTag }.SetNew(),
+                    new RuleAction() { Id = 4, RuleId = 2, Property = null, Value = null, TagId = 4, RuleActionType = RuleActionType.AddTag }.SetNew(),
                 }
             },
         };

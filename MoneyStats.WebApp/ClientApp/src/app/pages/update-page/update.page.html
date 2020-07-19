@@ -88,7 +88,7 @@
                     Supported transactions: <strong>K&H</strong>.
                 </p>
             </div>
-            <app-choose-file (nextStepChange)="output_firstStep($event)"
+            <app-choose-file (nextStepChange)="output_change($event)"
                 (nextStepAlertsChange)="output_stepAlertChange($event)"></app-choose-file>
         </div>
         <div *ngSwitchCase="1">
@@ -98,8 +98,8 @@
                     The program finds the duplicates across multiple files and omits them.
                 </p>
             </div>
-            <app-read-files-component [params]="results.firstResult" [mapper]="results.utils.bankMapper"
-                (nextStepChange)="output_secondStep($event)" (nextStepAlertsChange)="output_stepAlertChange($event)">
+            <app-read-files-component [params]="wizard.wizardSteps[1].$input" [mapper]="wizard.utils.bankMapper"
+                (nextStepChange)="output_change($event)" (nextStepAlertsChange)="output_stepAlertChange($event)">
             </app-read-files-component>
         </div>
         <div *ngSwitchCase="2">
@@ -110,8 +110,8 @@
                     already has. Recommends exclusion of duplicates.
                 </p>
             </div>
-            <app-compare-db-component [params]="results.secondResult" [mapper]="results.utils.bankMapper"
-                (nextStepChange)="output_thirdStep($event)" (nextStepAlertsChange)="output_stepAlertChange($event)">
+            <app-compare-db-component [params]="wizard.wizardSteps[2].$input" [mapper]="wizard.utils.bankMapper"
+                (nextStepChange)="output_change($event)" (nextStepAlertsChange)="output_stepAlertChange($event)">
             </app-compare-db-component>
         </div>
         <div *ngSwitchCase="3">
@@ -121,7 +121,8 @@
                     Maybe.
                 </p>
             </div>
-            <app-eval-transactions-component [params]="results.thirdResult" (nextStepAlertsChange)="output_stepAlertChange($event)">
+            <app-eval-transactions-component [params]="wizard.wizardSteps[3].$input" (nextStepAlertsChange)="output_stepAlertChange($event)" 
+            (nextStepChange)="output_change($event)">
             </app-eval-transactions-component>
         </div>
         <div *ngSwitchDefault>

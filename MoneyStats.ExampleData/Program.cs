@@ -13,8 +13,8 @@ namespace MoneyStats.ExampleData
 #endif
 
 #if false
-            global.DeleteAllFromDatabase(); // DELETE
             global.InsertAllExamples(); // INSERT
+            global.DeleteAllFromDatabase(); // DELETE
             global.ReadRowCounts(); // READ
             global.DropAllTables(); // DROP!
 #endif

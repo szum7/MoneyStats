@@ -4,7 +4,7 @@ import { ExcelReader } from 'src/app/models/component-models/excel-reader';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
-import { StepAlert } from 'src/app/pages/update-page/update.page';
+import { StepAlert } from "src/app/models/component-models/step-alert.model";
 
 /// <summary>
 /// This component let's you browse for multiple files on your local machine, 
@@ -59,7 +59,7 @@ export class ChooseFileComponent implements OnInit {
 
     // Wait for reader to read files
     var self = this;
-    this.loadingScreen.start();
+    //this.loadingScreen.start(); // TODO
     var finishedReadingInterval = setInterval(function () {
 
       if (self.reader.isReadingFinished()) {
@@ -70,7 +70,7 @@ export class ChooseFileComponent implements OnInit {
           console.log("No read files/rows to work with.");
         }
 
-        self.loadingScreen.stop();
+        //self.loadingScreen.stop();
         console.log(mappedExcelMatrix);
 
         self.emitOutput(mappedExcelMatrix, self.mapper);
