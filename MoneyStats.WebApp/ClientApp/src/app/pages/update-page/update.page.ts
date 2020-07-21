@@ -174,7 +174,7 @@ export class UpdateWizard {
             return;
 
         let self = this;
-        this.nextStepActions(() => {
+        this.beforeNextStepActions(() => {
             self.stepsAt++;
         });
     }
@@ -188,7 +188,7 @@ export class UpdateWizard {
         return true;
     }
 
-    private nextStepActions(callback: () => void): void { // TODO make the outputs strongly types somehow (?)
+    private beforeNextStepActions(callback: () => void): void { // TODO make the outputs strongly types somehow (?)
         let self = this;
         switch (this.stepsAt) {
             case 0:
@@ -271,9 +271,19 @@ export class UpdatePage implements OnInit, AfterViewInit {
         private bankRowService: BankRowService,
         private generatedTransactionService: GeneratedTransactionService,
         private ruleService: RuleService) {
+
         this.wizard = new UpdateWizard(bankRowService, generatedTransactionService);
         this.isTooltipsDisabled = true;
-        //this.test();
+    }
+
+    ngAfterViewInit(): void {
+        this.initWizardNavPositionAndHeight();
+    }
+
+    ngOnInit(): void {
+        this.wizard.setFirstStep();
+
+        //this.testLastStep();
     }
 
     test() { // TEST
@@ -291,20 +301,20 @@ export class UpdatePage implements OnInit, AfterViewInit {
         this.wizard.stepsAt = 1;
     }
 
-    ngAfterViewInit(): void {
-        this.initWizardNavPositionAndHeight();
+    private testLastStep(): void {
+        let self = this;
+        this.bankRowService.get().subscribe(r => {
+            Common.ConsoleResponse("testLastStep BankRows:", r);
+            self.wizard.wizardSteps[3].setInput(r);
+            self.wizard.stepsAt = 3;
+        }, e => {
+            console.log(e);
+        });
     }
 
     private initWizardNavPositionAndHeight(): void {
         let btnsHeight = this.btnsView.nativeElement.offsetHeight;
         this.wizardNavView.nativeElement.style.top = btnsHeight + "px";
-    }
-
-    ngOnInit(): void {
-        //this.wizard.setFirstStep();
-        this.getRules(function(r){
-            
-        });
     }
 
     click_NextStep() {
@@ -327,14 +337,5 @@ export class UpdatePage implements OnInit, AfterViewInit {
 
     output_stepAlertChange($output: StepAlert[]): void {
         this.wizard.currentStep.stepAlerts = $output;
-    }
-
-    private getRules(callback: (response: Rule[]) => void): void {
-        this.ruleService.get().subscribe(response => {
-            Common.ConsoleResponse("getRules", response);
-            callback(response);
-        }, error => {
-            console.log(error);
-        });
     }
 }

@@ -50,20 +50,28 @@ namespace MoneyStats.BL.Modules
             {
                 var andRule = rule.AndConditionGroups[i];  // = (a & b & c)
                 var allAndRulesValidate = true;
-                var j = 0;
-                while (j < andRule.Conditions.Count && allAndRulesValidate)
+
+                if (andRule.Conditions.Count > 0)
                 {
-                    var condition = andRule.Conditions[j]; // = a
-                    var rowValue = typeof(BankRow).GetProperty(condition.Property).GetValue(bankRow);
+                    var j = 0;
+                    while (j < andRule.Conditions.Count && allAndRulesValidate)
+                    {
+                        var condition = andRule.Conditions[j]; // = a
+                        var rowValue = typeof(BankRow).GetProperty(condition.Property).GetValue(bankRow);
 
-                    allAndRulesValidate = RuleEvaluator.IsConditionTrue(condition, rowValue);
+                        allAndRulesValidate = RuleEvaluator.IsConditionTrue(condition, rowValue);
 
-                    j++;
+                        j++;
+                    }
+
+                    if (allAndRulesValidate)
+                    {
+                        oneOrRulesValidate = true;
+                    }
                 }
-
-                if (allAndRulesValidate)
+                else
                 {
-                    oneOrRulesValidate = true;
+                    throw new Exception("AndCondtionGroups can NOT be without at least one condition!");
                 }
 
                 i++;

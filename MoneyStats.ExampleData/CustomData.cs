@@ -56,7 +56,6 @@ namespace MoneyStats.ExampleData
                     new AndConditionGroup() { Id = 1, RuleId = 1 }.SetNew(),
                     // Rule#2
                     new AndConditionGroup() { Id = 2, RuleId = 2 }.SetNew(),
-                    new AndConditionGroup() { Id = 3, RuleId = 2 }.SetNew(), 
                 }
             },
             // Condition

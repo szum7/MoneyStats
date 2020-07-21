@@ -1,4 +1,75 @@
 ﻿
+                //context.Configuration.ProxyCreationEnabled = false;
+                //context.Configuration.LazyLoadingEnabled = false;
+
+        public List<Rule> GetWithEntitiesX()
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                var list = context.Rules
+                    .Where(rule => rule.State == 1)
+                    .Include(x => x.RuleActions.Select(o => new RuleAction()
+                    {
+                        Id = o.Id,
+                        Title = o.Title,
+                        Property = o.Property,
+                        RuleActionType = o.RuleActionType,
+                        Value = o.Value,
+                        RuleId = o.RuleId,
+                        TagId = o.TagId
+                    }))
+                    .Include(x => x.AndConditionGroups.Select(o => new AndConditionGroup()
+                    {
+                        Id = o.Id,
+                        RuleId = o.RuleId
+                    })).ThenInclude(x => x.Conditions.Select(o => new Condition()
+                    {
+                        Id = o.Id,
+                        Property = o.Property,
+                        ConditionType = o.ConditionType,
+                        Value = o.Value,
+                        AndConditionGroupId = o.AndConditionGroupId
+                    }))
+                    .ToList();
+
+
+                return list;
+            }
+        }        
+
+        public List<Rule> GetWithEntities3()
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                var list = context.Rules.Where(rule => rule.State == 1).ToList();
+
+                return list;
+            }
+        }
+
+        public List<Rule> GetWithEntitiesFaulty()
+        {
+            using (var context = new MoneyStatsContext())
+            {
+                var list = new List<Rule>();
+
+                list = context.Rules
+                    .Where(rule => rule.State == 1)
+                    .Include(x => x.RuleActions)
+                    .Include(x => x.AndConditionGroups).ThenInclude(x => x.Conditions)
+                    .ToList();
+
+                return list;
+            }
+        }
+
+
+
+
+
+
+
+
                     // TODO doesn't work. Even though tables are empty, foreign contraint still throws an exception
                     //db.Database.ExecuteSqlCommand("TRUNCATE TABLE [" + tableName + "]");
 

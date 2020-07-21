@@ -9,17 +9,10 @@ namespace MoneyStats.BL.Repositories
 {
     public class RuleRepository : EntityBaseRepository<Rule>, IRuleRepository
     {
-        public List<Rule> GetWithEntities2()
+        public List<Rule> GetWithEntities()
         {
             using (var context = new MoneyStatsContext())
             {
-
-                //list = context.Rules
-                //    .Where(rule => rule.State == 1)
-                //    .Include(x => x.RuleActions)
-                //    .Include(x => x.AndConditionGroups).ThenInclude(x => x.Conditions)
-                //    .ToList();
-
                 // Rules
                 var rules = context.Rules.Where(rule => rule.State == 1).ToList();
                 foreach (var rule in rules)
@@ -45,32 +38,6 @@ namespace MoneyStats.BL.Repositories
                 }
 
                 return rules;
-            }
-        }
-
-        public List<Rule> GetWithEntities()
-        {
-            using (var context = new MoneyStatsContext())
-            {
-                var list = context.Rules.Where(rule => rule.State == 1).ToList();
-
-                return list;
-            }
-        }
-
-        public List<Rule> GetWithEntitiesFaulty()
-        {
-            using (var context = new MoneyStatsContext())
-            {
-                var list = new List<Rule>();
-
-                list = context.Rules
-                    .Where(rule => rule.State == 1)
-                    .Include(x => x.RuleActions)
-                    .Include(x => x.AndConditionGroups).ThenInclude(x => x.Conditions)
-                    .ToList();
-
-                return list;
             }
         }
 
