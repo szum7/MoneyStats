@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MoneyStats.BL.Interfaces;
 using MoneyStats.BL.Repositories;
+using Newtonsoft.Json;
 
 namespace MoneyStats.WebApp
 {
@@ -27,6 +28,13 @@ namespace MoneyStats.WebApp
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
+            });
+
+            // AddJsonOptions
+            // AddNewtonsoftJson
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
             services.AddSingleton<IBankRowRepository, BankRowRepository>();
