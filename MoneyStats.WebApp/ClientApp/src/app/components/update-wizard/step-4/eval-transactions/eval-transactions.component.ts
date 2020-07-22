@@ -9,6 +9,20 @@ import { GeneratedTransactionService } from 'src/app/services/generated-transact
 import { GeneratedTransaction } from 'src/app/models/service-models/generated-transaction.model';
 import { Common } from 'src/app/utilities/common.static';
 
+export class UsedRule {
+  isExcluded: boolean;
+  value: Rule;
+
+  constructor(value: Rule) {
+    this.value = value;
+    this.isExcluded = false;
+  }
+
+  public toggleExclusion(): void {
+    this.isExcluded = !this.isExcluded;
+  }
+}
+
 @Component({
   selector: 'app-eval-transactions-component',
   templateUrl: './eval-transactions.component.html',
@@ -22,13 +36,16 @@ export class EvalTransactionsComponent implements OnInit {
 
   public get bankRows(): BankRow[] { return this.params; }
 
-  public rules: Rule[];
+  public rules: UsedRule[];
   public generatedTransactions: GeneratedTransaction[];
 
   constructor(
     private loadingScreen: LoadingScreenService,
     private ruleService: RuleService,
     private generatedTransactionService: GeneratedTransactionService) {
+
+    this.rules = [];
+
     // 1. get rules
     // 2. run the program on the shown BankRows
     // 3. get the GeneratedTransactions
@@ -44,13 +61,31 @@ export class EvalTransactionsComponent implements OnInit {
     let self = this;
 
     self.getRules(function (rules: Rule[]) {
-      self.rules = rules;
+      self.rules = self.getUsedRulesFromRules(rules);
     })
+  }
+
+  private getUsedRulesFromRules(rules: Rule[]): UsedRule[] {
+    let ur: UsedRule[] = [];
+    for (let i = 0; i < rules.length; i++) {
+      ur.push(new UsedRule(rules[i]));
+    }
+    return ur;
+  }
+
+  private getRulesFromUsedRules(ur: UsedRule[]): Rule[] {
+    let rules: Rule[] = [];
+    for (let i = 0; i < ur.length; i++) {
+      if (!ur[i].isExcluded) {
+        rules.push(ur[i].value);
+      }
+    }
+    return rules;
   }
 
   click_generatedTransactionsProgram(): void {
     let self = this;
-    self.getGeneratedTransactions(self.rules, self.bankRows, function (response: GeneratedTransaction[]) {
+    self.getGeneratedTransactions(self.getRulesFromUsedRules(self.rules), self.bankRows, function (response: GeneratedTransaction[]) {
       self.generatedTransactions = response;
       self.emitOutput();
     });
@@ -106,10 +141,8 @@ export class EvalTransactionsComponent implements OnInit {
     row.isDetailsOpen = !row.isDetailsOpen;
   }
 
-  click_toggleRowExclusion(row: ReadBankRowForDbCompare): void {
+  click_toggleRowExclusion(row: UsedRule): void {
     row.toggleExclusion();
-
-    this.emitNextStepAlerts();
   }
 
 }

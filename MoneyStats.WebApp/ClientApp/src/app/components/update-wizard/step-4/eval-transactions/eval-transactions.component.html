@@ -1,7 +1,34 @@
-<button (click)="click_generatedTransactionsProgram()">Evaluate to transactions</button>
 
-<div class="ev-tr-page">
+<div class="content ev-tr-page">
+
+    <button (click)="click_generatedTransactionsProgram()" style="margin-bottom:20px;">Test: Evaluate to transactions</button>
+
+    <h2>Rules</h2>
+
     <div class="tr-table">
-        
+        <!-- Header -->
+        <div class="tr-row header">
+            <div class="tr-cell" style="width: 30px;">Actions</div>
+            <div class="tr-cell" style="width: 30px;">#</div>
+            <div class="tr-cell" style="width: 200px;">Title</div>
+            <div class="tr-cell">Fancy name</div>
+        </div>
+        <!-- Content -->
+        <div class="tr-row" *ngFor="let rule of rules" [ngClass]="{'excluded': rule.isExcluded}">
+            <div class="tr-row-content">
+                <div class="tr-cell" style="width: 30px;"><!-- Include/Exclude -->
+                    <div class="tr-btn" (click)="click_toggleRowExclusion(rule)"
+                        [ngClass]="{'excluded': rule.isExcluded}">
+                        <fa-icon icon="minus" *ngIf="rule.isExcluded">
+                        </fa-icon>
+                        <fa-icon icon="plus" *ngIf="!rule.isExcluded">
+                        </fa-icon>
+                    </div>
+                </div>
+                <div class="tr-cell" style="width: 30px;">{{rule.value.id}}</div>
+                <div class="tr-cell" style="width: 200px;" [title]="rule.value.title">{{rule.value.title}}</div>
+                <div class="tr-cell" [title]="rule.value.fancyName">{{rule.value.fancyName}}</div>
+            </div>
+        </div>
     </div>
 </div>

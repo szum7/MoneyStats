@@ -14,7 +14,9 @@ class RuleServiceMap extends BaseHttpService {
             r.push({
                 id: e.id,
                 title: e.title,
-                fancyName: e.fancyName
+                fancyName: e.fancyName,
+                andConditionGroups: e.andConditionGroups,
+                ruleActions: e.ruleActions
             });
         }
         return r;
