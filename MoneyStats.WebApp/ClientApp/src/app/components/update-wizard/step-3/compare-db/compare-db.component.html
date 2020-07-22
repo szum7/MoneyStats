@@ -16,7 +16,7 @@
             </div>
         </div>
         <!-- Content -->
-        <div class="tr-row" *ngFor="let tr of sortBy_bankRows(bankRows, 'AccountingDate')"
+        <div class="tr-row" *ngFor="let tr of sortBy_bankRows(bankRows, 'accountingDate')"
             [ngClass]="{'excluded': tr.isExcluded, 'opened': tr.isDetailsOpen}">
             <div class="tr-row-content">
                 <!-- Actions -->

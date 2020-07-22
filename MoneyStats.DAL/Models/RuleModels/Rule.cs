@@ -29,6 +29,8 @@ namespace MoneyStats.DAL.Models
             this.RuleActions = new List<RuleAction>();
         }
 
+        public string FancyName => this.ToString();
+
         public override string ToString()
         {
             if (this.AndConditionGroups.Count == 0 || this.AndConditionGroups[0].Conditions.Count == 0 || this.RuleActions.Count == 0)

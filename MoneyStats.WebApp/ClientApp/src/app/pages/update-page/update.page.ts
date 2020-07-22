@@ -281,9 +281,9 @@ export class UpdatePage implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.wizard.setFirstStep();
+        //this.wizard.setFirstStep();
 
-        //this.testLastStep();
+        this.testLastStep();
     }
 
     test() { // TEST

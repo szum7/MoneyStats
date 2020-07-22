@@ -11,16 +11,16 @@ export class ExcelBankRowMapper {
 
     private readonly bankPropertyMaps: EnumDictionary<BankType, Array<PropertyMapRow>> = {
         [BankType.KH]: [
-            new PropertyMapRow("A1", null, "100px", "AccountingDate", this.getJsDateFromExcel),
-            new PropertyMapRow("B1", null, "150px", "BankTransactionId", null),
-            new PropertyMapRow("C1", null, "210px", "Type", null),
-            new PropertyMapRow("D1", null, "210px", "Account", null),
-            new PropertyMapRow("E1", null, "120px", "AccountName", null),
-            new PropertyMapRow("F1", null, "210px", "PartnerAccount", null),
-            new PropertyMapRow("G1", null, "130px", "PartnerName", null),
-            new PropertyMapRow("H1", "text-right", "80px", "Sum", null),
-            new PropertyMapRow("I1", null, "100px", "Currency", null),
-            new PropertyMapRow("J1", null, "auto", "Message", null)
+            new PropertyMapRow("A1", null, "100px", "accountingDate", this.getJsDateFromExcel),
+            new PropertyMapRow("B1", null, "150px", "bankTransactionId", null),
+            new PropertyMapRow("C1", null, "210px", "type", null),
+            new PropertyMapRow("D1", null, "210px", "account", null),
+            new PropertyMapRow("E1", null, "120px", "accountName", null),
+            new PropertyMapRow("F1", null, "210px", "partnerAccount", null),
+            new PropertyMapRow("G1", null, "130px", "partnerName", null),
+            new PropertyMapRow("H1", "text-right", "80px", "sum", null),
+            new PropertyMapRow("I1", null, "100px", "currency", null),
+            new PropertyMapRow("J1", null, "auto", "message", null)
         ],
         [BankType.BudapestBank]: [],
         [BankType.CIB]: [],
@@ -35,7 +35,7 @@ export class ExcelBankRowMapper {
 
     getPropertyValue(obj: ReadInBankRow, key: string): any {
         // Custom rules
-        if (key == "AccountingDate") {
+        if (key == "accountingDate") {
             return this.formatDate(obj[key]);
         }
 

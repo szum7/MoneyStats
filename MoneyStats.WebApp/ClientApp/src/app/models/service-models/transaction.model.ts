@@ -3,19 +3,19 @@ import { Tag } from "./tag.model";
 
 export class Transaction {
 
-    Title: string;
-    Description: string;
-    Date?: Date;
-    Sum?: number;
-    IsCustom: boolean;
-    BankRowId?: number;
-    Tags: Tag[];
-    AggregatedReferences: BankRow[];
+    title: string;
+    description: string;
+    date?: Date;
+    sum?: number;
+    isCustom: boolean;
+    bankRowId?: number;
+    tags: Tag[];
+    aggregatedReferences: BankRow[];
     
-    get IsGroup(): boolean { return this.BankRowId == null; }
+    get isGroup(): boolean { return this.bankRowId == null; }
 
     constructor() {
-        this.Tags = [];
-        this.AggregatedReferences = [];
+        this.tags = [];
+        this.aggregatedReferences = [];
     }
 }

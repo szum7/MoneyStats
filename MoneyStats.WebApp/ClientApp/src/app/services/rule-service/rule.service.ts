@@ -7,8 +7,17 @@ import { Rule } from "src/app/models/service-models/rule.model";
 
 class RuleServiceMap extends BaseHttpService {
 
-    protected dummyMap(response: any[]): any {
-        return response;
+    protected mapRules(response: any[]): any {
+        let r: Rule[] = [];
+        for (let i = 0; i < response.length; i++) {
+            const e = response[i];
+            r.push({
+                id: e.id,
+                title: e.title,
+                fancyName: e.fancyName
+            });
+        }
+        return r;
     }    
 }
 
@@ -33,7 +42,7 @@ export class RuleService extends RuleServiceLogic {
         }
         return this.http
             .get<Rule[]>(this.url + 'get')
-            .pipe(map(this.dummyMap));
+            .pipe(map(this.mapRules));
     }
 
     private getMock(): Observable<Rule[]> {
