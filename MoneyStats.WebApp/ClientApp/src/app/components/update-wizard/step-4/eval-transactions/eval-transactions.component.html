@@ -16,7 +16,8 @@
         <!-- Content -->
         <div class="tr-row" *ngFor="let rule of rules" [ngClass]="{'excluded': rule.isExcluded}">
             <div class="tr-row-content">
-                <div class="tr-cell" style="width: 30px;"><!-- Include/Exclude -->
+                <div class="tr-cell" style="width: 30px;">
+                    <!-- Include/Exclude -->
                     <div class="tr-btn" (click)="click_toggleRowExclusion(rule)"
                         [ngClass]="{'excluded': rule.isExcluded}">
                         <fa-icon icon="minus" *ngIf="rule.isExcluded">

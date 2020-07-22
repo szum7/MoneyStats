@@ -18,7 +18,6 @@ import { RouterService } from './services/router-service/router.service';
 import { TestTableService } from './services/test-table-service/test-table.service';
 import { BaseHttpService } from './services/base-http.service';
 import { BankRowService } from './services/bank-row-service/bank-row.service';
-import { RuleEvaluatorService } from './services/rule-evaluator-service/rule-evaluator.service';
 import { RuleService } from './services/rule-service/rule.service';
 import { GeneratedTransactionService } from './services/generated-transaction-service/generated-transaction.service';
 
@@ -27,7 +26,6 @@ import { AppComponent } from './app.component';
 import { NavComponent } from './components/nav/nav.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { WizardNavigationComponent } from './components/wizard-navigation/wizard-navigation.component';
-import { WizardTestComponent } from './components/wizard-test/wizard-test.component';
 import { ChooseFileComponent } from './components/update-wizard/step-1/choose-file/choose-file.component';
 import { ReadFilesComponent } from './components/update-wizard/step-2/read-files/read-files.component';
 import { EvalTransactionsComponent } from './components/update-wizard/step-4/eval-transactions/eval-transactions.component';
@@ -47,7 +45,6 @@ import { CompareDbComponent } from './components/update-wizard/step-3/compare-db
     NavComponent,
     LoadingScreenComponent,
     WizardNavigationComponent,
-    WizardTestComponent,
     ChooseFileComponent,
     FooterComponent,
     ReadFilesComponent,
@@ -73,7 +70,6 @@ import { CompareDbComponent } from './components/update-wizard/step-3/compare-db
     BaseHttpService,
     TestTableService,
     BankRowService,
-    RuleEvaluatorService,
     RuleService,
     GeneratedTransactionService
   ],

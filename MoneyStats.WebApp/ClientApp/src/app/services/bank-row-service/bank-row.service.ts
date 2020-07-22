@@ -14,7 +14,7 @@ class BankRowServiceMap extends BaseHttpService {
             
             let t = new BankRow();
 
-            t.Id = e.id;
+            t.id = e.id;
 
             t.set(
                 new Date(e.accountingDate), 

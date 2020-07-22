@@ -10,7 +10,7 @@ import { GeneratedTransactionService } from 'src/app/services/generated-transact
 import { GenericResponse } from 'src/app/models/service-models/generic-response.model';
 import { StepAlertType } from '../../models/component-models/step-alert-type.enum';
 import { StepAlert } from '../../models/component-models/step-alert.model';
-import { WizardStep } from '../../models/component-models/wizard-step.moel';
+import { WizardStep } from '../../models/component-models/wizard-step.model';
 import { UpdateResultsUtilities } from '../../models/component-models/update-results-utilities.model';
 import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
 import { Common } from 'src/app/utilities/common.static';
