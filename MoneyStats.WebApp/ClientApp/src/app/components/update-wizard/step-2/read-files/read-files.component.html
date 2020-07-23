@@ -22,8 +22,7 @@
                 <!-- Actions -->
                 <div class="tr-cell" style="width: 70px;">
                     <!-- Include/Exclude -->
-                    <div class="tr-btn" (click)="click_toggleRowExclusion(tr)"
-                        [ngClass]="{'excluded': tr.isExcluded}">
+                    <div class="tr-btn" (click)="click_toggleRowExclusion(tr)" [ngClass]="{'excluded': tr.isExcluded}">
                         <fa-icon icon="minus" *ngIf="tr.isExcluded">
                         </fa-icon>
                         <fa-icon icon="plus" *ngIf="!tr.isExcluded">
@@ -39,7 +38,7 @@
                 <div class="tr-cell" style="width: 30px;">{{tr.uiId}}</div>
                 <!-- BankRow value -->
                 <div class="tr-cell {{propertyMap.customClass}}" *ngFor="let propertyMap of mapper.propertyMaps"
-                    [ngClass]="{'isClosed': !propertyMap.isOpen}" [ngStyle]="{'width': propertyMap.width}"
+                    [ngStyle]="{'width': propertyMap.width}"
                     [title]="mapper.getPropertyValue(tr.bankRow, propertyMap.property)">
                     {{mapper.getPropertyValue(tr.bankRow, propertyMap.property)}}
                 </div>

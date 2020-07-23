@@ -16,6 +16,7 @@ import { BankRowService } from 'src/app/services/bank-row-service/bank-row.servi
 import { Common } from 'src/app/utilities/common.static';
 import { Rule } from 'src/app/models/service-models/rule.model';
 import { RuleService } from 'src/app/services/rule-service/rule.service';
+import { UsedGeneratedTransaction } from 'src/app/components/update-wizard/step-4/eval-transactions/eval-transactions.component';
 
 export class ImportFilesStep extends WizardStep {
 
@@ -104,7 +105,16 @@ export class EvalTransactionsStep extends WizardStep {
     }
 
     getOutput(): GeneratedTransaction[] {
-        return this.$output;
+
+        let ret: GeneratedTransaction[] = [];
+        let cast: UsedGeneratedTransaction[] = this.$output;
+
+        for (let i = 0; i < cast.length; i++) {
+            if (!cast[i].isExcluded){
+                ret.push(cast[i].value);
+            }
+        }
+        return ret;
     }
 }
 

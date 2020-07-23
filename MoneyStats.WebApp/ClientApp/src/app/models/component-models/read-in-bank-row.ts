@@ -6,15 +6,18 @@ import { StaticMessages } from "src/app/utilities/input-messages.static";
 /// </summary>
 export class TableRowAttribute {
     public value: boolean; // is it excluded?
-    protected _message: string; // why it's excluded?
+    private _message: string; // why it's excluded?
 
     public get message(): string { return this._message; }
+
+    constructor(message: string){
+        this._message = message;
+    }
 }
 
 export class IsExcludedAttribute extends TableRowAttribute {
     constructor() {
-        super();
-        this._message = StaticMessages.ROW_WILL_BE_EXCLUDED;
+        super(StaticMessages.ROW_WILL_BE_EXCLUDED);
     }
 }
 

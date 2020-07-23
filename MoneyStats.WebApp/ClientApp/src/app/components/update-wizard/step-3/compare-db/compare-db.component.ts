@@ -110,4 +110,8 @@ export class CompareDbComponent implements OnInit {
     this.nextStepChange.emit(this.bankRows);
     this.emitNextStepAlerts();
   }
+
+  click_switchDetailsMenu(row: ReadBankRowForDbCompare, i: number): void {
+    row.detailsMenuPageAt = i;
+  }
 }
