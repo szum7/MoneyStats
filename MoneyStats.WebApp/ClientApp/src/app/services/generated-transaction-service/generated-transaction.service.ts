@@ -9,6 +9,25 @@ import { GeneratedTransaction } from "src/app/models/service-models/generated-tr
 import { GenericResponse } from "src/app/models/service-models/generic-response.model";
 
 class GeneratedTransactionServiceMap extends BaseHttpService {
+    
+    protected mapGeneratedTransactions(d: any[]): GeneratedTransaction[] {
+        let ret: GeneratedTransaction[] = [];
+        d.forEach(item => {
+            let o: GeneratedTransaction = {
+                aggregatedBankRowReferences: item.aggregatedBankRowReferences,
+                appliedRules: item.appliedRules,
+                bankRowReference: item.bankRowReference,
+                date: new Date(item.date),
+                description: item.description,
+                sum: item.sum,
+                tags: item.tags,
+                title: item.title,
+                isCustom: false
+            };
+            ret.push(o);
+        });
+        return ret;
+    }
 }
 
 class GeneratedTransactionServiceLogic extends GeneratedTransactionServiceMap {
@@ -27,10 +46,11 @@ export class GeneratedTransactionService extends GeneratedTransactionServiceLogi
 
     getGenerated(data: { rules: Rule[], bankRows: BankRow[] }): Observable<GeneratedTransaction[]> {
         if (this.isMocked()) {
-            return this.getGeneratedMock();
+            return this.getGeneratedMock().pipe(map(this.mapGeneratedTransactions));
         }
         return this.http
-            .post<GeneratedTransaction[]>(this.url + 'getgenerated', data, this.getOptions());
+            .post<GeneratedTransaction[]>(this.url + 'getgenerated', data, this.getOptions())
+            .pipe(map(this.mapGeneratedTransactions));
     }
 
     private getGeneratedMock(): Observable<GeneratedTransaction[]> {

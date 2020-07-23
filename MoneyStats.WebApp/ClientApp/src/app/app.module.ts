@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
@@ -57,6 +58,7 @@ import { CompareDbComponent } from './components/update-wizard/step-3/compare-db
     HttpClientModule,
     FontAwesomeModule,
     NgbModule,
+    FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomePage },
       { path: 'test', component: TestTablePage },

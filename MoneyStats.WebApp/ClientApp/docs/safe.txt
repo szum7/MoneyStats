@@ -1,4 +1,11 @@
 
+                <!-- <div class="tr-cell" style="width: 200px;" [title]="tr.value.date">{{tr.value.date}}</div>
+                <div class="tr-cell" style="width: 200px;" [title]="tr.value.title">{{tr.value.title}}</div>
+                <div class="tr-cell" style="width: 200px;" [title]="tr.value.sum">{{tr.value.sum}}</div>
+                <div class="tr-cell" [title]="tr.value.description">{{tr.value.description}}</div> -->
+
+
+                
 Mon Feb 02 2015 01:00:00 GMT+0100 (Central European Standard Time)
 
 export class TableRow {

@@ -5,6 +5,36 @@
 .tr-table {
     $cell-height: 30px;
 
+    .ml-input {
+        height: 23px;
+        border: none;
+        width: 100%;
+        background-color: #f1f1f1;
+
+        &:focus {
+            outline: none;
+        }
+
+        &::placeholder {
+            color: #aaa;
+            opacity: 1; 
+        }
+
+        &:-ms-input-placeholder {
+            color: #aaa;
+        }
+
+        &::-ms-input-placeholder {
+            color: #aaa;
+        }
+    }
+
+    .data-inputs {
+        .ml-input {
+            margin-bottom: 2px;
+        }
+    }
+
     .tr-row {
         vertical-align: top;
         white-space: nowrap;
@@ -80,12 +110,14 @@
                     display: inline-block;
                     padding: 5px 8px;
                     border: 1px solid #ddd;
+                    color: #777;
                     border-bottom: none;
                     cursor: pointer;
 
                     &:hover,
                     &.active {
                         background: #ddd;
+                        color: #111;
                     }
 
                     &.active {

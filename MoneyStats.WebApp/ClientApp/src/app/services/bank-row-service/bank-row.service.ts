@@ -7,7 +7,7 @@ import { BankRow } from '../../models/service-models/bank-row.model';
 
 class BankRowServiceMap extends BaseHttpService {
 
-    protected mapBankRow(response: any[]): any {
+    protected mapBankRow(response: any[]): BankRow[] {
         let r: BankRow[] = [];
         for (let i = 0; i < response.length; i++) {
             const e = response[i];

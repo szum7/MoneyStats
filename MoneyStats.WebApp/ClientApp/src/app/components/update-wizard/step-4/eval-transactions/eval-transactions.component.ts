@@ -10,9 +10,10 @@ import { GeneratedTransaction } from 'src/app/models/service-models/generated-tr
 import { Common } from 'src/app/utilities/common.static';
 import { TableRow, TableRowAttribute } from 'src/app/models/component-models/read-in-bank-row';
 import { StaticMessages } from 'src/app/utilities/input-messages.static';
+import { Tag } from 'src/app/models/service-models/tag.model';
 
 export class TagColorer {
-  
+
   private colors: string[];
   private colorCounter: number;
 
@@ -53,6 +54,7 @@ export class IsModifiedAttribute extends TableRowAttribute {
 export class UsedGeneratedTransaction extends TableRow {
 
   value: GeneratedTransaction;
+  originalValue: GeneratedTransaction;
   isModifiedAttr: IsModifiedAttribute; // TODO create (change) events to wire this alert in
 
   get bankRow(): BankRow {
@@ -74,6 +76,24 @@ export class UsedGeneratedTransaction extends TableRow {
     super();
     this.value = value;
     this.isModifiedAttr = new IsModifiedAttribute();
+    this.copyProperties(this.value, this.originalValue);
+  }
+
+  private copyProperties(from: GeneratedTransaction, to: GeneratedTransaction): void {
+    to = new GeneratedTransaction();
+    to.date = from.date;
+    to.title = from.title;
+    to.description = from.description;
+    to.sum = from.sum;
+    to.tags = [];
+    for (let i = 0; i < from.tags.length; i++) {
+      // No need to copy the tags's properties, it can stay as a reference.
+      to.tags.push(from.tags[i]);
+    }
+  }
+
+  resetToOriginal(): void {
+    this.copyProperties(this.originalValue, this.value);
   }
 }
 
@@ -109,6 +129,10 @@ export class EvalTransactionsComponent implements OnInit {
     // 3. get the GeneratedTransactions
     // 4. edit the transactions if needed
     // 5. save transactions
+  }
+
+  sout(){
+    console.log(this.transactions);
   }
 
   ngOnInit() {

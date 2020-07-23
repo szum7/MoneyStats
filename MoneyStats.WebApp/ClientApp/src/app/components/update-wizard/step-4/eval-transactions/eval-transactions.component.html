@@ -1,7 +1,7 @@
-
 <div class="content ev-tr-page">
 
     <button (click)="click_generatedTransactionsProgram()" style="margin-bottom:20px;">Test: Evaluate to transactions</button>
+    <button (click)="sout()" style="margin-bottom:20px;">Test: sout</button>
 
     <h2>Rules</h2>
 
@@ -48,14 +48,14 @@
         <div class="tr-row" *ngFor="let tr of transactions"
             [ngClass]="{'excluded': tr.isExcluded, 'opened': tr.isDetailsOpen, 'with-tags': tr.value.tags.length > 0}">
             <div class="tags-container">
-                <div class="tag-item" *ngFor="let tag of tr.value.tags" [ngStyle]="{'background': getBgColor()}">{{tag.title}}</div>
+                <div class="tag-item" *ngFor="let tag of tr.value.tags" [ngStyle]="{'background': getBgColor()}">
+                    {{tag.title}}</div>
             </div>
             <div class="tr-row-content">
                 <!-- Actions -->
                 <div class="tr-cell" style="width: 70px;">
                     <!-- Include/Exclude -->
-                    <div class="tr-btn" (click)="click_toggleRowExclusion(tr)"
-                        [ngClass]="{'excluded': tr.isExcluded}">
+                    <div class="tr-btn" (click)="click_toggleRowExclusion(tr)" [ngClass]="{'excluded': tr.isExcluded}">
                         <fa-icon icon="minus" *ngIf="tr.isExcluded">
                         </fa-icon>
                         <fa-icon icon="plus" *ngIf="!tr.isExcluded">
@@ -66,11 +66,20 @@
                         <fa-icon icon="chevron-down" *ngIf="tr.isDetailsOpen"></fa-icon>
                         <fa-icon icon="chevron-up" *ngIf="!tr.isDetailsOpen"></fa-icon>
                     </div>
-                </div>                
-                <div class="tr-cell" style="width: 200px;" [title]="tr.value.date">{{tr.value.date}}</div>
-                <div class="tr-cell" style="width: 200px;" [title]="tr.value.title">{{tr.value.title}}</div>
-                <div class="tr-cell" style="width: 200px;" [title]="tr.value.sum">{{tr.value.sum}}</div>
-                <div class="tr-cell" [title]="tr.value.description">{{tr.value.description}}</div>
+                </div>
+                <!-- Values -->
+                <div class="tr-cell" style="width: 200px;" [title]="tr.value.date">
+                    <input class="ml-input" type="text" [ngModel]="tr.value.date | date:'yyyy-MM-dd'" (ngModelChange)="tr.value.date = $event" />
+                </div>
+                <div class="tr-cell" style="width: 200px;" [title]="tr.value.title">
+                    <input class="ml-input" type="text" [(ngModel)]="tr.value.title" />
+                </div>
+                <div class="tr-cell" style="width: 200px;" [title]="tr.value.sum">
+                    <input class="ml-input" type="text" [(ngModel)]="tr.value.sum" />
+                </div>
+                <div class="tr-cell" [title]="tr.value.description">
+                    <input class="ml-input" type="text" style="width:400px;" [(ngModel)]="tr.value.description" />
+                </div>
             </div>
             <!-- Details menu -->
             <div class="tr-details" *ngIf="tr.isDetailsOpen">
@@ -93,7 +102,13 @@
                     </div>
                     <!-- Menu 2: Data -->
                     <div *ngSwitchCase="1">
-                        <p>TODO</p><!-- TODO -->
+                        <div class="data-inputs">
+                            <input class="ml-input" type="text" [ngModel]="tr.value.date | date:'yyyy-MM-dd'" 
+                                (ngModelChange)="tr.value.date = $event" placeholder="Date..." /><br/>
+                            <input class="ml-input" type="text" [(ngModel)]="tr.value.title" placeholder="Title..." /><br/>
+                            <input class="ml-input" type="text" [(ngModel)]="tr.value.sum" placeholder="Sum..." /><br/>
+                            <input class="ml-input" type="text" [(ngModel)]="tr.value.description" placeholder="Description..." />
+                        </div>
                     </div>
                     <div *ngSwitchDefault>
                     </div>
