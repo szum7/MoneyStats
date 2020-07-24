@@ -121,8 +121,8 @@
                     Maybe.
                 </p>
             </div>
-            <app-eval-transactions-component [params]="wizard.wizardSteps[3].$input" (nextStepAlertsChange)="output_stepAlertChange($event)" 
-            (nextStepChange)="output_change($event)">
+            <app-eval-transactions-component [params]="wizard.wizardSteps[3].$input" [mapper]="wizard.utils.bankMapper" 
+                (nextStepAlertsChange)="output_stepAlertChange($event)" (nextStepChange)="output_change($event)">
             </app-eval-transactions-component>
         </div>
         <div *ngSwitchDefault>

@@ -62,20 +62,24 @@
                     padding: 5px 8px;
                     border: 1px solid #ddd;
                     border-bottom: none;
+                    border-right: none;
                     cursor: pointer;
+                    background: #ddd;
+                    color: #777;
 
                     &:hover,
                     &.active {
-                        background: #ddd;
+                        color: #111;
+                        background: #fff;
                     }
-                    
+
                     &.active {
-                        cursor: default;                        
+                        cursor: default;
                     }
                 }
 
-                .tr-details-menu-item:first-child {
-                    border-right: none;
+                .tr-details-menu-item:last-child {
+                    border-right: 1px solid #ddd;
                 }
             }
 

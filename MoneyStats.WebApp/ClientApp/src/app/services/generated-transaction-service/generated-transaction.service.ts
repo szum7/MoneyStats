@@ -9,21 +9,29 @@ import { GeneratedTransaction } from "src/app/models/service-models/generated-tr
 import { GenericResponse } from "src/app/models/service-models/generic-response.model";
 
 class GeneratedTransactionServiceMap extends BaseHttpService {
-    
+
     protected mapGeneratedTransactions(d: any[]): GeneratedTransaction[] {
         let ret: GeneratedTransaction[] = [];
         d.forEach(item => {
-            let o: GeneratedTransaction = {
-                aggregatedBankRowReferences: item.aggregatedBankRowReferences,
-                appliedRules: item.appliedRules,
-                bankRowReference: item.bankRowReference,
-                date: new Date(item.date),
-                description: item.description,
-                sum: item.sum,
-                tags: item.tags,
-                title: item.title,
-                isCustom: false
-            };
+
+            let o: GeneratedTransaction = new GeneratedTransaction();
+
+            o.appliedRules = item.appliedRules;
+            o.date = new Date(item.date);
+            o.description = item.description;
+            o.sum = item.sum;
+            o.tags = item.tags;
+            o.title = item.title;
+            o.isCustom = false;
+            
+            o.bankRowReference = item.bankRowReference;
+            // if (o.bankRowReference != null) {
+            //     o.bankRowReference.accountingDate = new Date(item.bankRowReference.accountingDate);
+            // }
+
+            o.aggregatedBankRowReferences = item.aggregatedBankRowReferences;
+            // ... cast if needed
+
             ret.push(o);
         });
         return ret;
@@ -56,7 +64,7 @@ export class GeneratedTransactionService extends GeneratedTransactionServiceLogi
     private getGeneratedMock(): Observable<GeneratedTransaction[]> {
         return new Observable((observer) => {
             let res = [];
-            
+
             // TODO mock
 
             observer.next(res);

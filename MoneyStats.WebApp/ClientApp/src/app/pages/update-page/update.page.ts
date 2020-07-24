@@ -14,7 +14,6 @@ import { WizardStep } from '../../models/component-models/wizard-step.model';
 import { UpdateResultsUtilities } from '../../models/component-models/update-results-utilities.model';
 import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
 import { Common } from 'src/app/utilities/common.static';
-import { Rule } from 'src/app/models/service-models/rule.model';
 import { RuleService } from 'src/app/services/rule-service/rule.service';
 import { UsedGeneratedTransaction } from 'src/app/components/update-wizard/step-4/eval-transactions/eval-transactions.component';
 
@@ -312,6 +311,8 @@ export class UpdatePage implements OnInit, AfterViewInit {
     }
 
     private testLastStep(): void {
+        this.wizard.utils.bankMapper = new ExcelBankRowMapper(BankType.KH);
+
         let self = this;
         this.bankRowService.get().subscribe(r => {
             Common.ConsoleResponse("testLastStep BankRows:", r);

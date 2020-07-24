@@ -15,4 +15,11 @@ export class GeneratedTransaction {
     tags: Tag[];
     appliedRules: Rule[];
     aggregatedBankRowReferences: BankRow[];
+
+    get bankRowArray(): BankRow[] {
+        if (this.bankRowReference != null) {
+            return [this.bankRowReference];
+        }
+        return this.aggregatedBankRowReferences;
+    }
 }

@@ -35,7 +35,7 @@
 
     <h2 style="margin:20px 0 10px 0;">Generated transactions</h2>
 
-    <div class="tr-table" *ngIf="transactions.length > 0">
+    <div class="tr-table gen-tr" *ngIf="transactions.length > 0">
         <!-- Header -->
         <div class="tr-row header">
             <div class="tr-cell" style="width: 30px;">Actions</div>
@@ -47,9 +47,18 @@
         <!-- Content -->
         <div class="tr-row" *ngFor="let tr of transactions"
             [ngClass]="{'excluded': tr.isExcluded, 'opened': tr.isDetailsOpen, 'with-tags': tr.value.tags.length > 0}">
+            <!-- Tags -->
             <div class="tags-container">
                 <div class="tag-item" *ngFor="let tag of tr.value.tags" [ngStyle]="{'background': getBgColor()}">
                     {{tag.title}}</div>
+            </div>
+            <!-- BankRow reference -->
+            <div class="br-container">
+                <div class="br-row" *ngFor="let br of tr.value.bankRowArray">
+                    <div class="br-cell" *ngFor="let propertyMap of mapper.propertyMaps" [title]="mapper.getPropertyValueOrNull(br, propertyMap.property)">
+                        {{mapper.getPropertyValueOrNull(br, propertyMap.property)}}
+                    </div>
+                </div>
             </div>
             <div class="tr-row-content">
                 <!-- Actions -->
@@ -88,6 +97,8 @@
                         (click)="click_switchDetailsMenu(tr, 0)">Actions</div>
                     <div class="tr-details-menu-item" [ngClass]="{'active': tr.detailsMenuPageAt === 1}"
                         (click)="click_switchDetailsMenu(tr, 1)">Data</div>
+                    <div class="tr-details-menu-item" [ngClass]="{'active': tr.detailsMenuPageAt === 2}"
+                        (click)="click_switchDetailsMenu(tr, 2)">Original</div>
                 </div>
                 <div class="tr-details-content" [ngSwitch]="tr.detailsMenuPageAt">
                     <!-- Menu 1: Actions -->
@@ -109,6 +120,10 @@
                             <input class="ml-input" type="text" [(ngModel)]="tr.value.sum" placeholder="Sum..." /><br/>
                             <input class="ml-input" type="text" [(ngModel)]="tr.value.description" placeholder="Description..." />
                         </div>
+                    </div>
+                    <!-- Menu 3: Original -->
+                    <div *ngSwitchCase="2">
+                        
                     </div>
                     <div *ngSwitchDefault>
                     </div>

@@ -42,6 +42,21 @@ export class ExcelBankRowMapper {
         return obj[key];
     }
 
+    getPropertyValueOrNull(obj: ReadInBankRow, key: string): any {
+        let val;
+
+        if (key == "accountingDate") {
+            val = this.formatDate(obj[key]);
+        } else {
+            val = obj[key];
+        }
+
+        if (val == null || val == "") {
+            return "null";
+        }
+        return val;
+    }
+
     isPropertyMapUnset(): boolean {
         if (this.propertyMaps == null || this.propertyMaps.length == 0)
             return true;
@@ -65,10 +80,20 @@ export class ExcelBankRowMapper {
         return array;
     }
 
-    private formatDate(date: Date): string {
+    private formatDate(date: Date | string): string {
         if (!date)
             return null;
-        return date.toISOString().substring(0, 10);
+
+        if (typeof date === "string")
+            date = new Date(date);
+
+        let r = date.getFullYear();
+        let m = (date.getMonth() + 1).toString();
+        m = m.length > 1 ? m : "0" + m;
+        let d = date.getDate().toString();
+        d = d.length > 1 ? d : "0" + d;
+
+        return r + "-" + m + "-" + d;
     }
 
     private mapBankRow(obj: any): BankRow {
@@ -98,7 +123,7 @@ export class ExcelBankRowMapper {
 
         // JavaScript dates can be constructed by passing milliseconds
         // since the Unix epoch (January 1, 1970) example: new Date(12312512312);
-        
+
         // 1. Subtract number of days between Jan 1, 1900 and Jan 1, 1970, plus 1  (Google "excel leap year bug")
         // Need to add +1 for some reason - szum7
         // 2. Convert to milliseconds.

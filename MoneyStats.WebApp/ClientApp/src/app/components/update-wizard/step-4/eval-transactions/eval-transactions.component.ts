@@ -11,6 +11,8 @@ import { Common } from 'src/app/utilities/common.static';
 import { TableRow, TableRowAttribute } from 'src/app/models/component-models/read-in-bank-row';
 import { StaticMessages } from 'src/app/utilities/input-messages.static';
 import { Tag } from 'src/app/models/service-models/tag.model';
+import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
+import { BankType } from 'src/app/models/service-models/bank-type.enum';
 
 export class TagColorer {
 
@@ -105,6 +107,7 @@ export class UsedGeneratedTransaction extends TableRow {
 export class EvalTransactionsComponent implements OnInit {
 
   @Input() params: BankRow[];
+  @Input() mapper: ExcelBankRowMapper;
   @Output() nextStepChange = new EventEmitter<UsedGeneratedTransaction[]>();
   @Output() nextStepAlertsChange = new EventEmitter<string[]>();
 
@@ -131,7 +134,7 @@ export class EvalTransactionsComponent implements OnInit {
     // 5. save transactions
   }
 
-  sout(){
+  sout() {
     console.log(this.transactions);
   }
 

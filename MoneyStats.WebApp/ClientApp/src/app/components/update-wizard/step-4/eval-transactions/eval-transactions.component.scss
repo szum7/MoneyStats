@@ -35,21 +35,29 @@
         }
     }
 
+
+    $tag-height: 20px;
+    $br-height: 15px;
+    &.gen-tr {
+        .tr-row {
+            margin-top: $br-height + 1;
+        }
+    }
+
     .tr-row {
         vertical-align: top;
         white-space: nowrap;
-        margin-bottom: 1px;
+        margin-top: 1px;
+        position: relative;
 
-        $tag-height: 20px;
         &.with-tags {
-            position: relative;
-            margin-top: $tag-height + 1;
+            margin-top: $tag-height + $br-height + 1;
         }
 
         .tags-container {
             position: absolute;
             height: $tag-height;
-            top: -$tag-height;
+            top: -($tag-height + $br-height);
             left: 75px;
 
             .tag-item {
@@ -59,6 +67,28 @@
                 display: inline-block;
                 vertical-align: top;
                 font-size: 12px;
+            }
+        }
+
+        .br-container {
+            position: absolute;
+            top: -$br-height;
+            left: 75px;
+
+            .br-row {
+                height: $br-height;
+                white-space: nowrap;
+
+                .br-cell {
+                    display: inline-block;
+                    height: $br-height;
+                    line-height: $br-height;
+                    font-size: 10px;
+                    background-color: #ddd;
+                    margin-right: 1px;
+                    vertical-align: top;
+                    padding: 0 10px;
+                }
             }
         }
 
@@ -110,14 +140,16 @@
                     display: inline-block;
                     padding: 5px 8px;
                     border: 1px solid #ddd;
-                    color: #777;
                     border-bottom: none;
+                    border-right: none;
                     cursor: pointer;
+                    background: #ddd;
+                    color: #777;
 
                     &:hover,
                     &.active {
-                        background: #ddd;
                         color: #111;
+                        background: #fff;
                     }
 
                     &.active {
@@ -125,8 +157,8 @@
                     }
                 }
 
-                .tr-details-menu-item:first-child {
-                    border-right: none;
+                .tr-details-menu-item:last-child {
+                    border-right: 1px solid #ddd;
                 }
             }
 
