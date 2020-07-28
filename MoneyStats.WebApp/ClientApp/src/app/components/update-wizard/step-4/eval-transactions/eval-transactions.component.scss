@@ -2,6 +2,41 @@
     padding: 0 10px;
 }
 
+$tag-height: 20px;
+.tag-dropdown {
+    position: relative;
+    display: inline-block;
+    height: $tag-height;
+
+    input {
+        border: none;
+        background: #e5e5e5;
+        height: $tag-height;
+        vertical-align: top;
+        font-size: 12px;
+        width: 80px;
+        padding: 0 10px;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .results {
+        position: absolute;
+        top: $tag-height;
+        left: 0;
+        z-index: 100;
+        background-color: #fff;
+        border: 1px solid #ddd;
+
+        .result {
+            padding: 10px;
+            cursor: pointer;
+        }
+    }
+}
+
 .tr-table {
     $cell-height: 30px;
 
@@ -36,11 +71,10 @@
     }
 
 
-    $tag-height: 20px;
     $br-height: 15px;
     &.gen-tr {
         .tr-row {
-            margin-top: $br-height + 1;
+            margin-top: $tag-height + $br-height + 1;
         }
     }
 
@@ -50,9 +84,7 @@
         margin-top: 1px;
         position: relative;
 
-        &.with-tags {
-            margin-top: $tag-height + $br-height + 1;
-        }
+        //&.with-tags {}
 
         .tags-container {
             position: absolute;
@@ -67,6 +99,7 @@
                 display: inline-block;
                 vertical-align: top;
                 font-size: 12px;
+                border-right: 1px solid #ddd;
             }
         }
 

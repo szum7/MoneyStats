@@ -40,6 +40,7 @@ namespace MoneyStats.WebApp
             services.AddSingleton<IBankRowRepository, BankRowRepository>();
             services.AddSingleton<IRuleRepository, RuleRepository>();
             services.AddSingleton<IGeneratedTransactionRepository, GeneratedTransactionRepository>();
+            services.AddSingleton<ITagRepository, TagRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

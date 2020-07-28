@@ -46,11 +46,18 @@
         </div>
         <!-- Content -->
         <div class="tr-row" *ngFor="let tr of transactions"
-            [ngClass]="{'excluded': tr.isExcluded, 'opened': tr.isDetailsOpen, 'with-tags': tr.value.tags.length > 0}">
+            [ngClass]="{'excluded': tr.isExcluded, 'opened': tr.isDetailsOpen}">
             <!-- Tags -->
             <div class="tags-container">
-                <div class="tag-item" *ngFor="let tag of tr.value.tags" [ngStyle]="{'background': getBgColor()}">
-                    {{tag.title}}</div>
+                <!-- TODO ExpressionChangedAfterItHasBeenCheckedError [ngStyle]="{'background': getBgColor()}" -->
+                <div class="tag-item" *ngFor="let tag of tr.value.tags">{{tag.title}}</div>
+                <!-- New tag dropdown -->
+                <div class="tag-dropdown">
+                    <input type="text" placeholder="New..." [(ngModel)]="tr.tagStr" (ngModelChange)="change_getTags(tr)" />
+                    <div class="results">
+                        <div class="result" *ngFor="let tag of tr.tagResults" (click)="click_selectTag(tr, tag)">{{tag.id}} - {{tag.title}}</div>
+                    </div>
+                </div>
             </div>
             <!-- BankRow reference -->
             <div class="br-container">

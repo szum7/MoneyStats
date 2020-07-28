@@ -1,0 +1,2 @@
+- tags can't consist only of numbers -> autocomplete won't find it
+- tags have a minimum length of 2 -> autocomplete won't suggest it

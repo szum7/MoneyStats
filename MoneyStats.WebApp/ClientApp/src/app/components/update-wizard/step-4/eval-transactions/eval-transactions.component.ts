@@ -13,6 +13,7 @@ import { StaticMessages } from 'src/app/utilities/input-messages.static';
 import { Tag } from 'src/app/models/service-models/tag.model';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
+import { TagService } from 'src/app/services/tag-service/tag.service';
 
 export class TagColorer {
 
@@ -59,6 +60,9 @@ export class UsedGeneratedTransaction extends TableRow {
   originalValue: GeneratedTransaction;
   isModifiedAttr: IsModifiedAttribute; // TODO create (change) events to wire this alert in
 
+  tagStr: string; // for autocomplete dropdown input
+  tagResults: Tag[]; // for autocomplete dropdown tag results
+
   get bankRow(): BankRow {
     return this.value != null ? this.value.bankRowReference : null;
   }
@@ -79,6 +83,7 @@ export class UsedGeneratedTransaction extends TableRow {
     this.value = value;
     this.isModifiedAttr = new IsModifiedAttribute();
     this.copyProperties(this.value, this.originalValue);
+    this.tagResults = [];
   }
 
   private copyProperties(from: GeneratedTransaction, to: GeneratedTransaction): void {
@@ -96,6 +101,60 @@ export class UsedGeneratedTransaction extends TableRow {
 
   resetToOriginal(): void {
     this.copyProperties(this.originalValue, this.value);
+  }
+}
+
+export class TagDropdown {
+  tags: Tag[];
+
+  constructor(private tagService: TagService) {
+    this.tags = [];
+
+    this.init();
+  }
+
+  getResults(str: string): Tag[] {
+    if (this.tags.length === 0) {
+      return [];
+    }
+
+    let ret: Tag[] = [];
+    str = str.toLowerCase();
+
+    let check: (str: string, tag: Tag) => boolean = null;
+    if (!isNaN(Number(str))) { // id
+      check = (function (str: string, tag: Tag) {
+        return Number(tag.id) === Number(str);
+      });
+    } else { // title
+      check = (function (str: string, tag: Tag) {
+        return tag.title.toLowerCase().includes(str);
+      });
+    }
+
+    this.tags.forEach(tag => {
+      if (check(str, tag)) {
+        ret.push(tag);
+      }
+    });
+
+    return ret;
+  }
+
+  private init(): void {
+    let self = this;
+    this.getTags(function (r) {
+      self.tags = r;
+    });
+  }
+
+  private getTags(callback: (response: Tag[]) => void): void {
+    this.tagService.get().subscribe(r => {
+      Common.ConsoleResponse("getTags", r);
+      callback(r);
+    }, e => {
+      console.error(e);
+    })
   }
 }
 
@@ -117,15 +176,18 @@ export class EvalTransactionsComponent implements OnInit {
   public transactions: UsedGeneratedTransaction[];
 
   private tagColorer: TagColorer;
+  tagDropdown: TagDropdown;
 
   constructor(
     private loadingScreen: LoadingScreenService,
     private ruleService: RuleService,
-    private generatedTransactionService: GeneratedTransactionService) {
+    private generatedTransactionService: GeneratedTransactionService,
+    private tagService: TagService) {
 
     this.rules = [];
     this.transactions = [];
     this.tagColorer = new TagColorer();
+    this.tagDropdown = new TagDropdown(tagService);
 
     // 1. get rules
     // 2. run the program on the shown BankRows
@@ -244,6 +306,20 @@ export class EvalTransactionsComponent implements OnInit {
 
   getBgColor(): string {
     return this.tagColorer.getColor();
+  }
+
+  change_getTags(row: UsedGeneratedTransaction): void {
+    // IMPROVE add a delay, don't search for every 
+    let str = row.tagStr;
+    if (isNaN(Number(str)) && str.length <= 1) {
+      row.tagResults = [];
+      return;
+    }
+    row.tagResults = this.tagDropdown.getResults(str);
+  }
+
+  click_selectTag(row: UsedGeneratedTransaction, tag: Tag): void{
+    row.value.tags.push(tag);
   }
 
   /*
