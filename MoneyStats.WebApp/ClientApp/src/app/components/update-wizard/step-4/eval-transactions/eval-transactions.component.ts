@@ -113,7 +113,7 @@ export class TagDropdown {
     this.init();
   }
 
-  getResults(str: string): Tag[] {
+  getResults(str: string, excludes: Tag[]): Tag[] {
     if (this.tags.length === 0) {
       return [];
     }
@@ -123,18 +123,16 @@ export class TagDropdown {
 
     let check: (str: string, tag: Tag) => boolean = null;
     if (!isNaN(Number(str))) { // id
-      check = (function (str: string, tag: Tag) {
-        return Number(tag.id) === Number(str);
-      });
+      check = (str: string, tag: Tag) => Number(tag.id) === Number(str);
     } else { // title
-      check = (function (str: string, tag: Tag) {
-        return tag.title.toLowerCase().includes(str);
-      });
+      check = (str: string, tag: Tag) => tag.title.toLowerCase().includes(str);
     }
 
     this.tags.forEach(tag => {
       if (check(str, tag)) {
-        ret.push(tag);
+        if (!Common.containsObjectOnId(tag, excludes)) {
+          ret.push(tag);
+        }
       }
     });
 
@@ -309,28 +307,36 @@ export class EvalTransactionsComponent implements OnInit {
   }
 
   change_getTags(row: UsedGeneratedTransaction): void {
-    // IMPROVE add a delay, don't search for every 
+    // IMPROVE add a delay, don't search for every change
     let str = row.tagStr;
     if (isNaN(Number(str)) && str.length <= 1) {
       row.tagResults = [];
       return;
     }
-    row.tagResults = this.tagDropdown.getResults(str);
+    row.tagResults = this.tagDropdown.getResults(str, row.value.tags);
   }
 
-  click_selectTag(row: UsedGeneratedTransaction, tag: Tag): void{
+  click_selectTag(row: UsedGeneratedTransaction, tag: Tag): void {
+    if (Common.containsObjectOnId(tag, row.value.tags))
+      return;
+
     row.value.tags.push(tag);
+
+    const index = row.tagResults.indexOf(tag);
+    if (index > -1) {
+      row.tagResults.splice(index, 1);
+    }
   }
 
-  /*
-  sortBy_bankRows(arr: any[], property: string) {
-    return arr.sort((a, b) => this.dateComparer(a.bankRow[property], b.bankRow[property]));
+  click_tagsResultReset(row: UsedGeneratedTransaction): void {
+    row.tagResults = [];
   }
 
-  private dateComparer(a, b) {
-    let d1 = (new Date(a)).getTime(), d2 = (new Date(b)).getTime();
-    return d1 > d2 ? 1 : d1 === d2 ? 0 : -1;
+  rightClick_removeTag(row: UsedGeneratedTransaction, tag: Tag): boolean {
+    const index = row.value.tags.indexOf(tag);
+    if (index > -1) {
+      row.value.tags.splice(index, 1);
+    }
+    return false; // Avoid default browser action from the event
   }
-  */
-
 }

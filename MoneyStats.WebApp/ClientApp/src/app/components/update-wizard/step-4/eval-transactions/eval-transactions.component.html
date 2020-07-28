@@ -45,24 +45,25 @@
             <div class="tr-cell">Description</div>
         </div>
         <!-- Content -->
-        <div class="tr-row" *ngFor="let tr of transactions"
-            [ngClass]="{'excluded': tr.isExcluded, 'opened': tr.isDetailsOpen}">
+        <div class="tr-row" *ngFor="let tr of transactions" [ngClass]="{'excluded': tr.isExcluded, 'opened': tr.isDetailsOpen}">
             <!-- Tags -->
             <div class="tags-container">
-                <!-- TODO ExpressionChangedAfterItHasBeenCheckedError [ngStyle]="{'background': getBgColor()}" -->
-                <div class="tag-item" *ngFor="let tag of tr.value.tags">{{tag.title}}</div>
+                <div class="tag-counter">{{tr.value.tags.length > 0 ? tr.value.tags.length.toString() : "-"}}</div>
                 <!-- New tag dropdown -->
                 <div class="tag-dropdown">
                     <input type="text" placeholder="New..." [(ngModel)]="tr.tagStr" (ngModelChange)="change_getTags(tr)" />
-                    <div class="results">
+                    <div class="results" *ngIf="tr.tagResults.length > 0">
                         <div class="result" *ngFor="let tag of tr.tagResults" (click)="click_selectTag(tr, tag)">{{tag.id}} - {{tag.title}}</div>
+                        <div class="closer" (click)="click_tagsResultReset(tr)"></div>
                     </div>
                 </div>
+                <!-- TODO ExpressionChangedAfterItHasBeenCheckedError [ngStyle]="{'background': getBgColor()}" -->
+                <div class="tag-item" *ngFor="let tag of tr.value.tags" (contextmenu)="rightClick_removeTag(tr, tag)">{{tag.title}}</div>
             </div>
             <!-- BankRow reference -->
             <div class="br-container">
                 <div class="br-row" *ngFor="let br of tr.value.bankRowArray">
-                    <div class="br-cell" *ngFor="let propertyMap of mapper.propertyMaps" [title]="mapper.getPropertyValueOrNull(br, propertyMap.property)">
+                    <div class="br-cell" *ngFor="let propertyMap of mapper.propertyMaps" [title]="propertyMap.property">
                         {{mapper.getPropertyValueOrNull(br, propertyMap.property)}}
                     </div>
                 </div>

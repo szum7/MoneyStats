@@ -33,6 +33,16 @@ $tag-height: 20px;
         .result {
             padding: 10px;
             cursor: pointer;
+
+            &:hover {
+                background-color: #eee;
+            }
+        }
+
+        .closer {
+            height: 10px;
+            background: #555;
+            cursor: pointer;
         }
     }
 }
@@ -74,7 +84,7 @@ $tag-height: 20px;
     $br-height: 15px;
     &.gen-tr {
         .tr-row {
-            margin-top: $tag-height + $br-height + 1;
+            margin-top: $tag-height + $br-height + 8;
         }
     }
 
@@ -91,15 +101,26 @@ $tag-height: 20px;
             height: $tag-height;
             top: -($tag-height + $br-height);
             left: 75px;
-
+            
+            .tag-counter,
             .tag-item {
                 height: $tag-height;
-                line-height: $tag-height;
+                line-height: $tag-height - 1;
                 padding: 0 10px;
                 display: inline-block;
                 vertical-align: top;
                 font-size: 12px;
+            }
+
+            .tag-item {
                 border-right: 1px solid #ddd;
+                border-top: 1px solid #ddd;
+                cursor: default;
+            }
+
+            .tag-counter {
+                border: 1px solid #ddd;
+                border-right: none;
             }
         }
 
@@ -126,11 +147,11 @@ $tag-height: 20px;
         }
 
         .tr-cell:first-child {
-            border-left: 1px solid #ddd;
+            border-left: 1px solid #ccc;
         }
 
         &:last-child .tr-cell {
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #ccc;
         }
 
         &.header {
@@ -138,9 +159,8 @@ $tag-height: 20px;
             height: $cell-height;
         }
 
-        &.excluded .tr-row-content .tr-cell {
-            background-color: #f1f1f1;
-            color: #b6b6b6;
+        &.excluded {
+            opacity: 0.5;
         }
 
         &.excluded .tr-row-content .tr-cell:first-child {
@@ -150,9 +170,9 @@ $tag-height: 20px;
 
         .tr-cell {
             display: inline-block;
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
             border-left: none;
-            padding: 2px 5px;
+            padding: 2px;
             height: $cell-height;
             white-space: nowrap;
             overflow: hidden;
@@ -235,8 +255,7 @@ $tag-height: 20px;
         margin-right: 2px;
 
         &.excluded {
-            background-color: #666;
-            color: #eee;
+            background-color: #909090;
         }
     }
 }
