@@ -41,7 +41,7 @@ namespace MoneyStats.ExampleData
                 nameof(Rule),
                 new List<Rule>
                 {
-                    // Rule#1 : Típus == "Kamat" => addTags("K&H", "Kamat")
+                    // Rule#1 : Type == "Kamat" => Title = "K&H kamat" && addTags("K&H", "Kamat", "Bank")
                     new Rule() { Id = 1, Title = "K&H kamat" }.SetNew(),
                     // Rule#2 : PartnerName == "Óbudai Egyetem" && Sum > 0 => addTags("OE", "Scholarship")
                     new Rule() { Id = 2, Title = "OE ösztöndíj" }.SetNew(),
@@ -78,9 +78,11 @@ namespace MoneyStats.ExampleData
                     // Rule#1
                     new RuleAction() { Id = 1, RuleId = 1, Property = null, Value = null, TagId = 1, RuleActionType = RuleActionType.AddTag }.SetNew(),
                     new RuleAction() { Id = 2, RuleId = 1, Property = null, Value = null, TagId = 2, RuleActionType = RuleActionType.AddTag }.SetNew(),
+                    new RuleAction() { Id = 3, RuleId = 1, Property = "Title", Value = "K&H kamat", TagId = null, RuleActionType = RuleActionType.SetValueOfProperty }.SetNew(),
                     // Rule#2
-                    new RuleAction() { Id = 3, RuleId = 2, Property = null, Value = null, TagId = 3, RuleActionType = RuleActionType.AddTag }.SetNew(),
-                    new RuleAction() { Id = 4, RuleId = 2, Property = null, Value = null, TagId = 4, RuleActionType = RuleActionType.AddTag }.SetNew(),
+                    new RuleAction() { Id = 4, RuleId = 2, Property = null, Value = null, TagId = 3, RuleActionType = RuleActionType.AddTag }.SetNew(),
+                    new RuleAction() { Id = 5, RuleId = 2, Property = null, Value = null, TagId = 4, RuleActionType = RuleActionType.AddTag }.SetNew(),
+                    new RuleAction() { Id = 6, RuleId = 2, Property = "Title", Value = "OE ösztöndíj", TagId = null, RuleActionType = RuleActionType.SetValueOfProperty }.SetNew(),
                 }
             },
         };
