@@ -31,8 +31,20 @@ namespace MoneyStats.BL.Modules
 
                     var oneOrRulesValidate = RuleEvaluator.CheckIfBankRowValidatesToRule(rule, bankRow); // = (a & b & c) || d || (e & f)
 
+                    // Default behavior
+                    if (!oneOrRulesValidate)
+                    {
+                        if (!string.IsNullOrEmpty(bankRow.PartnerName))
+                        {
+                            transaction.Title = bankRow.PartnerName;
+                        }
+                        else
+                        {
+                            transaction.Title = bankRow.Type;
+                        }
+                    }
                     // Apply RuleAction if Rule is valid
-                    if (oneOrRulesValidate)
+                    else
                     {
                         GeneratedTransaction validTransaction = transaction;
 
