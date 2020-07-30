@@ -44,6 +44,11 @@ namespace MoneyStats.BL.Mocks
             throw new NotImplementedException();
         }
 
+        public List<string> GetBankRowProperties()
+        {
+            throw new NotImplementedException();
+        }
+
         public BankRow Insert(BankRow transaction)
         {
             throw new NotImplementedException();

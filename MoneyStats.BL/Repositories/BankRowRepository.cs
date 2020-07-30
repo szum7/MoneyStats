@@ -1,5 +1,6 @@
 ﻿using MoneyStats.BL.Interfaces;
 using MoneyStats.DAL;
+using MoneyStats.DAL.Common;
 using MoneyStats.DAL.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,13 @@ namespace MoneyStats.BL.Repositories
                 list.ForEach(x => x.GroupedTransactionId = x.GroupedTransaction.Id);
                 context.SaveChanges();
             }
+        }
+
+        public List<string> GetBankRowProperties()
+        {
+            return (from property in typeof(BankRow).GetProperties()
+                    where property.CustomAttributes.Any(customAttr => customAttr.AttributeType == typeof(Rulable))
+                    select property.Name).ToList();
         }
     }
 }

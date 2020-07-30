@@ -34,6 +34,7 @@ import { EvalTransactionsComponent } from './components/update-wizard/step-4/eva
 import { FooterComponent } from './components/footer/footer.component';
 import { WizardNavComponent } from './components/wizard-nav/wizard-nav.component';
 import { CompareDbComponent } from './components/update-wizard/step-3/compare-db/compare-db.component';
+import { EditRulesComponent } from './components/edit-rules/edit-rules.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { CompareDbComponent } from './components/update-wizard/step-3/compare-db
     EvalTransactionsComponent,
     WizardNavComponent,
     CompareDbComponent,
+    EditRulesComponent
   ],
   imports: [
     BrowserModule,

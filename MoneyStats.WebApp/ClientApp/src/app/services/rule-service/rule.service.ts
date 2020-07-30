@@ -7,7 +7,7 @@ import { Rule } from "src/app/models/service-models/rule.model";
 
 class RuleServiceMap extends BaseHttpService {
 
-    protected mapRules(response: any[]): any {
+    protected mapRules(response: any[]): Rule[] {
         let r: Rule[] = [];
         for (let i = 0; i < response.length; i++) {
             const e = response[i];

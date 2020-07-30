@@ -27,5 +27,11 @@ namespace MoneyStats.WebApp.Controllers
         {
             return Ok(_repo.InsertRange(data));
         }
+
+        [HttpGet("getBankRowProperties")]
+        public ActionResult GetBankRowProperties()
+        {
+            return Ok(_repo.GetBankRowProperties());
+        }
     }
 }

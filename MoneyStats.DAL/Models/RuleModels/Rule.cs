@@ -33,7 +33,7 @@ namespace MoneyStats.DAL.Models
 
         public override string ToString()
         {
-            if (this.AndConditionGroups.Count == 0 || this.AndConditionGroups[0].Conditions.Count == 0 || this.RuleActions.Count == 0)
+            if (this.AndConditionGroups.Count == 0 || this.RuleActions.Count == 0)
                 return "";
 
             var ruleActions = string.Join(", ", RuleActions);

@@ -2,6 +2,7 @@
 {
     public enum ConditionType
     {
+        Unset = 0,
         TrueRule = 1,
         IsEqualTo = 2, // can be used with strings, numbers, dates, etc.
         IsGreaterThan = 3, // can be used with IComperable

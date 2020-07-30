@@ -17,6 +17,42 @@ https://stackoverflow.com/questions/40526102/how-do-you-format-a-date-time-in-ty
 // Misc
 //
 
+
+If you don't need two-way data-binding:
+
+<select (change)="onChange($event.target.value)">
+    <option *ngFor="let i of devices">{{i}}</option>
+</select>
+
+onChange(deviceValue) {
+    console.log(deviceValue);
+}
+
+
+If you don't need two-way data-binding:
+
+<select (change)="onChange($event.target.value)">
+    <option *ngFor="let i of devices">{{i}}</option>
+</select>
+
+onChange(deviceValue) {
+    console.log(deviceValue);
+}
+For two-way data-binding, separate the event and property bindings:
+
+<select [ngModel]="selectedDevice" (ngModelChange)="onChange($event)" name="sel2">
+    <option [value]="i" *ngFor="let i of devices">{{i}}</option>
+</select>
+export class AppComponent {
+  devices = 'one two three'.split(' ');
+  selectedDevice = 'two';
+  onChange(newValue) {
+    console.log(newValue);
+    this.selectedDevice = newValue;
+    // ... do other stuff here ...
+}
+
+
 // Javascript date formatting
 new Date().toDateString(); // e.g. "Fri Nov 11 2016"
 new Date().toLocaleDateString(); // e.g. "21/11/2016"

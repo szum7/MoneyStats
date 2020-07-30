@@ -31,7 +31,11 @@ class BankRowServiceMap extends BaseHttpService {
             r.push(t);
         }
         return r;
-    }    
+    }
+
+    protected dummyMap(response: any[]): any[] {        
+        return response;
+    } 
 }
 
 class BankRowServiceLogic extends BankRowServiceMap {
@@ -88,6 +92,26 @@ export class BankRowService extends BankRowServiceLogic {
     private saveMock(): Observable<BankRow[]> {
         return new Observable((observer) => {
             let res: BankRow[] = [];
+
+            // TODO mock
+
+            observer.next(res);
+            observer.complete();
+        });
+    }
+
+    getBankRowProperties(): Observable<string[]> {
+        if (this.isMocked()) {
+            return this.getBankRowPropertiesMock();
+        }
+        return this.http
+            .get<string[]>(this.url + 'getBankRowProperties')
+            .pipe(map(this.dummyMap));
+    }
+
+    private getBankRowPropertiesMock(): Observable<string[]> {
+        return new Observable((observer) => {
+            let res: string[] = [];
 
             // TODO mock
 
