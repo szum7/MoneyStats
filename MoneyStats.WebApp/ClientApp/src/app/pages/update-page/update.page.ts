@@ -15,7 +15,7 @@ import { UpdateResultsUtilities } from '../../models/component-models/update-res
 import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
 import { Common } from 'src/app/utilities/common.static';
 import { RuleService } from 'src/app/services/rule-service/rule.service';
-import { UsedGeneratedTransaction } from 'src/app/components/update-wizard/step-4/eval-transactions/eval-transactions.component';
+import { UsedGeneratedTransaction } from "src/app/components/update-wizard/step-4/eval-transactions/used-generated-transaction";
 
 export class ImportFilesStep extends WizardStep {
 
