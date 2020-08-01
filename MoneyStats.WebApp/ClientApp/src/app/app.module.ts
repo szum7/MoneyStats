@@ -22,6 +22,7 @@ import { BankRowService } from './services/bank-row-service/bank-row.service';
 import { RuleService } from './services/rule-service/rule.service';
 import { GeneratedTransactionService } from './services/generated-transaction-service/generated-transaction.service';
 import { TagService } from './services/tag-service/tag.service';
+import { TransactionService } from './services/transaction-service/transaction.service';
 
 // Components
 import { AppComponent } from './app.component';
@@ -35,6 +36,8 @@ import { FooterComponent } from './components/footer/footer.component';
 import { WizardNavComponent } from './components/wizard-nav/wizard-nav.component';
 import { CompareDbComponent } from './components/update-wizard/step-3/compare-db/compare-db.component';
 import { EditRulesComponent } from './components/edit-rules/edit-rules.component';
+import { SelectComponent } from './components/select/select.component';
+import { DropdownComponent } from './components/dropdown/dropdown.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +57,9 @@ import { EditRulesComponent } from './components/edit-rules/edit-rules.component
     EvalTransactionsComponent,
     WizardNavComponent,
     CompareDbComponent,
-    EditRulesComponent
+    EditRulesComponent,
+    SelectComponent,
+    DropdownComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,7 +82,8 @@ import { EditRulesComponent } from './components/edit-rules/edit-rules.component
     BankRowService,
     RuleService,
     GeneratedTransactionService,
-    TagService
+    TagService,
+    TransactionService,
   ],
   bootstrap: [AppComponent]
 })

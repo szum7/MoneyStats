@@ -1,0 +1,57 @@
+
+$height: 35px;
+.dropdown {
+    position: relative;
+    display: inline-block;
+    // height: $height;
+
+    // input {
+    //     border: none;
+    //     background: #e5e5e5;
+    //     height: $height;
+    //     vertical-align: top;
+    //     font-size: 12px;
+    //     width: 80px;
+    //     padding: 0 10px;
+
+    //     &:focus {
+    //         outline: none;
+    //     }
+    // }    
+
+    input {
+        height: $height;
+        vertical-align: top;
+        width: 120px;
+        border: 1px solid #ddd;
+        border-radius: 0;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .results {
+        position: absolute;
+        top: $height;
+        left: 0;
+        z-index: 100;
+        background-color: #fff;
+        border: 1px solid #ddd;
+
+        .result {
+            padding: 10px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #eee;
+            }
+        }
+
+        .closer {
+            height: 10px;
+            background: #555;
+            cursor: pointer;
+        }
+    }
+}

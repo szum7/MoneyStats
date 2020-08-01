@@ -1,0 +1,9 @@
+<div class="dropdown">
+    <input type="text" placeholder="New..." [(ngModel)]="str" (ngModelChange)="change_getResults()" />
+    <div class="results" *ngIf="results.length > 0">
+        <div class="result" *ngFor="let item of results" (click)="click_select(item)">
+            {{item.title}}
+        </div>
+        <div class="closer" (click)="click_close()"></div>
+    </div>
+</div>
