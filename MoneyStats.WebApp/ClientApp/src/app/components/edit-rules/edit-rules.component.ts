@@ -7,27 +7,44 @@ import { RuleActionType } from 'src/app/models/service-models/rule-action-type.e
 import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
 import { Common } from 'src/app/utilities/common.static';
 import { RuleAction } from 'src/app/models/service-models/rule-action.model';
+import { TransactionService } from 'src/app/services/transaction-service/transaction.service';
+import { TagService } from 'src/app/services/tag-service/tag.service';
+import { Tag } from 'src/app/models/service-models/tag.model';
 
 
 @Component({
     selector: 'app-edit-rules-component',
     templateUrl: './edit-rules.component.html',
-    styleUrls: ['./edit-rules.component.scss']
+    styleUrls: ['./edit-rules.component.scss'],
+    styles: [
+        `
+        :host ::ng-deep .select-component input {
+            
+        }
+        `
+    ]
 })
 export class EditRulesComponent implements OnInit {
 
     rules: Rule[];
     //ruleActionTypeVariable = RuleActionType;
     //conditionTypeVariable = ConditionType;
-    propertyList: string[];
+    bankRowProperties: string[];
+    transactionProperties: string[];
 
     conditionTypes: string[];
     actionTypes: string[];
+    tags: Tag[];
 
-    constructor(private bankRowService: BankRowService) {
+    constructor(
+        private bankRowService: BankRowService,
+        private transactionService: TransactionService,
+        private tagService: TagService) {
         this.rules = [];
+        this.tags = [];
 
         this.conditionTypes = [
+            ConditionType[ConditionType.Unset],
             ConditionType[ConditionType.ContainsValueOfProperty],
             ConditionType[ConditionType.IsEqualTo],
             ConditionType[ConditionType.IsGreaterThan],
@@ -38,6 +55,7 @@ export class EditRulesComponent implements OnInit {
         ];
 
         this.actionTypes = [
+            RuleActionType[RuleActionType.Unset],
             RuleActionType[RuleActionType.AddTag],
             RuleActionType[RuleActionType.AggregateToMonthlyTransaction],
             RuleActionType[RuleActionType.Omit],
@@ -47,8 +65,64 @@ export class EditRulesComponent implements OnInit {
 
     ngOnInit() {
         let self = this;
-        this.getBankRowProperties(res => {
-            self.propertyList = res;
+
+        self.getBankRowProperties(res => {
+            self.bankRowProperties = res;
+            self.bankRowProperties.unshift("");
+        });
+
+        self.getTransactionProperties(res => {
+            self.transactionProperties = res;
+            self.transactionProperties.unshift("");
+        });
+
+        /* TODO
+        - rule title-t bindolni valahova
+        - double bind dropdowns (for loading existing rules)
+        */
+        self.testData();
+
+        self.getTags((res) => {
+            self.tags = res;
+        });
+    }
+
+    private testData() {
+        let rule: Rule = {
+            title: "Példa 1",
+            andConditionGroups: [
+                {
+                    conditions: [{
+                        conditionType: ConditionType.IsEqualTo,
+                        property: "Sum",
+                        value: "100"
+                    }]
+                }
+            ],
+            ruleActions: [
+                {
+                    ruleActionType: RuleActionType.Omit
+                }
+            ]
+        };
+        this.rules.push(rule);
+    }
+
+    private getTags(callback: (response: Tag[]) => void): void {
+        this.tagService.get().subscribe(res => {
+            Common.ConsoleResponse("getTags", res);
+            callback(res);
+        }, err => {
+            console.log(err);
+        });
+    }
+
+    private getTransactionProperties(callback: (response: string[]) => void): void {
+        this.transactionService.getTransactionProperties().subscribe(res => {
+            Common.ConsoleResponse("getTransactionProperties", res);
+            callback(res);
+        }, err => {
+            console.log(err);
         });
     }
 

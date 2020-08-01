@@ -1,4 +1,7 @@
 
+                
+<!-- <app-dropdown-component [setOfValues]="tags" [alreadySelectedValues]="ruleAction.tag == null ? [] : [ruleAction.tag]" (valueChange)=""></app-dropdown-component> -->
+                
                 <!-- <div class="tr-cell" style="width: 200px;" [title]="tr.value.date">{{tr.value.date}}</div>
                 <div class="tr-cell" style="width: 200px;" [title]="tr.value.title">{{tr.value.title}}</div>
                 <div class="tr-cell" style="width: 200px;" [title]="tr.value.sum">{{tr.value.sum}}</div>

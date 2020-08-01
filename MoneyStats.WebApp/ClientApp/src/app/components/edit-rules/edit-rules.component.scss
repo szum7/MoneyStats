@@ -5,12 +5,19 @@
     input {
         height: 35px;
         margin-left: 2px;
+        border-radius: 0;
+
+        &:focus {
+            outline: none;
+        }
     }
 
     label {
         display: block;
         font-weight: bold;
         font-size: 12px;
+        margin: 0;
+        padding-bottom: 3px;
     }
 
     .btn {

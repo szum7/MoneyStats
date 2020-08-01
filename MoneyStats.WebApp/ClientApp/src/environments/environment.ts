@@ -9,7 +9,8 @@ export const environment = {
     bankRow: false,
     ruleEvaluator: false,
     generatedTransaction: false,
-    test: false
+    transaction: false,
+    test: false,
   }
 };
 

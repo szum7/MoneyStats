@@ -4,7 +4,7 @@ import { RuleAction } from "./rule-action.model";
 
 export class Rule extends EntityBase {
     title: string;
-    fancyName: string;
+    fancyName?: string;
     andConditionGroups: AndConditionGroup[];
     ruleActions: RuleAction[];
 

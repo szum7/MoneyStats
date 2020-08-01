@@ -50,7 +50,7 @@ namespace MoneyStats.BL.Repositories
             }
         }
 
-        public List<string> GetBankRowProperties()
+        public List<string> GetBankRowRulableProperties()
         {
             return (from property in typeof(BankRow).GetProperties()
                     where property.CustomAttributes.Any(customAttr => customAttr.AttributeType == typeof(Rulable))

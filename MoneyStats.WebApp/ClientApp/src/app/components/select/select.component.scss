@@ -1,0 +1,42 @@
+
+$height: 35px;
+.ac-select {
+    position: relative;
+    display: inline-block;
+
+    input {
+        height: $height;
+        vertical-align: top;
+        width: 120px;
+        border: 1px solid #ddd;
+        border-radius: 0;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .results {
+        position: absolute;
+        top: $height;
+        left: 0;
+        z-index: 100;
+        background-color: #fff;
+        border: 1px solid #ddd;
+
+        .result {
+            padding: 10px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #eee;
+            }
+        }
+
+        .closer {
+            height: 10px;
+            background: #555;
+            cursor: pointer;
+        }
+    }
+}

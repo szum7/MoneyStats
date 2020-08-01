@@ -44,7 +44,7 @@ namespace MoneyStats.BL.Mocks
             throw new NotImplementedException();
         }
 
-        public List<string> GetBankRowProperties()
+        public List<string> GetBankRowRulableProperties()
         {
             throw new NotImplementedException();
         }

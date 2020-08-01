@@ -5,6 +5,6 @@ namespace MoneyStats.BL.Interfaces
 {
     public interface IBankRowRepository : IEntityBaseRepository<BankRow>
     {
-        List<string> GetBankRowProperties();
+        List<string> GetBankRowRulableProperties();
     }
 }

@@ -1,14 +1,16 @@
 import { EntityBase } from "./entity-base.model";
 import { RuleActionType } from "./rule-action-type.enum";
 import { Tag } from "./tag.model";
+import { TagDropdownItem } from "../component-models/tag-dropdown-item";
 
-export class RuleAction extends EntityBase {
-    title: string;
-    property: string;
-    value: string;
+class RuleActionBase extends EntityBase {
+
+    title?: string;
+    property?: string;
+    value?: string;
     ruleActionType: RuleActionType;
-    tag: Tag;
-    tagId: number;
+    tag?: Tag;
+    tagId?: number;
 
     public toString = (): string => {
         switch (this.ruleActionType) {
@@ -23,5 +25,14 @@ export class RuleAction extends EntityBase {
             default:
                 return "";
         }
+    }
+}
+
+export class RuleAction extends RuleActionBase {
+    tagDropdownItem?: TagDropdownItem;
+
+    constructor() {
+        super();
+        this.tagDropdownItem = new TagDropdownItem();
     }
 }

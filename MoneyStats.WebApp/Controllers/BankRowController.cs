@@ -31,7 +31,7 @@ namespace MoneyStats.WebApp.Controllers
         [HttpGet("getBankRowProperties")]
         public ActionResult GetBankRowProperties()
         {
-            return Ok(_repo.GetBankRowProperties());
+            return Ok(_repo.GetBankRowRulableProperties());
         }
     }
 }

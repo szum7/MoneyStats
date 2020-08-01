@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoneyStats.DAL.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,11 +8,13 @@ namespace MoneyStats.DAL.Models
     [Table("Transaction")]
     public partial class Transaction : EntityBase
     {
+        [Rulable]
         public string Title { get; set; }
 
         /// <summary>
         /// Title explained. Useful for IsCustom=true transactions.
         /// </summary>
+        [Rulable]
         public string Description { get; set; }
 
         public DateTime? Date { get; set; }

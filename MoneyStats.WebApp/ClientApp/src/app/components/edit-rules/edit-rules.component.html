@@ -3,27 +3,25 @@
 <div class="btn" (click)="click_addRule()">New rule</div>
 
 <div class="rules">
-    <div class="rule" *ngFor="let rule of rules">
+    <div class="rule mb10" *ngFor="let rule of rules">
 
-        <div class="rule-title">{{rule.toString()}}</div>
+        <div class="rule-title mb5">{{rule.toString()}}</div>
 
         <!-- Condition groups -->
         <div class="and-condition-groups">
-            <div class="btn" (click)="click_addAndConditionGroup(rule)">Add and-group</div>
+            <div class="btn mb5" (click)="click_addAndConditionGroup(rule)">Add and-group</div>
 
             <div class="and-condition-group" *ngFor="let andConditionGroup of rule.andConditionGroups">
 
-                <div class="btn" (click)="click_addCondition(andConditionGroup)">Add condition</div>
-
                 <!-- Conditions -->
-                <div class="conditions">
+                <div class="conditions mb5">
                     <div class="condition" *ngFor="let condition of andConditionGroup.conditions">
 
                         <div class="in-btn" (click)="click_removeCondition(condition, andConditionGroup)">Remove</div>
 
                         <!-- Condition type -->
                         <div class="ib">
-                            <label>Type</label>
+                            <label>Condition type</label>
                             <select (change)="change_conditionType($event.target.value, condition)">
                                 <option *ngFor="let type of conditionTypes">{{type}}</option>
                             </select>
@@ -34,7 +32,7 @@
                             <div class="ib" *ngIf="isPropertyVisible(condition)">
                                 <label>Property</label>
                                 <select (change)="change_conditionProperty($event.target.value, condition)">
-                                    <option *ngFor="let property of propertyList">{{property}}</option>
+                                    <option *ngFor="let property of bankRowProperties">{{property}}</option>
                                 </select>
                             </div>
                             <div class="ib" *ngIf="isTextValueVisible(condition)">
@@ -48,32 +46,46 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="btn mb5" (click)="click_addCondition(andConditionGroup)">Add condition</div>
             </div>
         </div>
 
         <!-- Actions -->
-        <div class="rule-actions">    
+        <div class="rule-actions">
 
-            <div class="btn" (click)="click_addRuleAction(rule)">Add action</div>
-
-            <div class="rule-action" *ngFor="let ruleAction of rule.ruleActions">
+            <div class="rule-action mb5" *ngFor="let ruleAction of rule.ruleActions">
 
                 <div class="in-btn" (click)="click_removeRuleAction(ruleAction, rule)">Remove</div>
 
                 <!-- Action type -->
-                <select (change)="change_actionType($event.target.value, ruleAction)">
-                    <option *ngFor="let type of actionTypes">{{type}}</option>
-                </select>
+                <div class="ib">
+                    <label>Action type</label>
+                    <select (change)="change_actionType($event.target.value, ruleAction)">
+                        <option *ngFor="let type of actionTypes">{{type}}</option>
+                    </select>
+                </div>
 
                 <!-- Action properties -->
                 <div class="ib" *ngIf="isActionTypeSet(ruleAction)">
-                    <select *ngIf="isActionPropertyVisible(ruleAction)" (change)="change_actionProperty($event.target.value, ruleAction)">
-                        <option *ngFor="let property of propertyList">{{property}}</option>
-                    </select>
-                    <!-- TODO tags -->
-                    <input *ngIf="isActionValueVisible(ruleAction)" type="text" [(ngModel)]="ruleAction.value" />
+                    <div class="ib" *ngIf="isActionPropertyVisible(ruleAction)">
+                        <label>Property</label>
+                        <select (change)="change_actionProperty($event.target.value, ruleAction)">
+                            <option *ngFor="let property of transactionProperties">{{property}}</option>
+                        </select>
+                    </div>
+                    <div class="ib" *ngIf="isActionTagVisible(ruleAction)">
+                        <label>Tag</label>
+                        <app-select-component class="select-component" [setOfValues]="tags" [(value)]="ruleAction.tag"></app-select-component>
+                    </div>
+                    <div class="ib" *ngIf="isActionValueVisible(ruleAction)">
+                        <label>Value</label>
+                        <input type="text" [(ngModel)]="ruleAction.value" />
+                    </div>
                 </div>
             </div>
+
+            <div class="btn" (click)="click_addRuleAction(rule)">Add action</div>
         </div>
     </div>
 </div>

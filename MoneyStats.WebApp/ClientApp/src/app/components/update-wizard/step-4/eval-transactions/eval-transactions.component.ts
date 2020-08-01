@@ -14,6 +14,7 @@ import { Tag } from 'src/app/models/service-models/tag.model';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
 import { TagService } from 'src/app/services/tag-service/tag.service';
+import { TagDropdownItem } from 'src/app/models/component-models/tag-dropdown-item';
 
 export class TagColorer {
 
@@ -60,8 +61,7 @@ export class UsedGeneratedTransaction extends TableRow {
   originalValue: GeneratedTransaction;
   isModifiedAttr: IsModifiedAttribute; // TODO create (change) events to wire this alert in
 
-  tagStr: string; // for autocomplete dropdown input
-  tagResults: Tag[]; // for autocomplete dropdown tag results
+  tagDropdownItem: TagDropdownItem;
 
   get bankRow(): BankRow {
     return this.value != null ? this.value.bankRowReference : null;
@@ -82,8 +82,8 @@ export class UsedGeneratedTransaction extends TableRow {
     super();
     this.value = value;
     this.isModifiedAttr = new IsModifiedAttribute();
+    this.tagDropdownItem = new TagDropdownItem();
     this.copyProperties(this.value, this.originalValue);
-    this.tagResults = [];
   }
 
   private copyProperties(from: GeneratedTransaction, to: GeneratedTransaction): void {
@@ -159,7 +159,20 @@ export class TagDropdown {
 @Component({
   selector: 'app-eval-transactions-component',
   templateUrl: './eval-transactions.component.html',
-  styleUrls: ['./eval-transactions.component.scss']
+  styleUrls: ['./eval-transactions.component.scss'],
+  styles: [
+      `
+      :host ::ng-deep .content .dropdown-component .dropdown input {
+          border: none;
+          background: #e5e5e5;
+          height: 20px;
+          vertical-align: top;
+          font-size: 12px;
+          width: 80px;
+          padding: 0 10px;
+      }
+      `
+  ]
 })
 export class EvalTransactionsComponent implements OnInit {
 
@@ -175,6 +188,7 @@ export class EvalTransactionsComponent implements OnInit {
 
   private tagColorer: TagColorer;
   tagDropdown: TagDropdown;
+  tags: Tag[];
 
   constructor(
     private loadingScreen: LoadingScreenService,
@@ -207,6 +221,19 @@ export class EvalTransactionsComponent implements OnInit {
 
     self.getRules(function (rules: Rule[]) {
       self.rules = self.getUsedRulesFromRules(rules);
+    });
+
+    self.getTags(res => {
+      self.tags = res;
+    });
+  }
+
+  private getTags(callback: (response: Tag[]) => void): void {
+    this.tagService.get().subscribe(r => {
+      Common.ConsoleResponse("getTags", r);
+      callback(r);
+    }, e => {
+      console.error(e);
     })
   }
 
@@ -308,12 +335,12 @@ export class EvalTransactionsComponent implements OnInit {
 
   change_getTags(row: UsedGeneratedTransaction): void {
     // IMPROVE add a delay, don't search for every change
-    let str = row.tagStr;
+    let str = row.tagDropdownItem.str;
     if (isNaN(Number(str)) && str.length <= 1) {
-      row.tagResults = [];
+      row.tagDropdownItem.resetResults();
       return;
     }
-    row.tagResults = this.tagDropdown.getResults(str, row.value.tags);
+    row.tagDropdownItem.results = this.tagDropdown.getResults(str, row.value.tags);
   }
 
   click_selectTag(row: UsedGeneratedTransaction, tag: Tag): void {
@@ -322,21 +349,15 @@ export class EvalTransactionsComponent implements OnInit {
 
     row.value.tags.push(tag);
 
-    const index = row.tagResults.indexOf(tag);
-    if (index > -1) {
-      row.tagResults.splice(index, 1);
-    }
+    row.tagDropdownItem.removeFromResults(tag);
   }
 
   click_tagsResultReset(row: UsedGeneratedTransaction): void {
-    row.tagResults = [];
+    row.tagDropdownItem.results = [];
   }
 
   rightClick_removeTag(row: UsedGeneratedTransaction, tag: Tag): boolean {
-    const index = row.value.tags.indexOf(tag);
-    if (index > -1) {
-      row.value.tags.splice(index, 1);
-    }
+    Common.removeFromArray(tag, row.value.tags);
     return false; // Avoid default browser action from the event
   }
 }

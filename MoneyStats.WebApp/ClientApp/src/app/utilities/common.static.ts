@@ -13,4 +13,11 @@ export class Common {
         }
         return false;
     }
+
+    public static removeFromArray(obj: any, list: any[]): void {
+        const index = list.indexOf(obj);
+        if (index > -1) {
+            list.splice(index, 1);
+        }
+    }
 }

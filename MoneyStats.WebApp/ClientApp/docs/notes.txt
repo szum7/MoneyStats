@@ -12,6 +12,8 @@ https://github.com/FortAwesome/angular-fontawesome/blob/master/docs/upgrading/0.
 // Format date using @Pipe
 https://stackoverflow.com/questions/40526102/how-do-you-format-a-date-time-in-typescript
 
+// Two way component binding
+https://stackoverflow.com/questions/42006770/angular2-component-input-two-way-binding
 
 //
 // Misc
