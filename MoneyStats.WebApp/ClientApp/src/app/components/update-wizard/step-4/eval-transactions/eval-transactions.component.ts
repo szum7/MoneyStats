@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { StepAlert } from "src/app/models/component-models/step-alert.model";
@@ -12,9 +11,7 @@ import { TableRow, TableRowAttribute } from 'src/app/models/component-models/rea
 import { StaticMessages } from 'src/app/utilities/input-messages.static';
 import { Tag } from 'src/app/models/service-models/tag.model';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
-import { BankType } from 'src/app/models/service-models/bank-type.enum';
 import { TagService } from 'src/app/services/tag-service/tag.service';
-import { TagDropdownItem } from 'src/app/models/component-models/tag-dropdown-item';
 
 export class TagColorer {
 
@@ -61,8 +58,6 @@ export class UsedGeneratedTransaction extends TableRow {
   originalValue: GeneratedTransaction;
   isModifiedAttr: IsModifiedAttribute; // TODO create (change) events to wire this alert in
 
-  tagDropdownItem: TagDropdownItem;
-
   get bankRow(): BankRow {
     return this.value != null ? this.value.bankRowReference : null;
   }
@@ -82,7 +77,6 @@ export class UsedGeneratedTransaction extends TableRow {
     super();
     this.value = value;
     this.isModifiedAttr = new IsModifiedAttribute();
-    this.tagDropdownItem = new TagDropdownItem();
     this.copyProperties(this.value, this.originalValue);
   }
 
@@ -101,58 +95,6 @@ export class UsedGeneratedTransaction extends TableRow {
 
   resetToOriginal(): void {
     this.copyProperties(this.originalValue, this.value);
-  }
-}
-
-export class TagDropdown {
-  tags: Tag[];
-
-  constructor(private tagService: TagService) {
-    this.tags = [];
-
-    this.init();
-  }
-
-  getResults(str: string, excludes: Tag[]): Tag[] {
-    if (this.tags.length === 0) {
-      return [];
-    }
-
-    let ret: Tag[] = [];
-    str = str.toLowerCase();
-
-    let check: (str: string, tag: Tag) => boolean = null;
-    if (!isNaN(Number(str))) { // id
-      check = (str: string, tag: Tag) => Number(tag.id) === Number(str);
-    } else { // title
-      check = (str: string, tag: Tag) => tag.title.toLowerCase().includes(str);
-    }
-
-    this.tags.forEach(tag => {
-      if (check(str, tag)) {
-        if (!Common.containsObjectOnId(tag, excludes)) {
-          ret.push(tag);
-        }
-      }
-    });
-
-    return ret;
-  }
-
-  private init(): void {
-    let self = this;
-    this.getTags(function (r) {
-      self.tags = r;
-    });
-  }
-
-  private getTags(callback: (response: Tag[]) => void): void {
-    this.tagService.get().subscribe(r => {
-      Common.ConsoleResponse("getTags", r);
-      callback(r);
-    }, e => {
-      console.error(e);
-    })
   }
 }
 
@@ -187,7 +129,6 @@ export class EvalTransactionsComponent implements OnInit {
   public transactions: UsedGeneratedTransaction[];
 
   private tagColorer: TagColorer;
-  tagDropdown: TagDropdown;
   tags: Tag[];
 
   constructor(
@@ -199,7 +140,6 @@ export class EvalTransactionsComponent implements OnInit {
     this.rules = [];
     this.transactions = [];
     this.tagColorer = new TagColorer();
-    this.tagDropdown = new TagDropdown(tagService);
 
     // 1. get rules
     // 2. run the program on the shown BankRows
@@ -331,29 +271,6 @@ export class EvalTransactionsComponent implements OnInit {
 
   getBgColor(): string {
     return this.tagColorer.getColor();
-  }
-
-  change_getTags(row: UsedGeneratedTransaction): void {
-    // IMPROVE add a delay, don't search for every change
-    let str = row.tagDropdownItem.str;
-    if (isNaN(Number(str)) && str.length <= 1) {
-      row.tagDropdownItem.resetResults();
-      return;
-    }
-    row.tagDropdownItem.results = this.tagDropdown.getResults(str, row.value.tags);
-  }
-
-  click_selectTag(row: UsedGeneratedTransaction, tag: Tag): void {
-    if (Common.containsObjectOnId(tag, row.value.tags))
-      return;
-
-    row.value.tags.push(tag);
-
-    row.tagDropdownItem.removeFromResults(tag);
-  }
-
-  click_tagsResultReset(row: UsedGeneratedTransaction): void {
-    row.tagDropdownItem.results = [];
   }
 
   rightClick_removeTag(row: UsedGeneratedTransaction, tag: Tag): boolean {

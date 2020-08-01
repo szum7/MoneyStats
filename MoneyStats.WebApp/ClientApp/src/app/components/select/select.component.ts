@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 
 // interface IEntity {
 //     id: number;
@@ -8,10 +8,9 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation } fro
 @Component({
     selector: 'app-select-component',
     templateUrl: './select.component.html',
-    styleUrls: ['./select.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['./select.component.scss']
 })
-export class SelectComponent implements OnInit {
+export class SelectComponent {
 
     // List of values
     @Input() setOfValues: any[];
@@ -28,9 +27,6 @@ export class SelectComponent implements OnInit {
     constructor() {
         this.str = "";
         this.results = [];
-    }
-
-    ngOnInit() {
     }
 
     click_close() {

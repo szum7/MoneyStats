@@ -3,21 +3,6 @@ $height: 35px;
 .dropdown {
     position: relative;
     display: inline-block;
-    // height: $height;
-
-    // input {
-    //     border: none;
-    //     background: #e5e5e5;
-    //     height: $height;
-    //     vertical-align: top;
-    //     font-size: 12px;
-    //     width: 80px;
-    //     padding: 0 10px;
-
-    //     &:focus {
-    //         outline: none;
-    //     }
-    // }    
 
     input {
         height: $height;
