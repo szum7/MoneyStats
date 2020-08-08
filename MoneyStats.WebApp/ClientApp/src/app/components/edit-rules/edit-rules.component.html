@@ -22,9 +22,6 @@
                         <!-- Condition type -->
                         <div class="ib">
                             <label>Condition type</label>
-                            <!-- <select (change)="change_conditionType($event.target.value, condition)">
-                                <option *ngFor="let type of conditionTypes">{{type}}</option>
-                            </select> -->
                             <select [ngModel]="condition.conditionType" (ngModelChange)="change_conditionType($event, condition)">
                                 <option [value]="type.id" *ngFor="let type of conditionTypes">{{type.title}}</option>
                             </select>
@@ -34,9 +31,6 @@
                         <div class="ib" *ngIf="isTypeSet(condition)">
                             <div class="ib" *ngIf="isPropertyVisible(condition)">
                                 <label>Property</label>
-                                <!-- <select (change)="change_conditionProperty($event.target.value, condition)">
-                                    <option *ngFor="let property of bankRowProperties">{{property}}</option>
-                                </select> -->
                                 <select [ngModel]="condition.property" (ngModelChange)="change_conditionProperty($event, condition)">
                                     <option [value]="property" *ngFor="let property of bankRowProperties">{{property}}</option>
                                 </select>
@@ -67,9 +61,6 @@
                 <!-- Action type -->
                 <div class="ib">
                     <label>Action type</label>
-                    <!-- <select (change)="change_actionType($event.target.value, ruleAction)">
-                        <option *ngFor="let type of actionTypes">{{type}}</option>
-                    </select> -->
                     <select [ngModel]="ruleAction.ruleActionType" (ngModelChange)="change_actionType($event, ruleAction)">
                         <option [value]="type.id" *ngFor="let type of actionTypes">{{type.title}}</option>
                     </select>
@@ -79,9 +70,6 @@
                 <div class="ib" *ngIf="isActionTypeSet(ruleAction)">
                     <div class="ib" *ngIf="isActionPropertyVisible(ruleAction)">
                         <label>Property</label>
-                        <!-- <select (change)="change_actionProperty($event.target.value, ruleAction)">
-                            <option *ngFor="let property of transactionProperties">{{property}}</option>
-                        </select> -->
                         <select [ngModel]="ruleAction.property" (ngModelChange)="change_actionProperty($event, ruleAction)">
                             <option [value]="property" *ngFor="let property of transactionProperties">{{property}}</option>
                         </select>

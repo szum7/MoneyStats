@@ -12,6 +12,7 @@ import { HomePage } from './pages/home-page/home.page';
 import { TestTablePage } from './pages/test-table-page/test-table.page';
 import { ExcelTestPage } from './pages/excel-test-page/excel-test.page';
 import { UpdatePage } from './pages/update-page/update.page';
+import { ManageRulesPage } from './pages/manage-rules/manage-rules.page';
 
 // Services
 import { LoadingScreenService } from './services/loading-screen-service/loading-screen.service';
@@ -46,6 +47,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     TestTablePage,
     ExcelTestPage,
     UpdatePage,
+    ManageRulesPage,
     // Components
     AppComponent,
     NavComponent,
@@ -72,6 +74,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
       { path: 'test', component: TestTablePage },
       { path: 'update', component: UpdatePage },
       { path: 'excel', component: ExcelTestPage },
+      { path: 'rules', component: ManageRulesPage },
     ], { useHash: true })
   ],
   providers: [
