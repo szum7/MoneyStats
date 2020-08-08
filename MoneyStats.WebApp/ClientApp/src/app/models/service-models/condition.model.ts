@@ -19,4 +19,12 @@ export class Condition extends EntityBase {
             default: return "";
         }
     }
+
+    public set(obj: any): Condition {
+        this.property = obj.property;
+        this.value = obj.value;
+        this.conditionType = obj.conditionType;
+        this.setBase(obj);
+        return this;
+    }
 }

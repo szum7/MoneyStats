@@ -15,4 +15,9 @@ export class AndConditionGroup extends EntityBase {
 
         return this.conditions.join(" && ");
     }
+
+    public set(obj: any): AndConditionGroup {
+        this.setBase(obj);
+        return this;
+    }
 }

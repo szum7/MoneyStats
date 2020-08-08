@@ -18,8 +18,6 @@ https://stackoverflow.com/questions/42006770/angular2-component-input-two-way-bi
 //
 // Misc
 //
-
-
 If you don't need two-way data-binding:
 
 <select (change)="onChange($event.target.value)">
@@ -30,16 +28,6 @@ onChange(deviceValue) {
     console.log(deviceValue);
 }
 
-
-If you don't need two-way data-binding:
-
-<select (change)="onChange($event.target.value)">
-    <option *ngFor="let i of devices">{{i}}</option>
-</select>
-
-onChange(deviceValue) {
-    console.log(deviceValue);
-}
 For two-way data-binding, separate the event and property bindings:
 
 <select [ngModel]="selectedDevice" (ngModelChange)="onChange($event)" name="sel2">

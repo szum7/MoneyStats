@@ -25,4 +25,15 @@ export class RuleAction extends EntityBase {
                 return "";
         }
     }
+
+    public set(obj: any): RuleAction {
+        this.title = obj.title;
+        this.property = obj.property;
+        this.value = obj.value;
+        this.ruleActionType = obj.ruleActionType;
+        this.tag = new Tag().set(obj.tag);
+        this.tagId = obj.tagId;
+        this.setBase(obj);
+        return this;
+    }
 }

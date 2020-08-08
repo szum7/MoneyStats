@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewEncapsulation, OnInit } from '@angular/core';
 
 // interface IEntity {
 //     id: number;
@@ -10,7 +10,7 @@ import { Component, Input, Output, EventEmitter, ViewEncapsulation } from '@angu
     templateUrl: './select.component.html',
     styleUrls: ['./select.component.scss']
 })
-export class SelectComponent {
+export class SelectComponent implements OnInit {
 
     // List of values
     @Input() setOfValues: any[];
@@ -27,6 +27,20 @@ export class SelectComponent {
     constructor() {
         this.str = "";
         this.results = [];
+    }
+
+    ngOnInit(): void {
+        this.setInitialValue();
+    }
+
+    private setInitialValue(): void {
+        if (this.value !== null && this.setOfValues.length > 0) {
+            let i = 0;
+            while (i < this.setOfValues.length && this.value.id !== this.setOfValues[i].id) i++;
+            if (i < this.setOfValues.length) {
+                this.str = this.value.title;
+            }
+        }
     }
 
     click_close() {

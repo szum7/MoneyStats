@@ -20,4 +20,11 @@ export class Rule extends EntityBase {
 
         return `(${this.andConditionGroups.join(") || (")}) => ${this.ruleActions.join(", ")}`;
     }
+
+    public set(obj: any): Rule {
+        this.title = obj.title;
+        this.fancyName = obj.fancyName;
+        this.setBase(obj);
+        return this;
+    }
 }

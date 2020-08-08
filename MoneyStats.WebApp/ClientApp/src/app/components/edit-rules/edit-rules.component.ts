@@ -5,12 +5,12 @@ import { Condition } from 'src/app/models/service-models/condition.model';
 import { ConditionType } from 'src/app/models/service-models/condition-type.enum';
 import { RuleActionType } from 'src/app/models/service-models/rule-action-type.enum';
 import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
-import { Common } from 'src/app/utilities/common.static';
+import { Common, ConditionTypeObj, RuleActionTypeObj } from 'src/app/utilities/common.static';
 import { RuleAction } from 'src/app/models/service-models/rule-action.model';
 import { TransactionService } from 'src/app/services/transaction-service/transaction.service';
 import { TagService } from 'src/app/services/tag-service/tag.service';
 import { Tag } from 'src/app/models/service-models/tag.model';
-
+import { RuleService } from 'src/app/services/rule-service/rule.service';
 
 @Component({
     selector: 'app-edit-rules-component',
@@ -27,43 +27,31 @@ import { Tag } from 'src/app/models/service-models/tag.model';
 export class EditRulesComponent implements OnInit {
 
     rules: Rule[];
-    //ruleActionTypeVariable = RuleActionType;
-    //conditionTypeVariable = ConditionType;
     bankRowProperties: string[];
     transactionProperties: string[];
 
-    conditionTypes: string[];
-    actionTypes: string[];
+    conditionTypes: ConditionTypeObj[];
+    actionTypes: RuleActionTypeObj[];
     tags: Tag[];
 
     constructor(
         private bankRowService: BankRowService,
         private transactionService: TransactionService,
-        private tagService: TagService) {
+        private tagService: TagService,
+        private ruleService: RuleService) {
         this.rules = [];
         this.tags = [];
 
-        this.conditionTypes = [
-            ConditionType[ConditionType.Unset],
-            ConditionType[ConditionType.ContainsValueOfProperty],
-            ConditionType[ConditionType.IsEqualTo],
-            ConditionType[ConditionType.IsGreaterThan],
-            ConditionType[ConditionType.IsLesserThan],
-            ConditionType[ConditionType.IsPropertyNotNull],
-            ConditionType[ConditionType.IsPropertyNull],
-            ConditionType[ConditionType.TrueRule]
-        ];
-
-        this.actionTypes = [
-            RuleActionType[RuleActionType.Unset],
-            RuleActionType[RuleActionType.AddTag],
-            RuleActionType[RuleActionType.AggregateToMonthlyTransaction],
-            RuleActionType[RuleActionType.Omit],
-            RuleActionType[RuleActionType.SetValueOfProperty]
-        ];
+        this.conditionTypes = Common.getConditionTypes();
+        this.actionTypes = Common.getActionTypes();
     }
 
     ngOnInit() {
+        /* TODO
+        - rule title-t bindolni valahova
+        - double bind dropdowns (for loading existing rules)
+        */
+
         let self = this;
 
         self.getBankRowProperties(res => {
@@ -76,36 +64,22 @@ export class EditRulesComponent implements OnInit {
             self.transactionProperties.unshift("");
         });
 
-        /* TODO
-        - rule title-t bindolni valahova
-        - double bind dropdowns (for loading existing rules)
-        */
-        self.testData();
-
         self.getTags((res) => {
             self.tags = res;
         });
+
+        self.getRules(res => {
+            self.rules = res;
+        });
     }
 
-    private testData() {
-        let rule: Rule = {
-            title: "Példa 1",
-            andConditionGroups: [
-                {
-                    conditions: [{
-                        conditionType: ConditionType.IsEqualTo,
-                        property: "Sum",
-                        value: "100"
-                    }]
-                }
-            ],
-            ruleActions: [
-                {
-                    ruleActionType: RuleActionType.Omit
-                }
-            ]
-        };
-        this.rules.push(rule);
+    private getRules(callback: (response: Rule[]) => void): void {
+        this.ruleService.get().subscribe(res => {
+            Common.ConsoleResponse("getRules", res);
+            callback(res);
+        }, err => {
+            console.log(err);
+        })
     }
 
     private getTags(callback: (response: Tag[]) => void): void {
@@ -170,11 +144,11 @@ export class EditRulesComponent implements OnInit {
     }
 
     change_conditionType(value: string, condition: Condition): void {
-        condition.conditionType = ConditionType[value];
+        condition.conditionType = parseInt(value);
     }
 
     change_actionType(value: string, action: RuleAction): void {
-        action.ruleActionType = RuleActionType[value];
+        action.ruleActionType = parseInt(value);
     }
 
     change_conditionProperty(value: string, condition: Condition): void {
