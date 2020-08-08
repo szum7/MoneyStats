@@ -16,13 +16,13 @@ import { UpdatePage } from './pages/update-page/update.page';
 // Services
 import { LoadingScreenService } from './services/loading-screen-service/loading-screen.service';
 import { RouterService } from './services/router-service/router.service';
-import { TestTableService } from './services/test-table-service/test-table.service';
+import { TestTableService } from './services/test-table.service';
 import { BaseHttpService } from './services/base-http.service';
-import { BankRowService } from './services/bank-row-service/bank-row.service';
-import { RuleService } from './services/rule-service/rule.service';
-import { GeneratedTransactionService } from './services/generated-transaction-service/generated-transaction.service';
-import { TagService } from './services/tag-service/tag.service';
-import { TransactionService } from './services/transaction-service/transaction.service';
+import { BankRowService } from './services/bank-row.service';
+import { RuleService } from './services/rule.service';
+import { GeneratedTransactionService } from './services/generated-transaction.service';
+import { TagService } from './services/tag.service';
+import { TransactionService } from './services/transaction.service';
 
 // Components
 import { AppComponent } from './app.component';

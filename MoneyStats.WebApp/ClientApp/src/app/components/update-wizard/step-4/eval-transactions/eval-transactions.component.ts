@@ -3,13 +3,13 @@ import { LoadingScreenService } from 'src/app/services/loading-screen-service/lo
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { StepAlert } from "src/app/models/component-models/step-alert.model";
 import { Rule } from 'src/app/models/service-models/rule.model';
-import { RuleService } from 'src/app/services/rule-service/rule.service';
-import { GeneratedTransactionService } from 'src/app/services/generated-transaction-service/generated-transaction.service';
+import { RuleService } from 'src/app/services/rule.service';
+import { GeneratedTransactionService } from 'src/app/services/generated-transaction.service';
 import { GeneratedTransaction } from 'src/app/models/service-models/generated-transaction.model';
 import { Common } from 'src/app/utilities/common.static';
 import { Tag } from 'src/app/models/service-models/tag.model';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
-import { TagService } from 'src/app/services/tag-service/tag.service';
+import { TagService } from 'src/app/services/tag.service';
 import { TagColorer } from './tag-colorer';
 import { UsedRule } from './used-rule';
 import { UsedGeneratedTransaction } from './used-generated-transaction';

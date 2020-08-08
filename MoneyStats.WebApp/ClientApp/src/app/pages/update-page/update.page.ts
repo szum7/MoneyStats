@@ -6,15 +6,15 @@ import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { GeneratedTransaction } from 'src/app/models/service-models/generated-transaction.model';
-import { GeneratedTransactionService } from 'src/app/services/generated-transaction-service/generated-transaction.service';
+import { GeneratedTransactionService } from 'src/app/services/generated-transaction.service';
 import { GenericResponse } from 'src/app/models/service-models/generic-response.model';
 import { StepAlertType } from '../../models/component-models/step-alert-type.enum';
 import { StepAlert } from '../../models/component-models/step-alert.model';
 import { WizardStep } from '../../models/component-models/wizard-step.model';
 import { UpdateResultsUtilities } from '../../models/component-models/update-results-utilities.model';
-import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
+import { BankRowService } from 'src/app/services/bank-row.service';
 import { Common } from 'src/app/utilities/common.static';
-import { RuleService } from 'src/app/services/rule-service/rule.service';
+import { RuleService } from 'src/app/services/rule.service';
 import { UsedGeneratedTransaction } from "src/app/components/update-wizard/step-4/eval-transactions/used-generated-transaction";
 
 export class ImportFilesStep extends WizardStep {

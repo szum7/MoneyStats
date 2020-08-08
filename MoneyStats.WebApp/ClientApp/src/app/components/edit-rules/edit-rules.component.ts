@@ -4,13 +4,13 @@ import { AndConditionGroup } from 'src/app/models/service-models/and-condition-g
 import { Condition } from 'src/app/models/service-models/condition.model';
 import { ConditionType } from 'src/app/models/service-models/condition-type.enum';
 import { RuleActionType } from 'src/app/models/service-models/rule-action-type.enum';
-import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
+import { BankRowService } from 'src/app/services/bank-row.service';
 import { Common, ConditionTypeObj, RuleActionTypeObj } from 'src/app/utilities/common.static';
 import { RuleAction } from 'src/app/models/service-models/rule-action.model';
-import { TransactionService } from 'src/app/services/transaction-service/transaction.service';
-import { TagService } from 'src/app/services/tag-service/tag.service';
+import { TransactionService } from 'src/app/services/transaction.service';
+import { TagService } from 'src/app/services/tag.service';
 import { Tag } from 'src/app/models/service-models/tag.model';
-import { RuleService } from 'src/app/services/rule-service/rule.service';
+import { RuleService } from 'src/app/services/rule.service';
 
 @Component({
     selector: 'app-edit-rules-component',

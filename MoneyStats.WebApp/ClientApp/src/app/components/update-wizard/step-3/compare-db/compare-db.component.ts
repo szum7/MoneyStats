@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
-import { BankRowService } from 'src/app/services/bank-row-service/bank-row.service';
+import { BankRowService } from 'src/app/services/bank-row.service';
 import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { StaticMessages } from 'src/app/utilities/input-messages.static';
 import { StepAlert } from "src/app/models/component-models/step-alert.model";

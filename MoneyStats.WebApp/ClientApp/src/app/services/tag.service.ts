@@ -1,6 +1,6 @@
 import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
-import { BaseHttpService } from '../base-http.service';
+import { BaseHttpService } from './base-http.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Tag } from "src/app/models/service-models/tag.model";
@@ -11,11 +11,7 @@ class TagServiceMap extends BaseHttpService {
         let r: Tag[] = [];
         for (let i = 0; i < response.length; i++) {
             const e = response[i];
-            r.push({
-                id: e.id,
-                title: e.title,
-                description: e.description
-            });
+            r.push(new Tag().set(e));
         }
         return r;
     }    

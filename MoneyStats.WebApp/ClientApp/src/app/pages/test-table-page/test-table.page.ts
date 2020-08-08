@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TestTableService } from '../../services/test-table-service/test-table.service';
+import { TestTableService } from '../../services/test-table.service';
 
 @Component({
     selector: 'app-test-table-page',
