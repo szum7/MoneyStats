@@ -1,10 +1,15 @@
 <div class="left-side-menu">
     <section class="btns" #btnsElement>
         <!-- Next step btn -->
-        <div class="btn-item" (click)="click_NextStep()" [ngClass]="{'banned': !wizard.currentStep.isProgressable}">
+        <div class="btn-item" (click)="click_NextStep()">
             <div class="btn-toggle">
-                <fa-icon *ngIf="wizard.stepsAt < wizard.wizardSteps.length - 1" icon="arrow-right"></fa-icon>
-                <fa-icon *ngIf="wizard.stepsAt === wizard.wizardSteps.length - 1" icon="check"></fa-icon>
+                <div *ngIf="!wizard.currentStep.isProgressable">
+                    <fa-icon icon="times"></fa-icon>
+                </div>
+                <div *ngIf="wizard.currentStep.isProgressable">                    
+                    <fa-icon *ngIf="wizard.stepsAt < wizard.wizardSteps.length - 1" icon="arrow-right"></fa-icon>
+                    <fa-icon *ngIf="wizard.stepsAt === wizard.wizardSteps.length - 1" icon="check"></fa-icon>
+                </div>
             </div>
             <div class="next-step-tooltip">
                 <p class="title">Next step</p>

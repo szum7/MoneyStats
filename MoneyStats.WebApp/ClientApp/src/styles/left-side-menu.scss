@@ -33,7 +33,7 @@ $banned-color: #ff6161;
                 }
             }
 
-            &.unabled {
+            &.unabled { // usually a more transparent color
                 .btn-toggle {
                     color: $disabled-color;
                 }
@@ -42,7 +42,7 @@ $banned-color: #ff6161;
                 }
             }
 
-            &.banned {
+            &.banned { // usually a different color, e.g.: red
                 .btn-toggle {
                     color: $banned-color;
                 }
