@@ -16,7 +16,7 @@ class RuleServiceMap extends BaseHttpService {
             
             const ruleJson = response[i];
 
-            let rule = new Rule();
+            let rule = new Rule().set(ruleJson);
 
             ruleJson.andConditionGroups.forEach(andConditionGroupJson => {
                 let andConditionGroup = new AndConditionGroup().set(andConditionGroupJson);
@@ -70,6 +70,22 @@ export class RuleService extends RuleServiceLogic {
             res.push(new Rule());
 
             observer.next(res);
+            observer.complete();
+        });
+    }
+
+    delete(id: number): Observable<boolean> {
+        if (this.isMocked()) {
+            return this.deleteMock(id);
+        }
+        return this.http
+            .post<boolean>(this.url + 'delete', id, this.getOptions());
+    }
+
+    private deleteMock(id: number): Observable<boolean> {
+        return new Observable((observer) => {
+            let response: boolean = id > 0 ? true : false;
+            observer.next(response);
             observer.complete();
         });
     }

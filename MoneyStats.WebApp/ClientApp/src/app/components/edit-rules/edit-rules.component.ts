@@ -26,6 +26,8 @@ import { RuleService } from 'src/app/services/rule.service';
 })
 export class EditRulesComponent implements OnInit {
 
+    @Input() isDeletionAllowed: boolean;
+
     rules: Rule[];
     bankRowProperties: string[];
     transactionProperties: string[];
@@ -109,6 +111,14 @@ export class EditRulesComponent implements OnInit {
         });
     }
 
+    private deleteRule(id: number, callback: (response: boolean) => void): void {
+        this.ruleService.delete(id).subscribe(res => {
+            callback(res);
+        }, err => {
+            console.log(err);
+        });
+    }
+
     sout_rules(): void {
         console.log(this.rules);
     }
@@ -134,7 +144,24 @@ export class EditRulesComponent implements OnInit {
     }
 
     click_removeRule(c: Rule): void {
-        Common.removeFromArray(c, this.rules);
+        if (!this.isDeletionAllowed) {
+            console.error("Deletion is not alowed!");
+            return;
+        }
+
+        let self = this;
+
+        if (c.id > 0) {
+            self.deleteRule(c.id, res => {
+                if (res === true) {
+                    Common.removeFromArray(c, self.rules);
+                } else {
+                    console.log("Rule deletion error. Rule was possibly not found.");
+                }
+            });
+        } else {
+            Common.removeFromArray(c, self.rules);
+        }
     }
 
     click_removeAndConditionGroup(c: AndConditionGroup, a: Rule): void {

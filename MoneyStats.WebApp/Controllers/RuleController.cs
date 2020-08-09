@@ -19,5 +19,11 @@ namespace MoneyStats.WebApp.Controllers
         {            
             return Ok(_repo.GetWithEntities());
         }
+
+        [HttpPost("delete"), Produces("application /json")]
+        public ActionResult Delete([FromBody] int id)
+        {
+            return Ok(_repo.Delete(id));
+        }
     }
 }

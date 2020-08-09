@@ -1,2 +1,15 @@
-
-<app-edit-rules-component></app-edit-rules-component>
+<div class="left-side-menu">
+    <section class="btns">
+        <!-- Toggle tooltips btn -->
+        <div class="btn-item" (click)="click_toggleDeleteSafeguard()" ngbTooltip="Toggle deletion safeguard"
+            tooltipClass="general-tooltip no-wrap" placement="right">
+            <div class="btn-toggle">
+                <fa-icon *ngIf="isDeletionAllowed" icon="trash-alt"></fa-icon>
+                <fa-icon *ngIf="!isDeletionAllowed" icon="times"></fa-icon>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="manage-rules-page-content">
+    <app-edit-rules-component [isDeletionAllowed]="isDeletionAllowed"></app-edit-rules-component>
+</div>

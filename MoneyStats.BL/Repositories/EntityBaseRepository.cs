@@ -109,7 +109,7 @@ namespace MoneyStats.BL.Repositories
         {
             using (var context = new MoneyStatsContext())
             {
-                return context.Set<TEntity>().SingleOrDefault(x => x.Id == id && x.IsActive);
+                return context.Set<TEntity>().ToList().SingleOrDefault(x => x.Id == id && x.IsActive);
             }
         }
 
@@ -140,7 +140,7 @@ namespace MoneyStats.BL.Repositories
         {
             using (var context = new MoneyStatsContext())
             {
-                var obj = context.Set<TEntity>().SingleOrDefault(x => x.Id == id && x.IsActive);
+                var obj = context.Set<TEntity>().ToList().SingleOrDefault(x => x.Id == id && x.IsActive);
 
                 if (obj != null)
                 {
