@@ -57,7 +57,7 @@ export class RuleService extends RuleServiceLogic {
             return this.getMock();
         }
         return this.http
-            .get<Rule[]>(this.url + 'get')
+            .get<Rule[]>(this.url + 'getwithentities')
             .pipe(map(this.mapRules));
     }
 

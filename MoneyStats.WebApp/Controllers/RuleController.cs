@@ -14,8 +14,8 @@ namespace MoneyStats.WebApp.Controllers
             _repo = repo;
         }
 
-        [HttpGet("get")]
-        public ActionResult Get()
+        [HttpGet("getwithentities")]
+        public ActionResult GetWithEntities()
         {            
             return Ok(_repo.GetWithEntities());
         }

@@ -7,11 +7,15 @@
 
         <div class="rule-title mb5">{{rule.toString()}}</div>
 
+        <div class="in-btn" (click)="click_rule(rule)">Remove</div>
+
         <!-- Condition groups -->
         <div class="and-condition-groups">
             <div class="btn mb5" (click)="click_addAndConditionGroup(rule)">Add and-group</div>
 
             <div class="and-condition-group" *ngFor="let andConditionGroup of rule.andConditionGroups">
+
+                <div class="in-btn" (click)="click_removeAndConditionGroup(andConditionGroup, rule)">Remove</div>
 
                 <!-- Conditions -->
                 <div class="conditions mb5">

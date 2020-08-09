@@ -130,25 +130,32 @@ export class EditRulesComponent implements OnInit {
     }
 
     click_removeCondition(c: Condition, a: AndConditionGroup): void {
-        const index = a.conditions.indexOf(c);
-        if (index > -1) {
-            a.conditions.splice(index, 1);
-        }
+        Common.removeFromArray(c, a.conditions);
+    }
+
+    click_removeRule(c: Rule): void {
+        Common.removeFromArray(c, this.rules);
+    }
+
+    click_removeAndConditionGroup(c: AndConditionGroup, a: Rule): void {
+        Common.removeFromArray(c, a.andConditionGroups);
     }
 
     click_removeRuleAction(c: RuleAction, a: Rule): void {
-        const index = a.ruleActions.indexOf(c);
-        if (index > -1) {
-            a.ruleActions.splice(index, 1);
-        }
+        Common.removeFromArray(c, a.ruleActions);
     }
 
     change_conditionType(value: string, condition: Condition): void {
         condition.conditionType = parseInt(value);
+        condition.property = null;
+        condition.value = null;
     }
 
     change_actionType(value: string, action: RuleAction): void {
         action.ruleActionType = parseInt(value);
+        action.property = null;
+        action.tag = null;
+        action.value = null;
     }
 
     change_conditionProperty(value: string, condition: Condition): void {
