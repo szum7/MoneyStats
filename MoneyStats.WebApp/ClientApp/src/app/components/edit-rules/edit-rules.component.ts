@@ -18,8 +18,16 @@ import { RuleService } from 'src/app/services/rule.service';
     styleUrls: ['./edit-rules.component.scss'],
     styles: [
         `
-        :host ::ng-deep .select-component input {
-            
+        :host ::ng-deep .select-component .ac-select input {
+            font-size: 12px;
+            height: 25px !important;
+            border: none  !important;
+            background-color: #e5e5e5;
+            padding: 0 6px;
+            margin-right: 3px;
+        }
+        :host ::ng-deep .select-component .ac-select .results {
+            top: 25px !important;
         }
         `
     ]
@@ -27,6 +35,7 @@ import { RuleService } from 'src/app/services/rule.service';
 export class EditRulesComponent implements OnInit {
 
     @Input() isDeletionAllowed: boolean;
+    @Input() isSavingAllowed: boolean;
 
     rules: Rule[];
     bankRowProperties: string[];
@@ -170,6 +179,13 @@ export class EditRulesComponent implements OnInit {
 
     click_removeRuleAction(c: RuleAction, a: Rule): void {
         Common.removeFromArray(c, a.ruleActions);
+    }
+
+    click_saveRule(rule: Rule): void {
+        if (!this.isSavingAllowed) {
+            return;
+        }
+        // TODO
     }
 
     change_conditionType(value: string, condition: Condition): void {

@@ -1,4 +1,153 @@
-.rules {
+.edit-rules-component {
+    .rules {
+        padding: 10px;
+
+        $gradient-color: #fff;
+        $alter-gradient-color: #efefef;
+        .rule {
+            background: repeating-linear-gradient(45deg, $gradient-color, $gradient-color 5px, $alter-gradient-color 5px, $alter-gradient-color 10px);
+            border-bottom: 2px solid $alter-gradient-color;
+            margin-bottom: 25px;
+
+            .actions {
+                .a-i {
+                    float: left;
+                }
+            }
+
+            input.rule-title {
+                width: 100%;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            .rule-literal {
+                background: #555;
+                color: #fff;
+                padding: 5px 7px;
+            }
+
+            .conditions-section {
+                padding: 5px 3px;
+
+                .and-condition-group {
+                    padding: 5px;
+                    background-color: #eee;
+                    margin-bottom: 5px;
+
+                    .and-condition-group-literal {
+                        background-color: #e7e7e7;
+                        height: 28px;
+                        padding: 5px;
+                        font-size: 12px;
+                        margin-right: 30px;
+                    }
+
+                    .conditions {
+                        padding: 5px;
+
+                        .condition {
+                            margin-top: 5px;
+                        }
+                    }
+                }
+            }
+
+            .rule-actions-section {
+                padding: 5px 3px;
+
+                .rule-action {
+                    padding: 5px;
+                    background: #eee;
+                    margin-bottom: 5px;
+                }
+            }
+        }
+    }
+    .title {
+        font-weight: bold;
+    }
+
+    .text-alert {
+        opacity: 0.7;
+        font-size: 12px;
+        padding: 5px 0;
+    }
+
+    .st-btn {
+        cursor: pointer;
+        float: right;
+        width: 30px;
+        height: 28px;
+        line-height: 28px;
+        text-align: center;
+        color: #666;
+    }
+
+    .icn-btn {
+        cursor: pointer;
+        display: inline-block;
+        vertical-align: bottom;
+        width: 20px;
+        text-align: center;
+        margin-right: 5px;
+        color: #666;
+    }
+
+    .sbtn {
+        cursor: pointer;
+        font-size: 12px;
+        display: inline-block;
+
+        span,
+        p {
+            display: inline-block;
+            vertical-align: top;
+        }
+        span {
+            padding: 5px 3px;
+            border-radius: 2px;
+            font-size: 16px;
+            color: #444;
+        }
+        p {
+            padding: 8px 7px;
+        }
+    }
+
+    select,
+    input {
+        font-size: 12px;
+        height: 25px;
+        border: none;
+        border-radius: 0;
+        background-color: #e5e5e5;
+        padding: 0 6px;
+        margin-right: 3px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        font-size: 12px;
+        margin: 0;
+        padding-bottom: 3px;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    .data-item {
+        padding: 8px 7px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+}
+
+.rules-x {
     padding: 10px;
 
     select,

@@ -8,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 export class ManageRulesPage implements OnInit {
 
     isDeletionAllowed: boolean;
+    isSavingAllowed: boolean;
 
     constructor() {
         this.isDeletionAllowed = false;
+        this.isSavingAllowed = false;
     }
 
     ngOnInit(): void {
@@ -18,5 +20,9 @@ export class ManageRulesPage implements OnInit {
 
     click_toggleDeleteSafeguard(): void {
         this.isDeletionAllowed = !this.isDeletionAllowed;
+    }
+
+    click_toggleSavingSafeguard(): void {
+        this.isSavingAllowed = !this.isSavingAllowed;
     }
 }

@@ -27,6 +27,8 @@ $height: 35px;
         .result {
             padding: 10px;
             cursor: pointer;
+            max-height: 135px;
+            overflow: auto;
 
             &:hover {
                 background-color: #eee;
