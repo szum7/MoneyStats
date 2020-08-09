@@ -122,10 +122,14 @@ namespace MoneyStats.BL.Modules
             return transactions;
         }
 
+        /// <summary>
+        /// Sort Rules based on Omit actions. 
+        /// Rules with Omit actions need to run first (break from iteration)
+        /// </summary>
+        /// <param name="rules"></param>
+        /// <returns></returns>
         List<Rule> GetSortedRules(List<Rule> rules)
         {
-            // Sort Rules based on Omit actions. 
-            // Rules with Omit actions need to run first (break from iteration)
             int start = 0;
             int end = rules.Count - 1;
             var sortedArray = new Rule[rules.Count];

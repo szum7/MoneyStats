@@ -21,6 +21,8 @@ namespace MoneyStats.DAL.Models
 
         public decimal? Sum { get; set; }
 
+        public string AppliedRules { get; set; }
+
         /// <summary>
         /// We can create transactions without bank exported transaction reference.
         /// E.g.: Create an IsCutom=true transaction for transactions payed with cash,
@@ -38,7 +40,6 @@ namespace MoneyStats.DAL.Models
 
         public virtual BankRow BankRow { get; set; }
         public virtual List<TransactionTagConn> TransactionTagConn { get; set; }
-        public virtual List<TransactionCreatedWithRule> TransactionCreatedWithRule { get; set; }
     }
 
     public partial class Transaction
@@ -69,7 +70,6 @@ namespace MoneyStats.DAL.Models
         {
             this.Tags = new List<Tag>();
             this.AggregatedReferences = new List<BankRow>();
-            this.TransactionCreatedWithRule = new List<TransactionCreatedWithRule>();
             this.TransactionTagConn = new List<TransactionTagConn>();
         }
     }

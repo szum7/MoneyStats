@@ -12,7 +12,6 @@ namespace MoneyStats.DAL
         public DbSet<RuleAction> RuleActions { get; set; }
         public DbSet<AndConditionGroup> AndConditionGroups { get; set; }
         public DbSet<Condition> Conditions { get; set; }
-        public DbSet<TransactionCreatedWithRule> TransactionCreatedWithRules { get; set; }
         public DbSet<TransactionTagConn> TransactionTagConns { get; set; }
         public DbSet<Ruleset> Rulesets { get; set; }
         public DbSet<RulesetRuleConn> RulesetRuleConns { get; set; }

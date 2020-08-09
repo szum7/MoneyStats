@@ -2,10 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using MoneyStats.BL.Interfaces;
-using MoneyStats.BL.Repositories;
 using MoneyStats.DAL.Models;
 using Newtonsoft.Json;
+using MoneyStats.BL.Modules;
 
 namespace MoneyStats.Tests
 {
@@ -13,13 +12,6 @@ namespace MoneyStats.Tests
     {
         public List<BankRow> BankRows { get; set; }
         public List<Rule> Rules { get; set; }
-    }
-
-    public class EvaluateRulesTestOutput
-    {
-        public List<Transaction> Transactions { get; set; }
-        public List<TransactionCreatedWithRule> TransactionCreatedWithRules { get; set; }
-        public List<TransactionTagConn> TransactionTagConns { get; set; }
     }
 
     [TestClass]
@@ -41,54 +33,31 @@ namespace MoneyStats.Tests
                 }
             };
 
-            var output = new EvaluateRulesTestOutput()
+            var output = new List<GeneratedTransaction>()
             {
-                Transactions = new List<Transaction>()
-                {
-
-                },
-                TransactionCreatedWithRules = new List<TransactionCreatedWithRule>()
-                {
-
-                },
-                TransactionTagConns = new List<TransactionTagConn>()
-                {
-
-                }
             };
 
             // Act & Assert
             this.ActAndAssert(input, output);
         }
 
-        public void ActAndAssert(EvaluateRulesTestInput input, EvaluateRulesTestOutput output)
+        public void ActAndAssert(EvaluateRulesTestInput input, List<GeneratedTransaction> output)
         {
             // Act
-            var result = new ConditionRepository().CreateTransactionUsingRulesFlattened(input.Rules, input.BankRows);
+            var result = new TransactionGenerator().Generate(input.Rules, input.BankRows);
 
             // Assert
-            Assert.AreEqual(result.Transactions.Count, output.Transactions.Count);
-            Assert.AreEqual(result.TransactionTagConns.Count, output.TransactionTagConns.Count);
-            Assert.AreEqual(result.TransactionCreatedWithRules.Count, output.TransactionCreatedWithRules.Count);
+            Assert.AreEqual(result.Count, output.Count);
+            Assert.AreEqual(result.Count, output.Count);
+            Assert.AreEqual(result.Count, output.Count);
 
-            for (int i = 0; i < result.Transactions.Count; i++)
+            for (int i = 0; i < result.Count; i++)
             {
-                var a = JsonConvert.SerializeObject(result.Transactions[i]);
-                var b = JsonConvert.SerializeObject(output.Transactions[i]);
+                var a = JsonConvert.SerializeObject(result[i]);
+                var b = JsonConvert.SerializeObject(output[i]);
                 Assert.AreEqual(a, b);
             }
-            for (int i = 0; i < result.TransactionTagConns.Count; i++)
-            {
-                var a = JsonConvert.SerializeObject(result.TransactionTagConns[i]);
-                var b = JsonConvert.SerializeObject(output.TransactionTagConns[i]);
-                Assert.AreEqual(a, b);
-            }
-            for (int i = 0; i < result.TransactionCreatedWithRules.Count; i++)
-            {
-                var a = JsonConvert.SerializeObject(result.TransactionCreatedWithRules[i]);
-                var b = JsonConvert.SerializeObject(output.TransactionCreatedWithRules[i]);
-                Assert.AreEqual(a, b);
-            }
+            // Do this for other objects as well
         }
     }
 }
