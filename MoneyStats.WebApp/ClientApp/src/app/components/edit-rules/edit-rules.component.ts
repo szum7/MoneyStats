@@ -183,6 +183,7 @@ export class EditRulesComponent implements OnInit {
 
     click_saveRule(rule: Rule): void {
         if (!this.isSavingAllowed) {
+            console.error("Saving is not alowed!");
             return;
         }
         // TODO
