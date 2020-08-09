@@ -16,7 +16,6 @@ namespace MoneyStats.BL.Modules
             }
 
             var transactions = new List<Transaction>();
-            var transactionCreatedWithRules = new List<TransactionCreatedWithRule>();
             // TODO grouped bankRows and single bankRows are collected into one list for update.
             // grouped BankRows: GroupedTransactionId and IsTransactionCreated is changed
             // single BankRows: IsTransactionCreated is changed
@@ -32,7 +31,8 @@ namespace MoneyStats.BL.Modules
                     Description = tr.Description,
                     Date = tr.Date,
                     Sum = tr.Sum,
-                    IsCustom = tr.IsCustom
+                    IsCustom = tr.IsCustom,
+                    AppliedRules = $"{string.Join(";", tr.AppliedRules)};"
                 }.SetNew();
 
                 if (!tr.IsCustom)
@@ -42,8 +42,6 @@ namespace MoneyStats.BL.Modules
 
                 transactionTagConns.AddRange(this.GetTransactionTagConns(transaction, tr));
 
-                transactionCreatedWithRules.AddRange(this.GetTransactionCreatedWithRules(transaction, tr));
-
                 transactions.Add(transaction);
             }
 
@@ -52,9 +50,6 @@ namespace MoneyStats.BL.Modules
 
             // save transactionTagConns
             this.InsertTransactionTagConns(transactionTagConns);
-
-            // save transactionCreatedWithRule
-            this.InsertTransactionCreatedWithRules(transactionCreatedWithRules);
 
             // update bankrows (IsTransactionCreated [and GroupedTransactionId])
             this.UpdateBankRows(bankRows);
@@ -109,32 +104,6 @@ namespace MoneyStats.BL.Modules
             }
 
             return transactionTagConns;
-        }
-
-        List<TransactionCreatedWithRule> GetTransactionCreatedWithRules(Transaction transaction, GeneratedTransaction tr)
-        {
-            var transactionCreatedWithRules = new List<TransactionCreatedWithRule>();
-
-            foreach (var r in tr.AppliedRules)
-            {
-                var transactionCreatedWithRule = new TransactionCreatedWithRule()
-                {
-                    RuleId = r.Id,
-                    Transaction = transaction
-                }.SetNew();
-                transactionCreatedWithRules.Add(transactionCreatedWithRule);
-            }
-
-            return transactionCreatedWithRules;
-        }
-
-        void InsertTransactionCreatedWithRules(List<TransactionCreatedWithRule> transactionCreatedWithRules)
-        {
-            transactionCreatedWithRules.ForEach(x => {
-                x.TransactionId = x.Transaction.Id;
-                x.Transaction = null;
-            });
-            new TransactionCreatedWithRuleRepository().InsertRange(transactionCreatedWithRules);
         }
 
         void InsertTransactionTagConns(List<TransactionTagConn> transactionTagConns)

@@ -1,4 +1,5 @@
-﻿using MoneyStats.BL.Repositories;
+﻿using MoneyStats.BL.Common;
+using MoneyStats.BL.Repositories;
 using MoneyStats.DAL.Models;
 using System;
 
@@ -19,12 +20,12 @@ namespace MoneyStats.BL.Modules
             else if (condition.ConditionType == ConditionType.IsGreaterThan)
             {
                 var convertedValue = (IComparable)Convert.ChangeType(condition.Value, rowValue.GetType());
-                return ConditionRepository.Compare(convertedValue, "<", (IComparable)rowValue);
+                return Utilities.Compare(convertedValue, "<", (IComparable)rowValue);
             }
             else if (condition.ConditionType == ConditionType.IsLesserThan)
             {
                 var convertedValue = (IComparable)Convert.ChangeType(condition.Value, rowValue.GetType());
-                return ConditionRepository.Compare(convertedValue, ">", (IComparable)rowValue);
+                return Utilities.Compare(convertedValue, ">", (IComparable)rowValue);
             }
             else if (condition.ConditionType == ConditionType.IsPropertyNull)
             {

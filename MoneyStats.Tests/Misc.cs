@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MoneyStats.BL.Interfaces;
+using MoneyStats.BL.Modules;
 using MoneyStats.BL.Repositories;
 using MoneyStats.DAL.Models;
 using System;
@@ -90,7 +91,7 @@ namespace MoneyStats.Tests
         public void TestRuleEvaluation()
         {
             // Arrange
-            var repo = new ConditionRepository();
+            var generator = new TransactionGenerator();
 #if true
             var data = new RuleEvalData() { RuleIds = new List<int>{ 1 }, BankRowIds = new List<int> { 7, 8, 9 } };
 #endif
@@ -103,7 +104,7 @@ namespace MoneyStats.Tests
             var rules = new RuleRepository().GetOnIdsWithEntitiesInDepth(data.RuleIds);
 
             // Act
-            repo.CreateTransactionUsingRulesFlattened(rules, bankRows);
+            generator.Generate(rules, bankRows);
 
             // Assert
             Assert.AreEqual(1, 1);

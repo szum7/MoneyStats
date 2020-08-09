@@ -10,7 +10,6 @@ namespace MoneyStats.ExampleData
             nameof(RuleAction),
             nameof(TransactionTagConn),
             nameof(Tag),
-            nameof(TransactionCreatedWithRule),
             nameof(Condition),
             nameof(AndConditionGroup),
             nameof(RulesetRuleConn),
