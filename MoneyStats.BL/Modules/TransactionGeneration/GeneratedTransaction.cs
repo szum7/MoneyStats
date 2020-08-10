@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MoneyStats.BL.Modules
+namespace MoneyStats.BL.Modules.TransactionGeneration
 {
     public class GeneratedTransaction
     {

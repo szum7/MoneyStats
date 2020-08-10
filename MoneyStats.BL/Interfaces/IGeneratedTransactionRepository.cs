@@ -1,5 +1,5 @@
 ﻿using MoneyStats.BL.Common;
-using MoneyStats.BL.Modules;
+using MoneyStats.BL.Modules.TransactionGeneration;
 using MoneyStats.DAL.Models;
 using System.Collections.Generic;
 

@@ -1,6 +1,6 @@
 ﻿using MoneyStats.BL.Common;
 using MoneyStats.BL.Interfaces;
-using MoneyStats.BL.Modules;
+using MoneyStats.BL.Modules.TransactionGeneration;
 using MoneyStats.DAL.Models;
 using System;
 using System.Collections.Generic;

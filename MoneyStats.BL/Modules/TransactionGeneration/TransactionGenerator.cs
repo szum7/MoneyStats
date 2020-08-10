@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MoneyStats.BL.Modules
+namespace MoneyStats.BL.Modules.TransactionGeneration
 {
     public class TransactionGenerator
     {

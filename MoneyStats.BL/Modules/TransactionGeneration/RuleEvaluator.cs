@@ -3,7 +3,7 @@ using MoneyStats.BL.Repositories;
 using MoneyStats.DAL.Models;
 using System;
 
-namespace MoneyStats.BL.Modules
+namespace MoneyStats.BL.Modules.TransactionGeneration
 {
     public class RuleEvaluator
     {

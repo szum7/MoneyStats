@@ -5,6 +5,7 @@ using System.Text;
 using MoneyStats.DAL.Models;
 using Newtonsoft.Json;
 using MoneyStats.BL.Modules;
+using MoneyStats.BL.Modules.TransactionGeneration;
 
 namespace MoneyStats.Tests
 {

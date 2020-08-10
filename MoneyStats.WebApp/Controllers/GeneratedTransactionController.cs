@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using MoneyStats.BL.Interfaces;
 using MoneyStats.DAL.Models;
 using MoneyStats.BL.Modules;
+using MoneyStats.BL.Modules.TransactionGeneration;
 
 namespace MoneyStats.WebApp.Controllers
 {

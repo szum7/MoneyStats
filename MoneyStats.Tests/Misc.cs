@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MoneyStats.BL.Interfaces;
 using MoneyStats.BL.Modules;
+using MoneyStats.BL.Modules.TransactionGeneration;
 using MoneyStats.BL.Repositories;
 using MoneyStats.DAL.Models;
 using System;
