@@ -21,9 +21,9 @@ namespace MoneyStats.WebApp.Controllers
     [Route("api/[controller]")]
     public class GeneratedTransactionController : ControllerBase
     {
-        IGeneratedTransactionRepository _repo;
+        IGeneratedTransactionService _repo;
 
-        public GeneratedTransactionController(IGeneratedTransactionRepository repo)
+        public GeneratedTransactionController(IGeneratedTransactionService repo)
         {
             _repo = repo;
         }

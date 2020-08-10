@@ -8,7 +8,7 @@ using System.Text;
 
 namespace MoneyStats.BL.Repositories
 {
-    public class GeneratedTransactionRepository : IGeneratedTransactionRepository
+    public class GeneratedTransactionService : IGeneratedTransactionService
     {
         public List<GeneratedTransaction> Generate(List<Rule> rules, List<BankRow> bankRows)
         {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MoneyStats.BL.Interfaces
 {
-    public interface IGeneratedTransactionRepository
+    public interface IGeneratedTransactionService
     {
         GenericResponse<bool> SaveAll(List<GeneratedTransaction> suggestedTransactions);
 
