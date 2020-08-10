@@ -37,7 +37,7 @@ namespace MoneyStats.DAL.Models
                 case ConditionType.IsPropertyNotNull:
                     return $"{Property} is not Null";
                 case ConditionType.ContainsValueOfProperty:
-                    return $"{Property}.Contains({Value})";
+                    return $"{Property}.Contains('{Value}')";
                 default:
                     return base.ToString();
             }

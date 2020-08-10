@@ -1,10 +1,18 @@
 <div class="edit-rules-component">
-    <div class="rules">
-        
-        <div class="sbtn" (click)="sout_rules()"><span>
-            <fa-icon icon="feather"></fa-icon></span>
-            <p>Sout rules</p>
+
+    <div class="rule-statistics padd10 mb10">
+        <h2>Summary</h2>
+        <div class="padd5">
+            <p>Rule count: {{rules.length}}</p>
+            <p *ngFor="let rule of rules">
+                <strong *ngIf="rule.id > 0">{{rule.id}}, {{rule.title}}:</strong>
+                <strong *ngIf="rule.id == null">{{rule.title}}:</strong>
+                &nbsp;{{rule.toString()}}
+            </p>
         </div>
+    </div>
+
+    <div class="rules">
 
         <div class="rule" *ngFor="let rule of rules">
             <input class="rule-title" type="text" [(ngModel)]="rule.title" placeholder="Title..." />
@@ -119,5 +127,10 @@
             <p>Rule</p>
         </div>
 
-    </div>
+        <div class="sbtn" (click)="sout_rules()"><span>
+            <fa-icon icon="feather"></fa-icon></span>
+            <p>Sout rules</p>
+        </div>
+
+    </div>        
 </div>

@@ -1,4 +1,13 @@
 .edit-rules-component {
+    padding: 5px;
+
+    .rule-statistics {
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    }
+
     .rules {
         padding: 10px;
 
@@ -17,6 +26,11 @@
 
             input.rule-title {
                 width: 100%;
+                background: #fff;
+                font-size: 24px;
+                padding: 5px 0;
+                height: auto;
+                font-weight: bold;
 
                 &:focus {
                     outline: none;

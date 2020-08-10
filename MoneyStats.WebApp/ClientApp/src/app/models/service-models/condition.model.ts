@@ -9,12 +9,12 @@ export class Condition extends EntityBase {
     public toString = (): string => {
         switch (this.conditionType) {
             case ConditionType.TrueRule: return "true";
-            case ConditionType.IsEqualTo: return `${this.property} == ${this.value}`;
+            case ConditionType.IsEqualTo: return `${this.property} == "${this.value}"`;
             case ConditionType.IsGreaterThan: return `${this.property} > ${this.value}`;
             case ConditionType.IsLesserThan: return `${this.property} < ${this.value}`;
             case ConditionType.IsPropertyNull: return `${this.property} is Null`;
             case ConditionType.IsPropertyNotNull: return `${this.property} is not Null`;
-            case ConditionType.ContainsValueOfProperty: return `${this.property}.Contains(${this.value})`;
+            case ConditionType.ContainsValueOfProperty: return `${this.property}.Contains("${this.value}")`;
             //default: return `${this.property} - ${this.value} - ${this.conditionType}`;
             default: return "";
         }

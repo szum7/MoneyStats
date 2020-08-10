@@ -16,9 +16,9 @@ export class RuleAction extends EntityBase {
             case RuleActionType.Omit:
                 return "Omit";
             case RuleActionType.AddTag:
-                return (this.tag == null) ? `AddTag(${this.tagId})"` : `AddTag(${this.tag.id}, '${this.tag.title}')`;
+                return (this.tag == null) ? `AddTag(${this.tagId})"` : `AddTag(${this.tag.id}, "${this.tag.title}")`;
             case RuleActionType.SetValueOfProperty:
-                return `${this.property} = '${this.value}'`;
+                return `${this.property} = "${this.value}"`;
             case RuleActionType.AggregateToMonthlyTransaction:
                 return "GroupToMonth";
             default:
