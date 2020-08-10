@@ -18,6 +18,7 @@ import { TestTablePage } from './pages/test-table-page/test-table.page';
 import { ExcelTestPage } from './pages/excel-test-page/excel-test.page';
 import { UpdatePage } from './pages/update-page/update.page';
 import { ManageRulesPage } from './pages/manage-rules/manage-rules.page';
+import { StatisticsPage } from './pages/statistics/statistics.page';
 
 // Services
 import { LoadingScreenService } from './services/loading-screen-service/loading-screen.service';
@@ -44,6 +45,7 @@ import { CompareDbComponent } from './components/update-wizard/step-3/compare-db
 import { EditRulesComponent } from './components/edit-rules/edit-rules.component';
 import { SelectComponent } from './components/select/select.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
+import { BasicMonthlyBarchartComponent } from './components/statistics/basic-monthly-barchart/basic-monthly-barchart.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     ExcelTestPage,
     UpdatePage,
     ManageRulesPage,
+    StatisticsPage,
     // Components
     AppComponent,
     NavComponent,
@@ -67,6 +70,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     EditRulesComponent,
     SelectComponent,
     DropdownComponent,
+    BasicMonthlyBarchartComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,9 +81,10 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     RouterModule.forRoot([
       { path: '', component: HomePage },
       { path: 'test', component: TestTablePage },
-      { path: 'update', component: UpdatePage },
       { path: 'excel', component: ExcelTestPage },
+      { path: 'update', component: UpdatePage },
       { path: 'rules', component: ManageRulesPage },
+      { path: 'statistics', component: StatisticsPage },
     ], { useHash: true })
   ],
   providers: [

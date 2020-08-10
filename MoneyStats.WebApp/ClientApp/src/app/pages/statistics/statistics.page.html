@@ -1,0 +1,20 @@
+<div class="left-side-menu">
+    <section class="btns">
+        <!-- Settings btn -->
+        <div ngbTooltip="" tooltipClass="general-tooltip no-wrap" placement="right">
+            <div class="btn-item" ngbDropdown placement="right-top">
+                <div class="btn-toggle" id="dd1" ngbDropdownToggle>
+                    <fa-icon icon="cog"></fa-icon>
+                </div>
+                <div class="sub-menu" ngbDropdownMenu aria-labelledby="dd1">
+                    <div class="sub-item" ngbDropdownItem>Info</div>
+                    <div class="sub-item" ngbDropdownItem>Sound</div>
+                    <div class="sub-item" ngbDropdownItem>Resolution</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="right-side-content">
+    <app-basic-monthly-barchart-component></app-basic-monthly-barchart-component>
+</div>

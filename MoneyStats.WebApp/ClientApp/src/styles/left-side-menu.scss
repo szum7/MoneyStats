@@ -1,3 +1,5 @@
+@import "./variables.scss";
+
 $side-nav-background: #333;
 $sub-menu-background: #434343;
 $sub-item-hover-background: #525252;
@@ -198,4 +200,9 @@ $banned-color: #ff6161;
         font-size: 13px;
     }
     /* Ng-bootstrap overrides end */
+}
+
+.right-side-content {
+    margin-top: $header-height;
+    margin-left: $side-nav-width;
 }

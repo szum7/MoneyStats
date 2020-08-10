@@ -17,40 +17,32 @@
         <a class="nav-link" href="#">Link</a>
       </li>-->
       <li class="nav-item" [routerLinkActive]='["link-active"]'>
-        <a class="nav-link" [routerLink]='["/update"]'>Update</a>
-      </li>
-      <li class="nav-item" [routerLinkActive]='["link-active"]'>
-        <a class="nav-link" [routerLink]='["/test"]'>Test</a>
-      </li>
-      <li class="nav-item" [routerLinkActive]='["link-active"]'>
-        <a class="nav-link" [routerLink]='["/wizard-test"]'>Wizard test</a>
+        <a class="nav-link" [routerLink]='["/update"]'>Generate</a>
       </li>
       <li class="nav-item" [routerLinkActive]='["link-active"]'>
         <a class="nav-link" [routerLink]='["/rules"]'>Manage rules</a>
       </li>
+      <li class="nav-item" [routerLinkActive]='["link-active"]'>
+        <a class="nav-link" [routerLink]='["/statistics"]'>Statistics</a>
+      </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
-          Dropdown
+          Tests
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <div>
-            <a class="dropdown-item" href="#">
-              <fa-icon icon="align-justify"></fa-icon>
-              <span>Action</span>
-            </a>
-          </div>
-          <div>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item" [routerLink]='["/test"]'>
               <fa-icon icon="tag"></fa-icon>
-              <span>Action two</span>
+              <span>Test page</span>
             </a>
-          </div>
+          </div>         
           <div>
-            <a class="dropdown-item" href="#">
-              <span>Something else here</span>
+            <a class="dropdown-item" [routerLink]='["/excel"]'>
+              <fa-icon icon="align-justify"></fa-icon>
+              <span>Excel test page</span>
             </a>
-          </div>
+          </div>  
           <!--<div class="dropdown-divider"></div>-->
         </div>
       </li>
