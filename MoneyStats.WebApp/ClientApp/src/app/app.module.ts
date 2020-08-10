@@ -15,7 +15,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // Pages
 import { HomePage } from './pages/home-page/home.page';
 import { TestTablePage } from './pages/test-table-page/test-table.page';
-import { ExcelTestPage } from './pages/excel-test-page/excel-test.page';
 import { UpdatePage } from './pages/update-page/update.page';
 import { ManageRulesPage } from './pages/manage-rules/manage-rules.page';
 import { StatisticsPage } from './pages/statistics/statistics.page';
@@ -40,7 +39,6 @@ import { ChooseFileComponent } from './components/update-wizard/step-1/choose-fi
 import { ReadFilesComponent } from './components/update-wizard/step-2/read-files/read-files.component';
 import { EvalTransactionsComponent } from './components/update-wizard/step-4/eval-transactions/eval-transactions.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { WizardNavComponent } from './components/wizard-nav/wizard-nav.component';
 import { CompareDbComponent } from './components/update-wizard/step-3/compare-db/compare-db.component';
 import { EditRulesComponent } from './components/edit-rules/edit-rules.component';
 import { SelectComponent } from './components/select/select.component';
@@ -52,7 +50,6 @@ import { BasicMonthlyBarchartComponent } from './components/statistics/basic-mon
     // Pages
     HomePage,
     TestTablePage,
-    ExcelTestPage,
     UpdatePage,
     ManageRulesPage,
     StatisticsPage,
@@ -65,7 +62,6 @@ import { BasicMonthlyBarchartComponent } from './components/statistics/basic-mon
     FooterComponent,
     ReadFilesComponent,
     EvalTransactionsComponent,
-    WizardNavComponent,
     CompareDbComponent,
     EditRulesComponent,
     SelectComponent,
@@ -81,7 +77,6 @@ import { BasicMonthlyBarchartComponent } from './components/statistics/basic-mon
     RouterModule.forRoot([
       { path: '', component: HomePage },
       { path: 'test', component: TestTablePage },
-      { path: 'excel', component: ExcelTestPage },
       { path: 'update', component: UpdatePage },
       { path: 'rules', component: ManageRulesPage },
       { path: 'statistics', component: StatisticsPage },
