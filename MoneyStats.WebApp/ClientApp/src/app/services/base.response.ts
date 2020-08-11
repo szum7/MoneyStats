@@ -1,3 +1,5 @@
+// These responses are unused!
+
 export abstract class BaseResponse<T> {
     public isValid: boolean;
     public errorMessages: Array<string>;
@@ -10,8 +12,10 @@ export abstract class BaseResponse<T> {
 
 class EmptyObject {
 }
-  
-// A model for actions which don't require data, only a success/error respone (sent in "isValid")
+
+/**
+ * A model for actions which don't require data, only a success/error respone (sent in "isValid")
+ */
 export class EmptyResponse extends BaseResponse<EmptyObject> {
 }
 

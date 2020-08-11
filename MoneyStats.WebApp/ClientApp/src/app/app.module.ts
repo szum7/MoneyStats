@@ -29,6 +29,7 @@ import { RuleService } from './services/rule.service';
 import { GeneratedTransactionService } from './services/generated-transaction.service';
 import { TagService } from './services/tag.service';
 import { TransactionService } from './services/transaction.service';
+import { StatisticsService } from './services/statistics.service';
 
 // Components
 import { AppComponent } from './app.component';
@@ -92,6 +93,7 @@ import { BasicMonthlyBarchartComponent } from './components/statistics/basic-mon
     GeneratedTransactionService,
     TagService,
     TransactionService,
+    StatisticsService,
   ],
   bootstrap: [AppComponent]
 })

@@ -11,6 +11,7 @@ export const environment = {
     generatedTransaction: false,
     transaction: false,
     test: false,
+    statistics: false
   }
 };
 

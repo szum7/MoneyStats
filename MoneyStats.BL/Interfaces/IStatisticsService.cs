@@ -6,6 +6,6 @@ namespace MoneyStats.BL.Interfaces
 {
     public interface IStatisticsService
     {
-        List<BasicMonthlyBar> Get(DateTime from, DateTime to);
+        BasicMonthlyBarchart Get(DateTime from, DateTime to);
     }
 }

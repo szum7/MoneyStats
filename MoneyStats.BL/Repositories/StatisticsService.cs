@@ -8,7 +8,7 @@ namespace MoneyStats.BL.Repositories
 {
     public class StatisticsService : IStatisticsService
     {
-        public List<BasicMonthlyBar> Get(DateTime from, DateTime to)
+        public BasicMonthlyBarchart Get(DateTime from, DateTime to)
         {
             return new BasicMonthlyBarchartGenerator().Get(from, to);
         }

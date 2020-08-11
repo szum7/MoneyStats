@@ -1,4 +1,4 @@
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { EmptyResponse } from './base.response';
 import { environment } from 'src/environments/environment';
@@ -18,26 +18,40 @@ export class BaseHttpService {
         // Could do it with constructor parameters, but then the injections would also have to be passed in.
     }
 
-    set(serviceName: string, baseUrl: string, serviceUrl: string): void {
+    protected set(serviceName: string, baseUrl: string, serviceUrl: string): void {
         this.serviceName = serviceName;
         this.baseUrl = baseUrl;
         this.serviceUrl = serviceUrl;
     }
 
-    getOptions(): { headers: HttpHeaders } {
+    protected getOptions(): { headers: HttpHeaders } {
         const header: HttpHeaders = new HttpHeaders({
-            'Content-Type':  'application/json',
+            'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + null
         });
-        return {headers: header};
+        return { headers: header };
     }
 
-    mapEmptyResponse(response: any): EmptyResponse {
+    /**
+     * Map a server side no-data response type to client side no-data response type
+     * @param response Has errorMessages and isValid properties. No data.
+     */
+    protected mapEmptyResponse(response: any): EmptyResponse {
         const ret = new EmptyResponse();
         ret.data = null;
         ret.errorMessages = response.errorMessages;
         ret.isValid = response.isValid;
         return ret;
+    }
+
+    protected setGetParams(paramList: { name: string, value: string }[]): { headers: HttpHeaders, params: HttpParams } {
+        let headers = new HttpHeaders();
+        headers.append('Content-Type', 'application/json');
+        let httpParams = new HttpParams();
+        paramList.forEach(paramItem => {
+            httpParams = httpParams.set(paramItem.name, paramItem.value);
+        });
+        return { headers: headers, params: httpParams };
     }
 
     isMocked(): boolean {
