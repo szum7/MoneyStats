@@ -8,6 +8,7 @@ namespace MoneyStats.BL.Modules.Barchart
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public List<BasicMonthlyBar> Bars { get; set; }
+        public decimal MaxValue { get; set; }
 
         public BasicMonthlyBarchart()
         {

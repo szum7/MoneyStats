@@ -176,7 +176,7 @@ export class UpdateWizard {
     }
 
     public next(): void {
-        if (this.stepsAt >= this.wizardSteps.length - 1)
+        if (this.stepsAt > this.wizardSteps.length - 1)
             return;
 
         if (!this.currentStep.isProgressable)
