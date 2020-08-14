@@ -1,1 +1,41 @@
-<p>It works!</p>
+<div class="bmb-page">
+    <div class="chart" *ngIf="!!data">
+        <div class="half top-half">
+            <div class="units y"></div>
+            <div class="bars" *ngFor="let bar of data.bars; let i = index" [ngStyle]="{'left': getBarLeftPosition(i)}">
+                <div class="relative">
+                    <div class="bar income" [ngStyle]="{'height': getBarHeight(bar.income)}" (click)="showTransactionList(bar)"></div>
+                    <div class="bar flow" *ngIf="bar.flow > 0" [ngStyle]="{'height': getBarHeight(bar.flow)}" (click)="showTransactionList(bar)"></div>
+                </div>
+            </div>
+        </div>
+        <div class="x-units"></div>
+        <div class="half bottom-half">
+            <div class="units y"></div>
+            <div class="bars" *ngFor="let bar of data.bars; let i = index" [ngStyle]="{'left': getBarLeftPosition(i)}">
+                <div class="relative">
+                    <div class="bar expense" [ngStyle]="{'height': getBarHeight(bar.expense)}" (click)="showTransactionList(bar)"></div>
+                    <div class="bar flow" *ngIf="bar.flow < 0" [ngStyle]="{'height': getBarHeight(bar.flow)}" (click)="showTransactionList(bar)"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <table>
+            <tr class="header">
+                <td>Id</td>
+                <td>Date</td>
+                <td>Title</td>
+                <td>Sum</td>
+                <td>Tags</td>
+            </tr>
+            <tr *ngFor="let tr of transactionList" [ngClass]="{'positive': tr.sum > 0, 'negative': tr.sum < 0}">
+                <td>{{tr.id}}</td>
+                <td>{{getDateLiteral(tr.date) | date:'yyyy-MM-dd'}}</td>
+                <td>{{tr.title}}</td>
+                <td class="money">{{tr.sum}}</td>
+                <td *ngFor="let tag of tr.tags"><span>{{tag.title}}&nbsp;</span></td>
+            </tr>
+        </table>
+    </div>
+</div>

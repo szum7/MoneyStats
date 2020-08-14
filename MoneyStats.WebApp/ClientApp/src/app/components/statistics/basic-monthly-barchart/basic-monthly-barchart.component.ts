@@ -2,6 +2,8 @@ import { Component, Input, Output, OnInit } from '@angular/core';
 import { StatisticsService } from 'src/app/services/statistics.service';
 import { BasicMonthlyBarchart } from 'src/app/models/service-models/basic-monthly-barchart.model';
 import { Common } from 'src/app/utilities/common.static';
+import { Transaction } from 'src/app/models/service-models/transaction.model';
+import { BasicMonthlyBar } from 'src/app/models/service-models/basic-monthly-bar.model';
 
 @Component({
     selector: 'app-basic-monthly-barchart-component',
@@ -11,8 +13,13 @@ import { Common } from 'src/app/utilities/common.static';
 export class BasicMonthlyBarchartComponent implements OnInit {
 
     data: BasicMonthlyBarchart;
+    transactionList: Transaction[];
+    barWidth: number = 60;
+    maxHeight: number = 300;
 
     constructor(private statisticsService: StatisticsService) {
+        // TODO tesztelni, hogy 0-0-0 esetén kihagyja-e az oszlop szélességét
+        // TODO minden hónapra szélességet állítani
     }
 
     ngOnInit(): void {
@@ -20,6 +27,27 @@ export class BasicMonthlyBarchartComponent implements OnInit {
         self.getBasicMonthlyBarchart(new Date(2010, 0, 1), new Date(2020, 2, 20), res => {
             self.data = res;
         });
+    }
+
+    getBarLeftPosition(i: number): string {
+        return (this.barWidth * (i + 1)) + "px";
+    }
+
+    getBarHeight(value: number): string {
+        let ratio = this.maxHeight / this.data.maxValue;
+        return Math.max(Math.abs(value) * ratio, 2) + "px";
+    }
+
+    showTransactionList(item: BasicMonthlyBar): void {
+        this.transactionList = item.transactions;
+    }
+
+    getDateLiteralX(dateString: string): string {
+        return new Date(dateString).toDateString();
+    }
+
+    getDateLiteral(dateString: string): Date {
+        return new Date(dateString);
     }
 
     private getBasicMonthlyBarchart(from: Date, to: Date, callback: (response: BasicMonthlyBarchart) => void): void {
