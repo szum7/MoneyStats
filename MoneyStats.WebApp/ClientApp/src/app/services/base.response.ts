@@ -2,11 +2,11 @@
 
 export abstract class BaseResponse<T> {
     public isValid: boolean;
-    public errorMessages: Array<string>;
+    public messages: Array<string>;
     public data: T;
 
     isValidResponse(): boolean {
-        return this.isValid && (this.errorMessages == null || this.errorMessages.length === 0);
+        return this.isValid && (this.messages == null || this.messages.length === 0);
     }
 }
 

@@ -6,7 +6,7 @@ namespace MoneyStats.ExampleData
     {
         static void Main(string[] args)
         {
-            var global = new Global(CustomData.UpdateWorkflowTest);
+            var global = new Global(CustomData.UpdatePageWorkflowTest);
 
 #if true
             global.ReadRowCounts(); // READ

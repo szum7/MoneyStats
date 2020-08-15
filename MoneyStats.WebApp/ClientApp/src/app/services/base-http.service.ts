@@ -39,7 +39,7 @@ export class BaseHttpService {
     protected mapEmptyResponse(response: any): EmptyResponse {
         const ret = new EmptyResponse();
         ret.data = null;
-        ret.errorMessages = response.errorMessages;
+        ret.messages = response.messages;
         ret.isValid = response.isValid;
         return ret;
     }

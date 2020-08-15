@@ -12,7 +12,7 @@ namespace MoneyStats.ExampleData
     /// </summary>
     public static class CustomData
     {
-        public static readonly Dictionary<string, object> UpdateWorkflowTest = new Dictionary<string, object>()
+        public static readonly Dictionary<string, object> UpdatePageWorkflowTest = new Dictionary<string, object>()
         {        
             // Tag
             {

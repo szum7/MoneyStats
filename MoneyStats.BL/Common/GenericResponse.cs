@@ -9,34 +9,46 @@ namespace MoneyStats.BL.Common
     {
         public SuccessResponse()
         {
-            this.Message = $"[{this.GetCurrentMethod(1)}] Success.";
-            this.IsError = false;
+            //this.Messages.Add($"[{this.GetCurrentMethod(1)}] Success.");
+            this.IsValid = true;
             this.Data = true;
         }
     }
 
     public class ErrorResponse : GenericResponse<bool>
     {
-        public ErrorResponse(string message = "")
+        public ErrorResponse(List<string> messages = null)
         {
-            this.Message = $"[{this.GetCurrentMethod(1)}]" + message == "" ? "" : $" {message}";
-            this.IsError = true;
+            foreach (var msg in messages)
+            {
+                this.Messages.Add($"[{this.GetCurrentMethod(1)}]: {msg}");
+            }
+            this.IsValid = false;
+            this.Data = false;
+        }
+
+        public ErrorResponse(string msg)
+        {
+            this.Messages.Add($"[{this.GetCurrentMethod(1)}]: {msg}");
+            this.IsValid = false;
             this.Data = false;
         }
     }
 
     public class GenericResponse<DataType>
     {
-        public string Message { get; set; }
         public List<string> Messages { get; set; }
-        public bool IsError { get; set; }
+        public bool IsValid { get; set; }
 
         public DataType Data { get; set; }
 
+        public GenericResponse()
+        {
+            this.Messages = new List<string>();
+        }
+
         public GenericResponse<DataType> Pulse()
         {
-            Console.WriteLine(this.Message);
-
             if (this.Messages != null)
             {
                 foreach (var m in this.Messages)
