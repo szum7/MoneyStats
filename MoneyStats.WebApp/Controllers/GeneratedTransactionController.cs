@@ -34,7 +34,7 @@ namespace MoneyStats.WebApp.Controllers
             return Ok(_repo.Generate(data.rules, data.bankRows));
         }
 
-        [HttpPost("save"), Produces("application /json")]
+        [HttpPost("save"), Produces("application/json")]
         public ActionResult Save([FromBody] List<GeneratedTransaction> generatedTransactions)
         {
             return Ok(_repo.SaveAll(generatedTransactions));

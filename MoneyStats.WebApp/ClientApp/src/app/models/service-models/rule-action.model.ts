@@ -31,7 +31,8 @@ export class RuleAction extends EntityBase {
         this.property = obj.property;
         this.value = obj.value;
         this.ruleActionType = obj.ruleActionType;
-        this.tag = new Tag().set(obj.tag);
+        if (obj.tag)
+            this.tag = new Tag().set(obj.tag);
         this.tagId = obj.tagId;
         this.setBase(obj);
         return this;

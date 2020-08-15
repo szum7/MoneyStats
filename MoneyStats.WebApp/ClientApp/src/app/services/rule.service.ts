@@ -109,34 +109,18 @@ export class RuleService extends RuleServiceLogic {
         });
     }
 
-    saveAll(rules: Rule[]): Observable<Rule[]> {
+    save(rules: Rule[]): Observable<Rule[]> {
         if (this.isMocked()) {
-            return this.saveAllMock(rules);
+            return this.saveMock(rules);
         }
         return this.http
-            .post<Rule[]>(this.url + 'saveallrules', rules, this.getOptions())
+            .post<Rule[]>(this.url + 'save', rules, this.getOptions())
             .pipe(map(this.mapRules));
     }
 
-    private saveAllMock(rules: Rule[]): Observable<Rule[]> {
+    private saveMock(rules: Rule[]): Observable<Rule[]> {
         return new Observable((observer) => {
             observer.next(rules);
-            observer.complete();
-        });
-    }
-
-    save(rule: Rule): Observable<Rule> {
-        if (this.isMocked()) {
-            return this.saveMock(rule);
-        }
-        return this.http
-            .post<Rule>(this.url + 'save', rule, this.getOptions())
-            .pipe(map(this.mapRule));
-    }
-
-    private saveMock(rule: Rule): Observable<Rule> {
-        return new Observable((observer) => {
-            observer.next(rule);
             observer.complete();
         });
     }

@@ -40,5 +40,13 @@ namespace MoneyStats.DAL.Models
             target.State = 1;
             return target;
         }
+
+        public static Type SetAsNew<Type>(this Type target) where Type : EntityBase
+        {
+            target.Id = default;
+            target.CreateDate = DateTime.Now;
+            target.State = 1;
+            return target;
+        }
     }
 }

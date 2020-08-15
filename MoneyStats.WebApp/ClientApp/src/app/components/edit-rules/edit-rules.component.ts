@@ -128,6 +128,14 @@ export class EditRulesComponent implements OnInit {
         });
     }
 
+    private saveRules(rules: Rule[], callback: (response: Rule[]) => void): void {
+        this.ruleService.save(rules).subscribe(res => {
+            callback(res);
+        }, err => {
+            console.log(err);
+        });
+    }
+
     sout_rules(): void {
         console.log(this.rules);
     }
@@ -186,7 +194,15 @@ export class EditRulesComponent implements OnInit {
             console.error("Saving is not alowed!");
             return;
         }
-        // TODO
+        let self = this;
+        self.saveRules([rule], res => {
+            if (res.length === 1) {
+                rule.id = res[0].id;
+                (rule as any).saveTimestamp = new Date();
+            } else {
+                console.error("Save error");
+            }
+        });
     }
 
     change_conditionType(value: string, condition: Condition): void {

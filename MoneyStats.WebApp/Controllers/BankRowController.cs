@@ -22,7 +22,7 @@ namespace MoneyStats.WebApp.Controllers
             return Ok(_repo.Get());
         }
 
-        [HttpPost("save"), Produces("application /json")]
+        [HttpPost("save"), Produces("application/json")]
         public ActionResult Save(List<BankRow> data)
         {
             return Ok(_repo.InsertRange(data));

@@ -9,13 +9,13 @@ namespace MoneyStats.ExampleData
             var global = new Global(CustomData.UpdatePageWorkflowTest);
 
 #if true
-            global.ReadRowCounts(); // READ
 #endif
 
 #if false
-            global.InsertAllExamples(); // INSERT
-            global.DeleteAllFromDatabase(); // DELETE
             global.ReadRowCounts(); // READ
+            global.ReadRowCounts(); // READ
+            global.DeleteAllFromDatabase(); // DELETE
+            global.InsertAllExamples(); // INSERT
             global.DropAllTables(); // DROP!
 #endif
 

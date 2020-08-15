@@ -115,6 +115,9 @@ namespace MoneyStats.BL.Repositories
 
         public bool DeleteRange(IEnumerable<int> ids)
         {
+            if (!ids.Any())
+                return true;
+
             using (var context = new MoneyStatsContext())
             {
                 var objs = this.Get();

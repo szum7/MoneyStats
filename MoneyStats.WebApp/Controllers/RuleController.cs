@@ -27,22 +27,16 @@ namespace MoneyStats.WebApp.Controllers
 
 
         #region Post
-        [HttpPost("delete"), Produces("application /json")]
+        [HttpPost("delete"), Produces("application/json")]
         public ActionResult Delete([FromBody] int id)
         {
             return Ok(_repo.Delete(id));
         }
 
-        [HttpPost("saverules"), Produces("application /json")]
+        [HttpPost("save"), Produces("application/json")]
         public ActionResult SaveRules([FromBody] List<Rule> rules)
         {
-            return Ok(_repo.SaveRules(rules));
-        }
-
-        [HttpPost("save"), Produces("application /json")]
-        public ActionResult Save([FromBody] Rule rule)
-        {
-            return Ok(_repo.Save(rule));
+            return Ok(_repo.Save(rules));
         }
         #endregion
     }
