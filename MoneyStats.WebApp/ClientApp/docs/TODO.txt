@@ -5,3 +5,6 @@
 - db-file oldalon legyen tranzakció hozzáadása lehetőség, legyen egy gomb amivel ellenőrizhető, hogy van-e már a db-ben
     -> jöjjenek ki közel hasonló sorok is
 - lehet jobb megoldás environmentben tárolni a base url-t global változóként, nem injektálni
+
+- > és < conditionöknél csak azokat a propertyket kéne listázni, ami icomperable
+- ha kliens oldalon állítom be a setNew propertyket (+ .tagId = o.tagId, .tag = null), akkor lehet szerver oldalon nem kell külön állítgatni mentésnél

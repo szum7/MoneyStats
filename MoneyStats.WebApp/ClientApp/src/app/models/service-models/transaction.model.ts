@@ -11,6 +11,7 @@ export class Transaction {
     bankRowId?: number;
     tags: Tag[];
     aggregatedReferences: BankRow[];
+    appliedRules: string;
     
     get isGroup(): boolean { return this.bankRowId == null; }
 

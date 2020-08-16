@@ -19,7 +19,7 @@ namespace MoneyStats.BL.Repositories
             this.DeleteRange(existingRules.Select(x => x.Id));
             this.SaveNewRules(existingRules);
 
-            return rules; //existingRules.Concat(newRules).ToList();
+            return rules;
         }
 
         void SaveNewRules(List<Rule> rules)
@@ -29,48 +29,30 @@ namespace MoneyStats.BL.Repositories
 
             using (var context = new MoneyStatsContext())
             {
-                // Add Rule
-                foreach (var rule in rules)
+                rules.ForEach(rule =>
                 {
+                    // Add Rule
                     rule.SetAsNew();
-                    context.Rules.Add(rule);
-                }
-                context.SaveChanges();
 
-                // Add AndConditionGroup
-                foreach (var rule in rules)
-                {
-                    foreach (var andCond in rule.AndConditionGroups)
+                    // Add AndConditionGroups
+                    rule.AndConditionGroups.ForEach(andConditionGroup =>
                     {
-                        andCond.SetAsNew();
-                        //andCond.RuleId = rule.Id;
-                        context.AndConditionGroups.Add(andCond);
-                    }
-                }
-                context.SaveChanges();
+                        andConditionGroup.SetAsNew();
+                        // Add Conditions
+                        andConditionGroup.Conditions.ForEach(condition => condition.SetAsNew());
+                    });
 
-                foreach (var rule in rules)
-                {
-                    // Add Condition
-                    foreach (var andCond in rule.AndConditionGroups)
-                    {
-                        foreach (var cond in andCond.Conditions)
-                        {
-                            cond.SetAsNew();
-                            //cond.AndConditionGroup.Id = andCond.Id;
-                            context.Conditions.Add(cond);
-                        }
-                    }
-
-                    // Add RuleAction
-                    foreach (var action in rule.RuleActions)
+                    // Add RuleActions
+                    rule.RuleActions.ForEach(action =>
                     {
                         action.SetAsNew();
-                        //action.RuleId = rule.Id;
                         action.TagId = action.Tag?.Id;
-                        context.RuleActions.Add(action);
-                    }
-                }
+                        action.Tag = null;
+                    });
+
+                    context.Rules.Add(rule);
+                });
+
                 context.SaveChanges();
             }
         }

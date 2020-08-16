@@ -1,4 +1,174 @@
 ﻿
+
+        void SaveNewRules(List<Rule> rules)
+        {
+            if (rules.Count == 0)
+                return;
+
+            using (var context = new MoneyStatsContext())
+            {
+                // Add Rule
+                foreach (var rule in rules)
+                {
+                    rule.SetAsNew();
+                    context.Rules.Add(rule);
+                }
+
+                // Add AndConditionGroup
+                foreach (var rule in rules)
+                {
+                    foreach (var andCond in rule.AndConditionGroups)
+                    {
+                        andCond.SetAsNew();
+                    }
+                    rule.AndConditionGroups.ForEach(x => x.SetAsNew());
+                }
+
+                foreach (var rule in rules)
+                {
+                    // Add Condition
+                    foreach (var andCond in rule.AndConditionGroups)
+                    {
+                        foreach (var cond in andCond.Conditions)
+                        {
+                            cond.SetAsNew();
+                        }
+                    }
+
+                    // Add RuleAction
+                    foreach (var action in rule.RuleActions)
+                    {
+                        action.SetAsNew();
+                        action.TagId = action.Tag?.Id;
+                    }
+                }
+                context.SaveChanges();
+            }
+        }
+
+        void SaveNewRules2(List<Rule> rules)
+        {
+            if (rules.Count == 0)
+                return;
+
+            using (var context = new MoneyStatsContext())
+            {
+                // Add Rule
+                foreach (var rule in rules)
+                {
+                    context.Rules.Add(new Rule()
+                    {
+                        Title = rule.Title
+                    }.SetNew());
+                }
+                context.SaveChanges();
+
+                // Add AndConditionGroup
+                foreach (var rule in rules)
+                {
+                    foreach (var andCond in rule.AndConditionGroups)
+                    {
+                        context.AndConditionGroups.Add(new AndConditionGroup()
+                        {
+                            RuleId = rule.Id
+                        }.SetNew());
+                    }
+                }
+                context.SaveChanges();
+
+                foreach (var rule in rules)
+                {
+                    // Add Condition
+                    foreach (var andCond in rule.AndConditionGroups)
+                    {
+                        foreach (var cond in andCond.Conditions)
+                        {
+                            context.Conditions.Add(new Condition()
+                            {
+                                Property = cond.Property,
+                                Value = cond.Value,
+                                ConditionType = cond.ConditionType,
+                                AndConditionGroupId = andCond.Id
+                            }.SetNew());
+                        }
+                    }
+
+                    // Add RuleAction
+                    foreach (var action in rule.RuleActions)
+                    {
+                        action.SetAsNew();
+                        //action.RuleId = rule.Id;
+                        action.TagId = action.Tag?.Id;
+                        context.RuleActions.Add(new RuleAction()
+                        {
+                            Title = action.Title,
+                            Property = action.Property,
+                            Value = action.Value,
+                            RuleActionType = action.RuleActionType,
+                            RuleId = rule.Id,
+                            TagId = action.Tag?.Id
+                        }.SetNew());
+
+                    }
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        void SaveNewRules3(List<Rule> rules)
+        {
+            if (rules.Count == 0)
+                return;
+
+            using (var context = new MoneyStatsContext())
+            {
+                // Add Rule
+                foreach (var rule in rules)
+                {
+                    rule.SetAsNew();
+                    context.Rules.Add(rule);
+                }
+                context.SaveChanges();
+
+                // Add AndConditionGroup
+                foreach (var rule in rules)
+                {
+                    foreach (var andCond in rule.AndConditionGroups)
+                    {
+                        andCond.SetAsNew();
+                        //andCond.RuleId = rule.Id;
+                        context.AndConditionGroups.Add(andCond);
+                    }
+                }
+                context.SaveChanges();
+
+                foreach (var rule in rules)
+                {
+                    // Add Condition
+                    foreach (var andCond in rule.AndConditionGroups)
+                    {
+                        foreach (var cond in andCond.Conditions)
+                        {
+                            cond.SetAsNew();
+                            //cond.AndConditionGroup.Id = andCond.Id;
+                            context.Conditions.Add(cond);
+                        }
+                    }
+
+                    // Add RuleAction
+                    foreach (var action in rule.RuleActions)
+                    {
+                        action.SetAsNew();
+                        //action.RuleId = rule.Id;
+                        action.TagId = action.Tag?.Id;
+                        context.RuleActions.Add(action);
+                    }
+                }
+                context.SaveChanges();
+            }
+        }
+
+
                 //context.Configuration.ProxyCreationEnabled = false;
                 //context.Configuration.LazyLoadingEnabled = false;
 

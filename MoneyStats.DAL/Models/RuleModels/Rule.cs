@@ -12,7 +12,6 @@ namespace MoneyStats.DAL.Models
     public partial class Rule : EntityBase
     {
         public string Title { get; set; }
-        public string AppliedRules { get; set; }
 
         public virtual List<AndConditionGroup> AndConditionGroups { get; set; }
         public virtual List<RuleAction> RuleActions { get; set; }

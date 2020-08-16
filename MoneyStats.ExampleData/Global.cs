@@ -74,7 +74,7 @@ namespace MoneyStats.ExampleData
 
         public void DropAllTables()
         {
-            this.AreYouSure("You are about to DROP all tables! Do you want to continue?");
+            this.AreYouSure("(!!!) You are about to DROP all tables! Do you want to continue?");
 
             using (var db = new MoneyStatsContext())
             {

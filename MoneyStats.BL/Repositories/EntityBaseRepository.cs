@@ -12,6 +12,9 @@ namespace MoneyStats.BL.Repositories
     {
         public IEnumerable<TEntity> InsertRange(IEnumerable<TEntity> entities)
         {
+            if (!entities.Any())
+                return entities;
+
             using (var context = new MoneyStatsContext())
             {
                 foreach (var item in entities)

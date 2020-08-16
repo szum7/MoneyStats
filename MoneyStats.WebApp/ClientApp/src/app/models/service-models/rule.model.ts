@@ -7,7 +7,6 @@ export class Rule extends EntityBase {
     fancyName?: string;
     andConditionGroups: AndConditionGroup[];
     ruleActions: RuleAction[];
-    appliedRules: string;
 
     constructor() {
         super();
