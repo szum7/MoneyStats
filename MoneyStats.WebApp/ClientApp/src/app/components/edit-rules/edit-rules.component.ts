@@ -22,9 +22,9 @@ import { RuleService } from 'src/app/services/rule.service';
             font-size: 12px;
             height: 25px !important;
             border: none  !important;
-            background-color: #e5e5e5;
             padding: 0 6px;
             margin-right: 3px;
+            border: 1px solid #ccc !important;
         }
         :host ::ng-deep .select-component .ac-select .results {
             top: 25px !important;
@@ -44,12 +44,16 @@ export class EditRulesComponent implements OnInit {
     conditionTypes: ConditionTypeObj[];
     actionTypes: RuleActionTypeObj[];
     tags: Tag[];
+    importString: string;
+    showImportExport: boolean;
 
     constructor(
         private bankRowService: BankRowService,
         private transactionService: TransactionService,
         private tagService: TagService,
         private ruleService: RuleService) {
+        
+        this.showImportExport = false;
         this.rules = [];
         this.tags = [];
 
@@ -134,6 +138,50 @@ export class EditRulesComponent implements OnInit {
         }, err => {
             console.log(err);
         });
+    }
+
+    getRulesJsonString(): string {
+        return JSON.stringify(this.rules);
+    }
+
+    importRules(rulesString: string): void {
+        let self = this;
+        var data: Rule[] = self.mapRules(JSON.parse(rulesString));        
+        self.saveRules(data, res => {
+            if (res != null) {
+                self.rules = self.rules.concat(res);
+            }
+        });
+    }    
+
+    private mapRules(response: any[]): Rule[] {
+        let rules: Rule[] = [];
+        for (let i = 0; i < response.length; i++) {
+
+            const ruleJson = response[i];
+
+            let rule = new Rule().setAsNew(ruleJson);
+
+            ruleJson.andConditionGroups.forEach(andConditionGroupJson => {
+                let andConditionGroup = new AndConditionGroup();
+                andConditionGroupJson.conditions.forEach(conditionJson => {
+                    andConditionGroup.conditions.push(new Condition().setAsNew(conditionJson));
+                });
+                rule.andConditionGroups.push(andConditionGroup);
+            });
+
+            ruleJson.ruleActions.forEach(ruleActionJson => {
+                let ruleAction = new RuleAction().setAsNew(ruleActionJson);
+                rule.ruleActions.push(ruleAction);
+            });
+
+            rules.push(rule);
+        }
+        return rules;
+    }
+
+    toggleImportExport(): void {
+        this.showImportExport = !this.showImportExport;
     }
 
     sout_rules(): void {

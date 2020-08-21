@@ -22,9 +22,13 @@ export class Rule extends EntityBase {
     }
 
     public set(obj: any): Rule {
+        this.setBase(obj);
+        return this.setAsNew(obj);
+    }
+
+    public setAsNew(obj: any): Rule {
         this.title = obj.title;
         this.fancyName = obj.fancyName;
-        this.setBase(obj);
         return this;
     }
 }

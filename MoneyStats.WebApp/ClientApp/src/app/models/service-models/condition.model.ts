@@ -27,4 +27,11 @@ export class Condition extends EntityBase {
         this.setBase(obj);
         return this;
     }
+
+    public setAsNew(obj: any): Condition {
+        this.property = obj.property;
+        this.value = obj.value;
+        this.conditionType = obj.conditionType;
+        return this;
+    }
 }

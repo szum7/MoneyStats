@@ -31,6 +31,9 @@ namespace MoneyStats.BL.Repositories
             {
                 rules.ForEach(rule =>
                 {
+                    if (rule.Id > 0)
+                        goto _continue;
+
                     // Add Rule
                     rule.SetAsNew();
 
@@ -51,6 +54,9 @@ namespace MoneyStats.BL.Repositories
                     });
 
                     context.Rules.Add(rule);
+                
+                _continue:;
+
                 });
 
                 context.SaveChanges();

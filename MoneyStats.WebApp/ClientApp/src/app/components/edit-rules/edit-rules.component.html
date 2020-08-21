@@ -12,128 +12,167 @@
         </div>
     </div>
 
+    <div class="import-export padd10">
+
+        <h2>Import/Export</h2>
+
+        <div class="padd5">
+
+            <div *ngIf="!showImportExport" class="sbtn" (click)="toggleImportExport()"><span>
+                <fa-icon icon="eye"></fa-icon></span>
+                <p>Show</p>
+            </div>
+    
+            <div *ngIf="showImportExport">
+    
+                <div class="sbtn mb10" (click)="toggleImportExport()"><span>
+                    <fa-icon icon="eye-slash"></fa-icon></span>
+                    <p>Hide</p>
+                </div>
+    
+                <h3>Export</h3>
+                <div class="export mb15">
+                    {{getRulesJsonString()}}
+                </div>
+    
+                <h3>Import</h3>
+                <textarea [(ngModel)]="importString"></textarea>
+    
+                <div class="sbtn" (click)="importRules(importString)"><span>
+                    <fa-icon icon="check"></fa-icon></span>
+                    <p>Import as new rules</p>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+
     <div class="rules">
 
-        <div class="rule" *ngFor="let rule of rules">
-            <input class="rule-title" type="text" [(ngModel)]="rule.title" placeholder="Title..." />
-            <div class="rule-literal">{{rule.toString()}}</div>
-            <div class="actions">
-                <p class="data-item a-i" *ngIf="rule.id > 0">ID: {{rule.id}}</p>
-                <div class="sbtn mr5 a-i" (click)="click_saveRule(rule)"><span>
-                    <fa-icon icon="check"></fa-icon></span>
-                    <p>Save rule</p>
+        <h2>Rules</h2>
+
+        <div class="padd5">
+            <div class="rule" *ngFor="let rule of rules">
+                <input class="rule-title" type="text" [(ngModel)]="rule.title" placeholder="Title of the rule..." />
+                <div class="rule-literal">{{rule.toString()}}</div>
+                <div class="actions">
+                    <p class="data-item a-i" *ngIf="rule.id > 0">ID: {{rule.id}}</p>
+                    <div class="sbtn mr5 a-i" (click)="click_saveRule(rule)"><span>
+                        <fa-icon icon="check"></fa-icon></span>
+                        <p>Save rule</p>
+                    </div>
+                    <div class="sbtn a-i" (click)="click_removeRule(rule)"><span>
+                        <fa-icon icon="trash-alt"></fa-icon></span>
+                        <p>Delete rule</p>
+                    </div>
+                    <p class="padd5 clear-both font12" *ngIf="rule.saveTimestamp">
+                        Save timestamp: {{rule.saveTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}
+                    </p>
                 </div>
-                <div class="sbtn a-i" (click)="click_removeRule(rule)"><span>
-                    <fa-icon icon="trash-alt"></fa-icon></span>
-                    <p>Delete rule</p>
-                </div>
-                <p class="padd5 clear-both font12" *ngIf="rule.saveTimestamp">
-                    Save timestamp: {{rule.saveTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}
-                </p>
-            </div>
-            <section class="conditions-section clear-both">
-                <div class="title">Condition groups</div>
-                <p class="text-alert" *ngIf="rule.andConditionGroups.length === 0">No condition groups yet.</p>
-                <div class="and-condition-group" *ngFor="let andConditionGroup of rule.andConditionGroups">
-                    <!-- Remove andConditionGroup -->
-                    <div class="st-btn" (click)="click_removeAndConditionGroup(andConditionGroup, rule)"><fa-icon icon="trash-alt"></fa-icon></div>
-                    <!-- AndConditionGroup literal -->
-                    <div class="and-condition-group-literal">{{andConditionGroup.toString()}}</div>
-                    <div class="conditions">
-                        <p class="text-alert" *ngIf="andConditionGroup.conditions.length === 0">No conditions yet.</p>
-                        <div class="condition" *ngFor="let condition of andConditionGroup.conditions">
-                            <!-- Condition type -->
-                            <div class="ib">
-                                <label>Condition type</label>
-                                <select [ngModel]="condition.conditionType" (ngModelChange)="change_conditionType($event, condition)">
-                                    <option [value]="type.id" *ngFor="let type of conditionTypes">{{type.title}}</option>
-                                </select>
-                            </div>
-                            <!-- Condition properties -->
-                            <div class="ib" *ngIf="isTypeSet(condition)">
-                                <div class="ib" *ngIf="isPropertyVisible(condition)">
-                                    <label>Property</label>
-                                    <select [ngModel]="condition.property" (ngModelChange)="change_conditionProperty($event, condition)">
-                                        <option [value]="property" *ngFor="let property of bankRowProperties">{{property}}</option>
+                <section class="conditions-section clear-both">
+                    <div class="title">Condition groups</div>
+                    <p class="text-alert pl5" *ngIf="rule.andConditionGroups.length === 0">No condition groups yet.</p>
+                    <div class="and-condition-group" *ngFor="let andConditionGroup of rule.andConditionGroups">
+                        <!-- Remove andConditionGroup -->
+                        <div class="st-btn" (click)="click_removeAndConditionGroup(andConditionGroup, rule)"><fa-icon icon="trash-alt"></fa-icon></div>
+                        <!-- AndConditionGroup literal -->
+                        <div class="and-condition-group-literal">{{andConditionGroup.toString()}}</div>
+                        <div class="conditions">
+                            <p class="text-alert pl5" *ngIf="andConditionGroup.conditions.length === 0">No conditions yet.</p>
+                            <div class="condition" *ngFor="let condition of andConditionGroup.conditions">
+                                <!-- Condition type -->
+                                <div class="ib">
+                                    <label>Condition type</label>
+                                    <select [ngModel]="condition.conditionType" (ngModelChange)="change_conditionType($event, condition)">
+                                        <option [value]="type.id" *ngFor="let type of conditionTypes">{{type.title}}</option>
                                     </select>
                                 </div>
-                                <div class="ib" *ngIf="isTextValueVisible(condition)">
-                                    <label>Value</label>
-                                    <input type="text" [(ngModel)]="condition.value" />
+                                <!-- Condition properties -->
+                                <div class="ib" *ngIf="isTypeSet(condition)">
+                                    <div class="ib" *ngIf="isPropertyVisible(condition)">
+                                        <label>Property</label>
+                                        <select [ngModel]="condition.property" (ngModelChange)="change_conditionProperty($event, condition)">
+                                            <option [value]="property" *ngFor="let property of bankRowProperties">{{property}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="ib" *ngIf="isTextValueVisible(condition)">
+                                        <label>Value</label>
+                                        <input type="text" [(ngModel)]="condition.value" />
+                                    </div>
+                                    <div class="ib" *ngIf="isNumberValueVisible(condition)">
+                                        <label>Value</label>
+                                        <input type="number" [(ngModel)]="condition.value" />
+                                    </div>
                                 </div>
-                                <div class="ib" *ngIf="isNumberValueVisible(condition)">
-                                    <label>Value</label>
-                                    <input type="number" [(ngModel)]="condition.value" />
-                                </div>
+                                <!-- Remove condition -->
+                                <div class="icn-btn" (click)="click_removeCondition(condition, andConditionGroup)"><fa-icon icon="trash-alt"></fa-icon></div>
                             </div>
-                            <!-- Remove condition -->
-                            <div class="icn-btn" (click)="click_removeCondition(condition, andConditionGroup)"><fa-icon icon="trash-alt"></fa-icon></div>
-                        </div>
-                        <!-- Add condition -->
-                        <div class="sbtn" (click)="click_addCondition(andConditionGroup)"><span>
-                            <fa-icon icon="plus"></fa-icon></span>
-                            <p>Condition</p>
+                            <!-- Add condition -->
+                            <div class="sbtn" (click)="click_addCondition(andConditionGroup)"><span>
+                                <fa-icon icon="plus"></fa-icon></span>
+                                <p>Condition</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Add andConditionGroup -->
-                <div class="sbtn" (click)="click_addAndConditionGroup(rule)">
-                    <span><fa-icon icon="plus"></fa-icon></span>
-                    <p>And-condition-group</p>
-                </div>
-            </section>
-            <section class="rule-actions-section mt5">
-                <div class="title">Rule actions</div>
-                <p class="text-alert" *ngIf="rule.ruleActions.length === 0">No rule actions yet.</p>
-                <div class="rule-action" *ngFor="let ruleAction of rule.ruleActions">
-
-                    <!-- Action type -->
-                    <div class="ib">
-                        <label>Action type</label>
-                        <select [ngModel]="ruleAction.ruleActionType" (ngModelChange)="change_actionType($event, ruleAction)">
-                            <option [value]="type.id" *ngFor="let type of actionTypes">{{type.title}}</option>
-                        </select>
+                    <!-- Add andConditionGroup -->
+                    <div class="sbtn" (click)="click_addAndConditionGroup(rule)">
+                        <span><fa-icon icon="plus"></fa-icon></span>
+                        <p>And-condition-group</p>
                     </div>
+                </section>
+                <section class="rule-actions-section mt5">
+                    <div class="title">Rule actions</div>
+                    <p class="text-alert" *ngIf="rule.ruleActions.length === 0">No rule actions yet.</p>
+                    <div class="rule-action" *ngFor="let ruleAction of rule.ruleActions">
 
-                    <!-- Action properties -->
-                    <div class="ib" *ngIf="isActionTypeSet(ruleAction)">
-                        <div class="ib" *ngIf="isActionPropertyVisible(ruleAction)">
-                            <label>Property</label>
-                            <select [ngModel]="ruleAction.property" (ngModelChange)="change_actionProperty($event, ruleAction)">
-                                <option [value]="property" *ngFor="let property of transactionProperties">{{property}}</option>
+                        <!-- Action type -->
+                        <div class="ib">
+                            <label>Action type</label>
+                            <select [ngModel]="ruleAction.ruleActionType" (ngModelChange)="change_actionType($event, ruleAction)">
+                                <option [value]="type.id" *ngFor="let type of actionTypes">{{type.title}}</option>
                             </select>
                         </div>
-                        <div class="ib" *ngIf="isActionTagVisible(ruleAction)">
-                            <label>Tag</label>
-                            <app-select-component class="select-component" [setOfValues]="tags" [(value)]="ruleAction.tag"></app-select-component>
+
+                        <!-- Action properties -->
+                        <div class="ib" *ngIf="isActionTypeSet(ruleAction)">
+                            <div class="ib" *ngIf="isActionPropertyVisible(ruleAction)">
+                                <label>Property</label>
+                                <select [ngModel]="ruleAction.property" (ngModelChange)="change_actionProperty($event, ruleAction)">
+                                    <option [value]="property" *ngFor="let property of transactionProperties">{{property}}</option>
+                                </select>
+                            </div>
+                            <div class="ib" *ngIf="isActionTagVisible(ruleAction)">
+                                <label>Tag</label>
+                                <app-select-component class="select-component" [setOfValues]="tags" [(value)]="ruleAction.tag"></app-select-component>
+                            </div>
+                            <div class="ib" *ngIf="isActionValueVisible(ruleAction)">
+                                <label>Value</label>
+                                <input type="text" [(ngModel)]="ruleAction.value" />
+                            </div>
                         </div>
-                        <div class="ib" *ngIf="isActionValueVisible(ruleAction)">
-                            <label>Value</label>
-                            <input type="text" [(ngModel)]="ruleAction.value" />
-                        </div>
+
+                        <!-- Remove action -->
+                        <div class="icn-btn" (click)="click_removeRuleAction(ruleAction, rule)"><fa-icon icon="trash-alt"></fa-icon></div>
                     </div>
 
-                    <!-- Remove action -->
-                    <div class="icn-btn" (click)="click_removeRuleAction(ruleAction, rule)"><fa-icon icon="trash-alt"></fa-icon></div>
-                </div>
+                    <!-- Add action -->
+                    <div class="sbtn" (click)="click_addRuleAction(rule)">
+                        <span><fa-icon icon="plus"></fa-icon></span>
+                        <p>Action</p>
+                    </div>
+                </section>
+            </div>
+        
+            <div class="sbtn" (click)="click_addRule()">
+                <span><fa-icon icon="plus"></fa-icon></span>
+                <p>Rule</p>
+            </div>
 
-                <!-- Add action -->
-                <div class="sbtn" (click)="click_addRuleAction(rule)">
-                    <span><fa-icon icon="plus"></fa-icon></span>
-                    <p>Action</p>
-                </div>
-            </section>
+            <div class="sbtn" (click)="sout_rules()"><span>
+                <fa-icon icon="feather"></fa-icon></span>
+                <p>Sout rules</p>
+            </div>
+            
         </div>
-    
-        <div class="sbtn" (click)="click_addRule()">
-            <span><fa-icon icon="plus"></fa-icon></span>
-            <p>Rule</p>
-        </div>
-
-        <div class="sbtn" (click)="sout_rules()"><span>
-            <fa-icon icon="feather"></fa-icon></span>
-            <p>Sout rules</p>
-        </div>
-
     </div>        
 </div>

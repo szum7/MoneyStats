@@ -27,6 +27,11 @@ export class RuleAction extends EntityBase {
     }
 
     public set(obj: any): RuleAction {
+        this.setBase(obj);
+        return this.setAsNew(obj);
+    }
+
+    public setAsNew(obj: any): RuleAction {
         this.title = obj.title;
         this.property = obj.property;
         this.value = obj.value;
@@ -34,7 +39,6 @@ export class RuleAction extends EntityBase {
         if (obj.tag)
             this.tag = new Tag().set(obj.tag);
         this.tagId = obj.tagId;
-        this.setBase(obj);
         return this;
     }
 }
