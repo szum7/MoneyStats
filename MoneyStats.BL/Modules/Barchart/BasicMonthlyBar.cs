@@ -9,6 +9,7 @@ namespace MoneyStats.BL.Modules.Barchart
         public decimal Income { get; set; }
         public decimal Expense { get; set; }
         public decimal Flow { get; set; }
+        public bool IsMissingMonth { get; set; }
 
         public List<Transaction> Transactions { get; set; }
 
@@ -20,6 +21,7 @@ namespace MoneyStats.BL.Modules.Barchart
         public BasicMonthlyBar()
         {
             this.Transactions = new List<Transaction>();
+            this.IsMissingMonth = false;
         }
     }
 }

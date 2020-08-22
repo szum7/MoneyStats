@@ -1,21 +1,38 @@
 <div class="bmb-page">
     <div class="chart" *ngIf="!!data">
-        <div class="half top-half">
-            <div class="units y"></div>
-            <div class="bars" *ngFor="let bar of data.bars; let i = index" [ngStyle]="{'left': getBarLeftPosition(i)}">
-                <div class="relative">
-                    <div class="bar income" [ngStyle]="{'height': getBarHeight(bar.income)}" (click)="showTransactionList(bar)"></div>
-                    <div class="bar flow" *ngIf="bar.flow > 0" [ngStyle]="{'height': getBarHeight(bar.flow)}" (click)="showTransactionList(bar)"></div>
-                </div>
+        <div class="y-units">
+            <div class="half upper">
+                <div *ngFor="let i of yUnits | reverse" [ngStyle]="{'height': yUnitGap + '%'}">{{i}}</div>
+            </div>
+            <div class="x-gap">
+                <span>0</span>
+            </div>
+            <div class="half lower">
+                <div *ngFor="let i of yUnits" [ngStyle]="{'height': yUnitGap + '%'}">{{i}}</div>
             </div>
         </div>
-        <div class="x-units"></div>
-        <div class="half bottom-half">
-            <div class="units y"></div>
-            <div class="bars" *ngFor="let bar of data.bars; let i = index" [ngStyle]="{'left': getBarLeftPosition(i)}">
-                <div class="relative">
-                    <div class="bar expense" [ngStyle]="{'height': getBarHeight(bar.expense)}" (click)="showTransactionList(bar)"></div>
-                    <div class="bar flow" *ngIf="bar.flow < 0" [ngStyle]="{'height': getBarHeight(bar.flow)}" (click)="showTransactionList(bar)"></div>
+        <div class="bar-section">
+            <div class="half top-half">
+                <!-- <div class="units y"></div> -->
+                <div class="bars" *ngFor="let bar of data.bars; let i = index" [ngStyle]="{'left': getBarLeftPosition(i)}" [ngClass]="{'no-data': bar.isMissingMonth}">
+                    <div class="relative" *ngIf="!bar.isMissingMonth">
+                        <div class="bar income" [ngStyle]="{'height': getBarHeight(bar.income)}" (click)="showTransactionList(bar)"></div>
+                        <div class="bar flow" *ngIf="bar.flow > 0" [ngStyle]="{'height': getBarHeight(bar.flow)}" (click)="showTransactionList(bar)"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="x-units" [ngStyle]="{'width': getXUnitsWidth()}">
+                <div class="x-unit" *ngFor="let bar of data.bars">
+                    <span>{{bar.date | date:'yyyy-MM'}}</span>
+                </div>
+            </div>
+            <div class="half bottom-half">
+                <!-- <div class="units y"></div> -->
+                <div class="bars" *ngFor="let bar of data.bars; let i = index" [ngStyle]="{'left': getBarLeftPosition(i)}" [ngClass]="{'no-data': bar.isMissingMonth}">
+                    <div class="relative" *ngIf="!bar.isMissingMonth">
+                        <div class="bar expense" [ngStyle]="{'height': getBarHeight(bar.expense)}" (click)="showTransactionList(bar)"></div>
+                        <div class="bar flow" *ngIf="bar.flow < 0" [ngStyle]="{'height': getBarHeight(bar.flow)}" (click)="showTransactionList(bar)"></div>
+                    </div>
                 </div>
             </div>
         </div>

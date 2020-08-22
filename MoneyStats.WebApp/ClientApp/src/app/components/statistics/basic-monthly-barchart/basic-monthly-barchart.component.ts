@@ -5,6 +5,7 @@ import { Common } from 'src/app/utilities/common.static';
 import { Transaction } from 'src/app/models/service-models/transaction.model';
 import { BasicMonthlyBar } from 'src/app/models/service-models/basic-monthly-bar.model';
 
+
 @Component({
     selector: 'app-basic-monthly-barchart-component',
     templateUrl: './basic-monthly-barchart.component.html',
@@ -16,21 +17,44 @@ export class BasicMonthlyBarchartComponent implements OnInit {
     transactionList: Transaction[];
     barWidth: number = 60;
     maxHeight: number = 300;
+    yUnitGap: number;
+    yUnits: number[];
+    xUnitsHeight: number = 30;
+    xUnits: string[];
 
     constructor(private statisticsService: StatisticsService) {
         // TODO tesztelni, hogy 0-0-0 esetén kihagyja-e az oszlop szélességét
         // TODO minden hónapra szélességet állítani
+        this.yUnits = [];
+        this.xUnits = [];
+        this.yUnitGap = 0;
     }
 
     ngOnInit(): void {
         let self = this;
         self.getBasicMonthlyBarchart(new Date(2010, 0, 1), new Date(2020, 2, 20), res => {
             self.data = res;
+            self.initProperties();
         });
     }
 
+    private initProperties() {
+        let unit: number = this.calculateYUnits(this.data.maxValue);
+        let unitTimes: number = this.data.maxValue / unit;
+        this.yUnitGap = (this.maxHeight / unitTimes) * (100 / this.maxHeight);
+        for (let i = 1; i < unitTimes - 1; i++) {
+            this.yUnits.push(i * unit);
+        }
+    }
+
+    getXUnitsWidth(): string {
+        if (this.data == null)
+            return "0px";
+        return (this.data.bars.length * this.barWidth) + "px";
+    }
+
     getBarLeftPosition(i: number): string {
-        return (this.barWidth * (i + 1)) + "px";
+        return (this.barWidth * i) + "px";
     }
 
     getBarHeight(value: number): string {

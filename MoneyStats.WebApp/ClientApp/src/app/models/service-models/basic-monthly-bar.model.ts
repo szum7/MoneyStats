@@ -7,6 +7,7 @@ export class BasicMonthlyBar {
     expense: number;
     flow: number;
     transactions: Transaction[];
+    isMissingMonth: boolean;
 
     constructor() {
         this.transactions = [];

@@ -12,11 +12,11 @@ namespace MoneyStats.ExampleData
 #endif
 
 #if false
-            global.DropAllTables(); // DROP!
-            global.InsertAllExamples(); // INSERT
             global.DeleteAllFromDatabase(); // DELETE
+            global.InsertAllExamples(); // INSERT
             global.ReadRowCounts(); // READ
             global.ReadRowCounts(); // READ
+            global.DropAllTables(); // DROP!
 #endif
 
             Console.WriteLine("Program ended.");

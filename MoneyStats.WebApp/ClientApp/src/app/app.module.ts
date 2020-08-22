@@ -45,6 +45,7 @@ import { EditRulesComponent } from './components/edit-rules/edit-rules.component
 import { SelectComponent } from './components/select/select.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { BasicMonthlyBarchartComponent } from './components/statistics/basic-monthly-barchart/basic-monthly-barchart.component';
+import { ReversePipe } from './pipes/reverse.pipe';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,8 @@ import { BasicMonthlyBarchartComponent } from './components/statistics/basic-mon
     SelectComponent,
     DropdownComponent,
     BasicMonthlyBarchartComponent,
+    // Pipes
+    ReversePipe,
   ],
   imports: [
     BrowserModule,

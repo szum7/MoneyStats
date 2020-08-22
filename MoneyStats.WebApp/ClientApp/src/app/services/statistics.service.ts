@@ -10,6 +10,23 @@ class StatisticsServiceMap extends BaseHttpService {
     protected dummyMap(response: any): any {
         return response;
     }
+
+    protected mapBMBDates(r: any): any {
+
+        let chart = new BasicMonthlyBarchart();
+
+        chart.from = new Date(r.from);
+        chart.to = new Date(r.to);
+        chart.maxValue = r.maxValue;
+        chart.bars = r.bars;
+
+        for (let i = 0; i < chart.bars.length; i++) {
+            let e = chart.bars[i];
+            e.date = new Date(e.date);
+        }
+        
+        return chart;
+    }
 }
 
 class StatisticsServiceLogic extends StatisticsServiceMap {
@@ -39,7 +56,7 @@ export class StatisticsService extends StatisticsServiceLogic {
 
         return this.http
             .get<BasicMonthlyBarchart>(this.url + 'getbasicmonthlybarchart', data)
-            .pipe(map(this.dummyMap));
+            .pipe(map(this.mapBMBDates));
     }
 
     private getBasicMonthlyBarchartMock(): Observable<any> {
