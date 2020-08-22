@@ -31,12 +31,13 @@ namespace MoneyStats.BL.Modules.Barchart
             // Fill up starting dates (if needed)
             this.FillInDateGaps(chart.Bars, from, transactions.First().Date.Value.AddMonths(-1));
 
-            // TODO !!! fix some kind of synch problem (?) 
-
             foreach (var tr in transactions)
             {
                 if (tr.Date < chart.From || tr.Date > chart.To)
                     continue;
+
+                if (tr.Date > chart.To)
+                    break;
 
                 BasicMonthlyBar currentMonthBar = null;
 
@@ -48,11 +49,7 @@ namespace MoneyStats.BL.Modules.Barchart
                 if (currentMonthBar == null || !this.IsSameMonth(currentMonthBar.Date, tr.Date.Value))
                 {
                     // Check for last item's localmax
-                    var localMax = this.GetLocalMax(currentMonthBar);
-                    if (chart.MaxValue < localMax)
-                    {
-                        chart.MaxValue = localMax;
-                    }
+                    this.CheckForMaxValue(chart);
 
                     // Fill in date gaps
                     if (currentMonthBar != null) // validated with !IsSameMonth
@@ -78,10 +75,21 @@ namespace MoneyStats.BL.Modules.Barchart
                 currentMonthBar.Transactions.Add(tr);
             }
 
+            this.CheckForMaxValue(chart);
+
             // Fill up ending dates (if needed)
             this.FillInDateGaps(chart.Bars, GetLast(chart.Bars).Date.AddMonths(1), to);
 
             return chart;
+        }
+
+        void CheckForMaxValue(BasicMonthlyBarchart chart)
+        {
+            var localMax = this.GetLocalMax(GetLast(chart.Bars));
+            if (chart.MaxValue < localMax)
+            {
+                chart.MaxValue = localMax;
+            }
         }
 
         BasicMonthlyBar GetLast(List<BasicMonthlyBar> list) => list[list.Count - 1];
