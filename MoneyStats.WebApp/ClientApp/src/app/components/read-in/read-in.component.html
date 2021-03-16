@@ -1,0 +1,27 @@
+<app-wizard-navigator-component [wizard]="wizard"></app-wizard-navigator-component>
+
+<button (click)="prev()">Previous</button>
+<button (click)="next()">Next</button>
+
+<!--<div class="dialog-contianer" [ngSwitch]="wizard.stepsAt">
+    <div *ngSwitchCase="0">
+        <div class="content center">    
+            <input type="file" class="file-browser" multiple placeholder="Upload file" accept=".xlsx,.xls" (change)="change_filesSelected($event)" />
+            <div class="mt10">
+                <div *ngFor="let file of readFiles">{{file.name}}</div>
+            </div>
+        </div>
+    </div>
+    <div *ngSwitchCase="1">
+        
+    </div>
+    <div *ngSwitchCase="2">
+        
+    </div>
+    <div *ngSwitchDefault>
+        <p>Something went wrong.</p>
+    </div>
+</div>-->
+
+
+

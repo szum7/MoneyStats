@@ -5,6 +5,13 @@ import { Common } from 'src/app/utilities/common.static';
 import { Transaction } from 'src/app/models/service-models/transaction.model';
 import { BasicMonthlyBar } from 'src/app/models/service-models/basic-monthly-bar.model';
 
+// TODO
+// - click blanket over bars
+// - order transactions by
+// - order asc, desc (icomperable)
+// - előjel abszolútérték szerinti sorrend (100, 10, 1, -200, -10, -2)
+// - to top btn
+// - 
 
 @Component({
     selector: 'app-basic-monthly-barchart-component',

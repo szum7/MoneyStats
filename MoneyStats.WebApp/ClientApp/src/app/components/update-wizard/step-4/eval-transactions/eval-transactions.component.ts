@@ -101,7 +101,7 @@ export class EvalTransactionsComponent implements OnInit {
     return ur;
   }
 
-  private getRulesFromUsedRules(ur: UsedRule[]): Rule[] {
+  private getNotExcludedRules(ur: UsedRule[]): Rule[] {
     let rules: Rule[] = [];
     for (let i = 0; i < ur.length; i++) {
       if (!ur[i].isExcluded) {
@@ -111,9 +111,17 @@ export class EvalTransactionsComponent implements OnInit {
     return rules;
   }
 
+  click_generateTransactions(): void {
+    let self = this;
+    self.getGeneratedTransactions(self.getNotExcludedRules(self.rules), self.bankRows, function (response: GeneratedTransaction[]) {
+      self.transactions = self.getUsedFromTransactions(response);
+      self.emitOutput();
+    });
+  }
+
   click_generatedTransactionsProgram(): void {
     let self = this;
-    self.getGeneratedTransactions(self.getRulesFromUsedRules(self.rules), self.bankRows, function (response: GeneratedTransaction[]) {
+    self.getGeneratedTransactions(self.getNotExcludedRules(self.rules), self.bankRows, function (response: GeneratedTransaction[]) {
       self.transactions = self.getUsedFromTransactions(response);
       self.emitOutput();
     });

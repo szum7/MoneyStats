@@ -9,7 +9,8 @@ import {
   faPlus, faWrench, faCheck, faTimes, faInfoCircle, 
   faEye, faEyeSlash, faCog, faTag, faAlignJustify, 
   faArrowRight, faArrowLeft, faChartBar, faChartPie, 
-  IconDefinition, faBan, faFeather } from '@fortawesome/free-solid-svg-icons';
+  IconDefinition, faBan, faFeather, faUniversity, 
+  faAngleDoubleRight, faClipboardList, faClipboardCheck } from '@fortawesome/free-solid-svg-icons';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Pages
@@ -18,6 +19,9 @@ import { TestTablePage } from './pages/test-table-page/test-table.page';
 import { UpdatePage } from './pages/update-page/update.page';
 import { ManageRulesPage } from './pages/manage-rules/manage-rules.page';
 import { StatisticsPage } from './pages/statistics/statistics.page';
+import { ApplyRulesPage } from './pages/apply-rules-page/apply-rules.page';
+import { ReadInPage } from './pages/read-in-page/read-in.page';
+import { BankRowToTransactionPage } from './pages/bank-row-to-transaction-page/bank-row-to-transaction.page';
 
 // Services
 import { LoadingScreenService } from './services/loading-screen-service/loading-screen.service';
@@ -46,6 +50,10 @@ import { SelectComponent } from './components/select/select.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { BasicMonthlyBarchartComponent } from './components/statistics/basic-monthly-barchart/basic-monthly-barchart.component';
 import { ReversePipe } from './pipes/reverse.pipe';
+import { ReadInComponent } from './components/read-in/read-in.component';
+import { BankRowToTransactionComponent } from './components/bank-row-to-transaction/bank-row-to-transaction.component';
+import { WizardNavigatorComponent } from './components/wizard-navigator/wizard-navigator.component';
+import { ApplyRulesComponent } from './components/apply-rules/apply-rules.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +63,9 @@ import { ReversePipe } from './pipes/reverse.pipe';
     UpdatePage,
     ManageRulesPage,
     StatisticsPage,
+    ApplyRulesPage,
+    ReadInPage,
+    BankRowToTransactionPage,
     // Components
     AppComponent,
     NavComponent,
@@ -69,8 +80,12 @@ import { ReversePipe } from './pipes/reverse.pipe';
     SelectComponent,
     DropdownComponent,
     BasicMonthlyBarchartComponent,
+    ReadInComponent,
+    BankRowToTransactionComponent,
+    ApplyRulesComponent,
     // Pipes
     ReversePipe,
+    WizardNavigatorComponent,
   ],
   imports: [
     BrowserModule,
@@ -84,6 +99,7 @@ import { ReversePipe } from './pipes/reverse.pipe';
       { path: 'update', component: UpdatePage },
       { path: 'rules', component: ManageRulesPage },
       { path: 'statistics', component: StatisticsPage },
+      { path: 'read-in', component: ReadInPage },
     ], { useHash: true })
   ],
   providers: [
@@ -109,7 +125,9 @@ export class AppModule {
       faArrowLeft, faArrowRight, faChartPie, faChartBar,
       faEye, faEyeSlash, faCheck, faTimes, 
       faWrench, faPlus, faMinus, faChevronDown, 
-      faChevronUp, faTrashAlt, faBan, faFeather
+      faChevronUp, faTrashAlt, faBan, faFeather,
+      faUniversity, faAngleDoubleRight, faClipboardList,
+      faClipboardCheck
     ];
 
     this.initIcons(library, icons);

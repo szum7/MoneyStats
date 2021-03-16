@@ -1,0 +1,25 @@
+<div class="wizard-nav">
+    <div class="step" *ngFor="let step of wizard.steps; let i = index" 
+        [ngStyle]="{'width': lineLength, 'height': stepHeightPercent}"
+        [ngClass]="{'first': i === 0, 'active': i <= wizard.stepsAt, 'green': step.isProgressable}">
+        <div class="line" *ngIf="i > 0"></div>
+        <div class="circle" (mouseover)="hoverToStep(i)" (mouseout)="hoverOutOfStep()"></div>
+    </div>
+    <div class="info-box">
+        <div class="arrow-width-box" [ngStyle]="{'width': arrowLeftPosition}">
+            <div class="arrow"></div>
+        </div>
+        <div class="info">
+            <h3>{{infoBoxStep.title}}</h3>
+            <p *ngFor="let dsc of infoBoxStep.description">{{dsc}}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Test area #1
+<hr>
+<button (click)="addError()">Add</button>
+<button (click)="removeError()">Remove</button>
+<button (click)="sout()">Sout</button>
+<hr>
+-->
