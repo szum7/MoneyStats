@@ -1,3 +1,10 @@
+
+
+  private flattenMatrix(matrix: any[][]): any[] {
+    return [].concat.apply([], matrix);
+  }
+
+
 steps.push(new WizardStep(
             "Introduction - Save bank data from exported files", 
             [

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { ExcelReader } from 'src/app/models/component-models/excel-reader';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
+import { ReadInBankRowsMerger } from 'src/app/models/component-models/read-in-bank-rows-merger';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
 import { Wizard, WizardStep } from '../wizard-navigator/wizard-navigator.component';
 
@@ -27,7 +28,7 @@ class ReadInFilesStep {
         this.wizard.addCriteria("No files are selected.");
     }
 
-    filesSelected(event: any, callback: (response: ReadInBankRow[][]) => void): void {
+    onChangeFilesSelected(event: any, callback: (response: ReadInBankRow[][]) => void): void {
         // Get the selected files
         let files = event.target.files;
     
@@ -75,6 +76,60 @@ class ReadInFilesStep {
     }
 }
 
+class SaveBankRowsStep {
+
+    public readInBankRows: ReadInBankRow[];
+    private wizard: Wizard;
+
+    constructor(wizard: Wizard) {
+        this.wizard = wizard;
+    }
+    
+    start(mappedExcelMatrix: ReadInBankRow[][]): void {
+
+        if (!mappedExcelMatrix || mappedExcelMatrix.length === 0) {
+            console.error("Input matrix is empty!");
+            return;
+        }
+    
+        // TODO research and understand why this (loadingScreen part) isn't working!
+        // Error: "Expression has changed after it was checked"
+        // https://blog.angular-university.io/angular-debugging/
+        //this.loadingScreen.start();
+    
+        new ReadInBankRowsMerger().searchForDuplicates(mappedExcelMatrix);
+        this.readInBankRows = this.flattenReadInBankRows(mappedExcelMatrix);
+    
+        //this.loadingScreen.stop();
+    
+        this.checkForErrors();
+        //this.nextStepChange.emit(this.readInBankRows);
+    }
+
+    private flattenReadInBankRows(matrix: ReadInBankRow[][]): ReadInBankRow[] {
+        let ret: ReadInBankRow[] = [];
+        let id: number = 0;
+        for (let i = 0; i < matrix.length; i++) {
+            let m = matrix[i];
+            for (let j = 0; j < m.length; j++) {
+                m[j].uiId = ++id;
+                ret.push(m[j]);
+            }
+        }
+        return ret;
+    }
+
+    checkForErrors(): void {
+        this.wizard.clearAlerts();
+        if (this.readInBankRows.length === 0) {
+            this.wizard.addCriteria("Bankrow count is zero!");
+        }
+        if (!this.readInBankRows.some(x => !x.isExcluded)) {
+            this.wizard.addCriteria("All bankrows are excluded!");
+        }
+    }
+}
+
 @Component({
     selector: 'app-read-in-component',
     templateUrl: './read-in.component.html',
@@ -84,8 +139,9 @@ export class ReadInComponent implements OnInit {
 
     public wizard: Wizard;
     public readInFilesStep: ReadInFilesStep;
+    public saveBankRowsStep: SaveBankRowsStep;
 
-    private mapper: ExcelBankRowMapper;
+    public mapper: ExcelBankRowMapper;
 
     constructor() { 
         this.initWizard();
@@ -95,6 +151,7 @@ export class ReadInComponent implements OnInit {
 
         // Init 1. step
         this.readInFilesStep = new ReadInFilesStep(this.wizard, this.mapper);
+        this.readInFilesStep.start();
     }
 
     ngOnInit() {
@@ -104,21 +161,18 @@ export class ReadInComponent implements OnInit {
     private initWizard(): void {
         let steps: WizardStep[] = [];
         steps.push(new WizardStep(
-            "Step 1 - Introduction to 'Save bank data from exported files'", 
+            "Step 1 - Read in exported files", 
+            ["Select which files you want to read in."]));
+        steps.push(new WizardStep(
+            "Step 2 - Eliminate duplicates between read files", 
             [
-                "This wizard will take you through the steps of saving bank exported excel data to the MoneyStats database.", 
-                "Read about - bank rows.", 
-                "Read about - transactions",
-                "Read about - Supported banks and export files"
+                "Select the records you wish to save to the database. The program helps you by detecting duplicates across multiple read files."
             ]));
         steps.push(new WizardStep(
-            "Step 2 - Read in exported files", 
-            ["Select which files you want to read in."]));
-            steps.push(new WizardStep(
-            "Step 3 - Eliminate duplicates and save", 
+            "Step 3 - Compare with database and save", 
             [
-                "Select the records you wish to save to the database.", 
-                "The program helps you by detecting duplicates across multiple read files. It compares every single read records with the ones already existing in the database by their properties. Duplicates are shown as excluded (grayed out) rows. (You can decide to include them if you think they're not duplicates)."
+                "Select the records you wish to save to the database.",
+                "The program compared every single records selected from the previous step with the ones already existing in the database. Comparison is done by properties. Duplicates are shown as excluded (grayed out) rows. (You can decide to include them if you know what you're doing and think they're not duplicates)."
             ]));
         this.wizard = new Wizard(steps);
     }
@@ -128,12 +182,11 @@ export class ReadInComponent implements OnInit {
         return BankType.KH;
     }
 
-    firstStepNext() {
-        this.wizard.next();
-        this.readInFilesStep.start();
+    step2Next() {
+        
     }
 
-    thirdStepNext() {
+    step3Next() {
         // confirm and save
     }
 
@@ -147,8 +200,37 @@ export class ReadInComponent implements OnInit {
 
     change_filesSelected(event): void {
         let self = this;
-        this.readInFilesStep.filesSelected(event, function(response: ReadInBankRow[][]) {
-            console.log(response);
+        this.readInFilesStep.onChangeFilesSelected(event, function(response: ReadInBankRow[][]) {
+            if (self.wizard.next()) {
+                self.saveBankRowsStep = new SaveBankRowsStep(self.wizard);
+                self.saveBankRowsStep.start(response);
+            }
         });
+    }
+
+    sortBy_bankRows(arr: Array<any>, property: string) {
+        return arr.sort((a, b) => this.dateComparer(a.bankRow[property], b.bankRow[property]));
+    }
+
+    private dateComparer(a, b) {
+        let d1 = (new Date(a)).getTime(), d2 = (new Date(b)).getTime();
+        return d1 > d2 ? 1 : d1 === d2 ? 0 : -1;
+    }
+    
+    click_toggleRowExclusion(row: ReadInBankRow): void {
+        row.toggleExclusion();
+        this.saveBankRowsStep.checkForErrors();
+    }
+
+    click_toggleDetails(row: ReadInBankRow): void {
+        row.isDetailsOpen = !row.isDetailsOpen;
+    }
+
+    click_switchDetailsMenu(row: ReadInBankRow, i: number): void {
+        row.detailsMenuPageAt = i;
+    }
+
+    getPrettyJson(obj: any): string {
+        return JSON.stringify(obj, null, 4);  
     }
 }

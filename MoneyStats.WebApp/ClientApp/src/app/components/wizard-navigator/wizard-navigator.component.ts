@@ -90,14 +90,15 @@ export class Wizard {
         this._stepsAt = 0;
     }
 
-    public next(): void {
+    public next(): boolean {
         if (this._stepsAt == this._steps.length - 1)
-            return;
+            return false;
 
         if (!this.isProgressable())
-            return;
+            return false;
 
         this._stepsAt++;
+        return true;
     }
 
     public previous(): boolean {
