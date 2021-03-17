@@ -22,6 +22,7 @@ export class ExcelBankRowMapper {
             new PropertyMapRow("I1", null, "100px", "currency", null),
             new PropertyMapRow("J1", null, "auto", "message", null)
         ],
+        [BankType.Raiffeisen]: [],
         [BankType.BudapestBank]: [],
         [BankType.CIB]: [],
         [BankType.OTP]: []

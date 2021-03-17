@@ -82,6 +82,10 @@ export class Wizard {
         }
     }
 
+    public isProgressable(): boolean {
+        return this.currentStep ? this.currentStep.isProgressable : false;
+    }
+
     public reset(): void {
         this._stepsAt = 0;
     }
@@ -90,7 +94,7 @@ export class Wizard {
         if (this._stepsAt == this._steps.length - 1)
             return;
 
-        if (!this.currentStep.isProgressable)
+        if (!this.isProgressable())
             return;
 
         this._stepsAt++;
@@ -105,11 +109,20 @@ export class Wizard {
         return true;
     }
 
-    public set(i: number): void {
-        if (i < 0 || i === this._stepsAt || i > this._steps.length - 1)
-            return;
+    public clearAlerts(): void {
+        this.currentStep.stepAlerts = [];
+    }
 
-        this._stepsAt = i;
+    public addCriteria(title: string): void {
+        this.currentStep.stepAlerts.push(new StepAlert(title).setToCriteria());
+    }
+
+    public addMessage(title: string): void {
+        this.currentStep.stepAlerts.push(new StepAlert(title).setToMessage());
+    }
+
+    public addGreenText(title: string): void {
+        this.currentStep.stepAlerts.push(new StepAlert(title).setToGreenText());
     }
 }
 
