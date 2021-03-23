@@ -1,39 +1,47 @@
 import { Component, OnInit } from '@angular/core';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { ExcelReader } from 'src/app/models/component-models/excel-reader';
+import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 import { ReadInBankRowsMerger } from 'src/app/models/component-models/read-in-bank-rows-merger';
+import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
+import { BankRowService } from 'src/app/services/bank-row.service';
+import { StaticMessages } from 'src/app/utilities/input-messages.static';
 import { Wizard, WizardStep } from '../wizard-navigator/wizard-navigator.component';
 
 class ReadInFilesStep {
 
-    public readFiles: any[];
-    private reader: ExcelReader;
-    private wizard: Wizard;
+    private _readFiles: any[];
+    private _reader: ExcelReader;
+    private _wizard: Wizard;
+
+    public get readFiles(): any[] {
+        return this._readFiles;
+    }
 
     constructor(wizard: Wizard, mapper: ExcelBankRowMapper) {
-        this.readFiles = [];
-        this.reader = new ExcelReader(mapper);
-        this.wizard = wizard;
+        this._readFiles = [];
+        this._reader = new ExcelReader(mapper);
+        this._wizard = wizard;
     }
 
     start(): void {
-        this.readFiles = [];
+        this._readFiles = [];
         this.setInitAlerts();
     }
 
     private setInitAlerts(): void {
-        this.wizard.clearAlerts();
-        this.wizard.addCriteria("No files are selected.");
+        this._wizard.clearAlerts();
+        this._wizard.addCriteria("No files are selected.");
     }
 
-    onChangeFilesSelected(event: any, callback: (response: ReadInBankRow[][]) => void): void {
+    readSelectedFiles(event: any, callback: (response: ReadInBankRow[][]) => void): void {
         // Get the selected files
         let files = event.target.files;
     
         // Save filenames
-        this.readFiles = files;
+        this._readFiles = files;
         
         if (files == null || files.length === 0) {
             console.error("No files were selected.");
@@ -41,13 +49,13 @@ class ReadInFilesStep {
         }
 
         // Read files
-        let mappedExcelMatrix: ReadInBankRow[][] = this.reader.getBankRowMatrix(files);
+        let mappedExcelMatrix: ReadInBankRow[][] = this._reader.getBankRowMatrix(files);
     
         // Wait for reader to read files
         var self = this;
         //this.loadingScreen.start(); // TODO
         var finishedReadingInterval = setInterval(function () {    
-            if (self.reader.isReadingFinished()) {
+            if (self._reader.isReadingFinished()) {
                 clearInterval(finishedReadingInterval);
 
                 // Evaluate read files
@@ -61,7 +69,7 @@ class ReadInFilesStep {
                 //self.emitOutput(mappedExcelMatrix, self.mapper);
                 self.checkForErrors();
 
-                if (self.wizard.isProgressable()) {
+                if (self._wizard.isProgressable()) {
                     callback(mappedExcelMatrix);
                 }
             }
@@ -69,20 +77,24 @@ class ReadInFilesStep {
     }
 
     private checkForErrors(): void {
-        this.wizard.clearAlerts();
-        if (this.readFiles.length === 0) {
-            this.wizard.addCriteria("No files were selected.");
+        this._wizard.clearAlerts();
+        if (this._readFiles.length === 0) {
+            this._wizard.addCriteria("No files were selected.");
         }
     }
 }
 
 class SaveBankRowsStep {
 
-    public readInBankRows: ReadInBankRow[];
-    private wizard: Wizard;
+    private _readInBankRows: ReadInBankRow[];
+    private _wizard: Wizard;
+
+    public get readInBankRows(): ReadInBankRow[] {
+        return this._readInBankRows;
+    }
 
     constructor(wizard: Wizard) {
-        this.wizard = wizard;
+        this._wizard = wizard;
     }
     
     start(mappedExcelMatrix: ReadInBankRow[][]): void {
@@ -98,7 +110,7 @@ class SaveBankRowsStep {
         //this.loadingScreen.start();
     
         new ReadInBankRowsMerger().searchForDuplicates(mappedExcelMatrix);
-        this.readInBankRows = this.flattenReadInBankRows(mappedExcelMatrix);
+        this._readInBankRows = this.flattenReadInBankRows(mappedExcelMatrix);
     
         //this.loadingScreen.stop();
     
@@ -120,12 +132,84 @@ class SaveBankRowsStep {
     }
 
     checkForErrors(): void {
-        this.wizard.clearAlerts();
-        if (this.readInBankRows.length === 0) {
-            this.wizard.addCriteria("Bankrow count is zero!");
+        this._wizard.clearAlerts();
+        if (this._readInBankRows.length === 0) {
+            this._wizard.addCriteria("Bankrow count is zero!");
         }
-        if (!this.readInBankRows.some(x => !x.isExcluded)) {
-            this.wizard.addCriteria("All bankrows are excluded!");
+        if (!this._readInBankRows.some(x => !x.isExcluded)) {
+            this._wizard.addCriteria("All bankrows are excluded!");
+        }
+    }
+}
+
+class CompareWithDbStep {
+
+    private _wizard: Wizard;
+    private _bankRowService: BankRowService;
+    private _bankRows: ReadBankRowForDbCompare[];
+
+    constructor(wizard: Wizard, bankRowService: BankRowService) {
+        this._wizard = wizard;
+        this._bankRowService = bankRowService;
+    }
+
+    start(callback: (response: ReadBankRowForDbCompare[]) => void): void {
+        let self = this;
+        //self.loadingScreen.start();
+        self.getBankRowsFromDb(function (dbList) {
+
+            self.compareDbToFileRows(dbList);
+            //self.loadingScreen.stop();
+            console.log("Compare finished");
+
+            callback(self._bankRows);
+            //self.nextStepChange.emit(self.bankRows);
+            self.checkForErrors();
+        });
+    }
+
+    private getBankRowsFromDb(callback: (response: Array<BankRow>) => void): void {
+        this._bankRowService.get().subscribe(response => {
+            console.log("=> getBankRowsFromDb:");
+            console.log(response);
+            console.log("<=");
+            callback(response);
+        }, error => {
+            console.error("Couldn't get bank rows from database!");
+            console.log(error);
+        });
+    }
+
+    // TODO do this server side!
+    private compareDbToFileRows(dbList: Array<BankRow>): void {
+        for (let i = 0; i < dbList.length; i++) {
+            let dbRow: BankRow = dbList[i];
+            for (let j = 0; j < this._bankRows.length; j++) {
+                let fileRow: ReadBankRowForDbCompare = this._bankRows[j];
+
+                if (dbRow.getContentId() === fileRow.bankRow.getContentId()) {
+                    fileRow.messages.push(StaticMessages.MATCHING_READ_BANKROW_WITH_DB);
+                    fileRow.setToExclude();
+                }
+
+            }
+        }
+    }
+
+    private checkForErrors(): void {
+        this._wizard.clearAlerts();
+
+        // Error messages
+        if (this._bankRows.length === 0) {
+            this._wizard.addCriteria("Bankrow count is zero!");
+        }
+        if (!this._bankRows.some(x => !x.isExcluded)) {
+            this._wizard.addCriteria("All bankrows are excluded!");
+        }
+
+        // Success messages
+        if (this._wizard.isProgressable()) {
+            this._wizard.addMessage("By clicking next step, the new BankRows will be saved to database!");
         }
     }
 }
@@ -140,10 +224,11 @@ export class ReadInComponent implements OnInit {
     public wizard: Wizard;
     public readInFilesStep: ReadInFilesStep;
     public saveBankRowsStep: SaveBankRowsStep;
+    public compareWithDbStep: CompareWithDbStep;
 
     public mapper: ExcelBankRowMapper;
 
-    constructor() { 
+    constructor(private bankRowService: BankRowService) { 
         this.initWizard();
 
         // Init global properties
@@ -160,20 +245,20 @@ export class ReadInComponent implements OnInit {
 
     private initWizard(): void {
         let steps: WizardStep[] = [];
+
         steps.push(new WizardStep(
             "Step 1 - Read in exported files", 
             ["Select which files you want to read in."]));
         steps.push(new WizardStep(
             "Step 2 - Eliminate duplicates between read files", 
-            [
-                "Select the records you wish to save to the database. The program helps you by detecting duplicates across multiple read files."
-            ]));
+            ["Select the records you wish to save to the database. The program helps you by detecting duplicates across multiple read files."]));
         steps.push(new WizardStep(
             "Step 3 - Compare with database and save", 
             [
                 "Select the records you wish to save to the database.",
                 "The program compared every single records selected from the previous step with the ones already existing in the database. Comparison is done by properties. Duplicates are shown as excluded (grayed out) rows. (You can decide to include them if you know what you're doing and think they're not duplicates)."
             ]));
+        
         this.wizard = new Wizard(steps);
     }
 
@@ -183,7 +268,13 @@ export class ReadInComponent implements OnInit {
     }
 
     step2Next() {
-        
+        if (!this.wizard.isProgressable())
+            return;
+
+        this.compareWithDbStep = new CompareWithDbStep(this.wizard, this.bankRowService);
+        this.compareWithDbStep.start(function(response: ReadBankRowForDbCompare[]) {
+            
+        });
     }
 
     step3Next() {
@@ -200,7 +291,7 @@ export class ReadInComponent implements OnInit {
 
     change_filesSelected(event): void {
         let self = this;
-        this.readInFilesStep.onChangeFilesSelected(event, function(response: ReadInBankRow[][]) {
+        this.readInFilesStep.readSelectedFiles(event, function(response: ReadInBankRow[][]) {
             if (self.wizard.next()) {
                 self.saveBankRowsStep = new SaveBankRowsStep(self.wizard);
                 self.saveBankRowsStep.start(response);
