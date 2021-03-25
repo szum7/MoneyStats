@@ -1,7 +1,8 @@
 <div class="left-side-menu">
-    <section class="btns" #btnsElement>
+    <section class="btns">
+    <!-- <section class="btns" #btnsElement> -->
         <!-- Next step btn -->
-        <div class="btn-item" (click)="click_NextStep()">
+        <!-- <div class="btn-item" (click)="click_NextStep()">
             <div class="btn-toggle">
                 <div *ngIf="!wizard.currentStep.isProgressable">
                     <fa-icon icon="times"></fa-icon>
@@ -31,15 +32,15 @@
                         {{tip.title}}</li>
                 </ul>
             </div>
-        </div>
+        </div> -->
         <!-- Previous step btn -->
-        <div class="btn-item" (click)="click_PrevStep()" [ngClass]="{'unabled': wizard.stepsAt <= 0}"
+        <!-- <div class="btn-item" (click)="click_PrevStep()" [ngClass]="{'unabled': wizard.stepsAt <= 0}"
             ngbTooltip="Previous step" tooltipClass="general-tooltip no-wrap" placement="right"
             [disableTooltip]="isTooltipsDisabled">
             <div class="btn-toggle">
                 <fa-icon icon="arrow-left"></fa-icon>
             </div>
-        </div>
+        </div> -->
         <!-- Settings btn -->
         <div ngbTooltip="Settings" tooltipClass="general-tooltip no-wrap" placement="right"
             [disableTooltip]="isTooltipsDisabled">
@@ -76,47 +77,53 @@
             </div>
         </div>
     </section>
-    <section class="wizard-nav-section" #wizardNavElement>
+    <!-- <section class="wizard-nav-section" #wizardNavElement>
         <app-wizard-navigation [isTooltipsHidden]="isTooltipsDisabled" [stepsAt]="wizard.stepsAt"
             [wizardSteps]="wizard.wizardSteps"></app-wizard-navigation>
-    </section>
+    </section> -->
 </div>
 
 <div class="update-page-content right-side-content">
-    <div class="dialog-contianer" [ngSwitch]="wizard.stepsAt">
+
+    <app-wizard-navigator-component [wizard]="wizardNav"></app-wizard-navigator-component>
+    
+    <div class="dialog-contianer" [ngSwitch]="wizardNav.stepsAt">
         <div *ngSwitchCase="0">
             <div class="padd10 center">
-                <h2 class="mt20">{{wizard.wizardSteps[0].title}}</h2>
+                <!-- <h2 class="mt20">{{wizard.wizardSteps[0].title}}</h2> -->
                 <p>
                     Import files from your local drive. <br />
                     Supported format: <strong>.xls, .xlsx</strong>. <br />
                     Supported transactions: <strong>K&H</strong>.
                 </p>
             </div>
-            <app-choose-file (nextStepChange)="output_change($event)"
-                (nextStepAlertsChange)="output_stepAlertChange($event)"></app-choose-file>
+            <app-choose-file 
+                [wizard]="wizardNav" 
+                (nextStepChange)="outputChange_step1($event)"></app-choose-file>
         </div>
         <div *ngSwitchCase="1">
             <div class="padd10 center">
-                <h2 class="mt20">{{wizard.wizardSteps[1].title}}</h2>
+                <!-- <h2 class="mt20">{{wizard.wizardSteps[1].title}}</h2>
                 <p>
                     The program finds the duplicates across multiple files and omits them.
-                </p>
+                </p> -->
             </div>
-            <app-read-files-component [params]="wizard.wizardSteps[1].$input" [mapper]="wizard.utils.bankMapper"
-                (nextStepChange)="output_change($event)" (nextStepAlertsChange)="output_stepAlertChange($event)">
+            <app-read-files-component 
+                [$input]="manageReadFilesInput" 
+                (nextStepChange)="outputChange_step2($event)">
             </app-read-files-component>
         </div>
         <div *ngSwitchCase="2">
             <div class="padd10 center">
-                <h2 class="mt20">{{wizard.wizardSteps[2].title}}</h2>
+                <!-- <h2 class="mt20">{{wizard.wizardSteps[2].title}}</h2>
                 <p>
                     The program will compare the browsed, read-in BankRows from the previous step with what the database
                     already has. Recommends exclusion of duplicates.
-                </p>
+                </p> -->
             </div>
-            <app-compare-db-component [params]="wizard.wizardSteps[2].$input" [mapper]="wizard.utils.bankMapper"
-                (nextStepChange)="output_change($event)" (nextStepAlertsChange)="output_stepAlertChange($event)">
+            <app-compare-db-component 
+                [$input]="compareDbInput"
+                (nextStepChange)="outputChange_step3($event)">
             </app-compare-db-component>
         </div>
         <div *ngSwitchCase="3">

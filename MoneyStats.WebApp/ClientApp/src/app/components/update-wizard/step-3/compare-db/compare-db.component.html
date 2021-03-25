@@ -1,5 +1,5 @@
 <div class="content">
-    <div class="tr-table" *ngIf="bankRows != null && bankRows.length > 0">
+    <div class="tr-table" *ngIf="!isError && bankRows != null && bankRows.length > 0">
         <!-- Header -->
         <div class="tr-row header">
             <!-- Actions head -->
@@ -71,5 +71,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div *ngIf="isError">
+        <p>Error imminent, doom approaches.</p>
     </div>
 </div>

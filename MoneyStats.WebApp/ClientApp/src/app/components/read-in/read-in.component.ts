@@ -8,7 +8,7 @@ import { BankRow } from 'src/app/models/service-models/bank-row.model';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
 import { BankRowService } from 'src/app/services/bank-row.service';
 import { StaticMessages } from 'src/app/utilities/input-messages.static';
-import { Wizard, WizardStep } from '../wizard-navigator/wizard-navigator.component';
+import { Wizard, WizardNavStep } from '../wizard-navigator/wizard-navigator.component';
 
 class ReadInFilesStep {
 
@@ -244,15 +244,15 @@ export class ReadInComponent implements OnInit {
     }
 
     private initWizard(): void {
-        let steps: WizardStep[] = [];
+        let steps: WizardNavStep[] = [];
 
-        steps.push(new WizardStep(
+        steps.push(new WizardNavStep(
             "Step 1 - Read in exported files", 
             ["Select which files you want to read in."]));
-        steps.push(new WizardStep(
+        steps.push(new WizardNavStep(
             "Step 2 - Eliminate duplicates between read files", 
             ["Select the records you wish to save to the database. The program helps you by detecting duplicates across multiple read files."]));
-        steps.push(new WizardStep(
+        steps.push(new WizardNavStep(
             "Step 3 - Compare with database and save", 
             [
                 "Select the records you wish to save to the database.",

@@ -1,9 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 enum StepAlertType {
+    /** Actions to be performed or fixed by the user before the step can progress. */
     Criteria,
+    /** For step-breaking (e.g.: server is unreachable) or just general errors. */
+    Error,
+    /** Hints and general messages. */
     Message,
-    GreenText
 }
 
 class StepAlert {
@@ -24,13 +27,13 @@ class StepAlert {
         return this;
     }
 
-    public setToGreenText() {
-        this.type = StepAlertType.GreenText;
+    public setToError() {
+        this.type = StepAlertType.Error;
         return this;
     }
 }
 
-export class WizardStep {
+export class WizardNavStep {
 
     public title: string;
     public description: string[];
@@ -57,23 +60,23 @@ export class Wizard {
 
     public hoverStepsAt: number;
     private _stepsAt: number;
-    private _steps: WizardStep[];
+    private _steps: WizardNavStep[];
 
     public get stepsAt(): number { return this._stepsAt; }
-    public get steps(): WizardStep[] { return this._steps; }
+    public get steps(): WizardNavStep[] { return this._steps; }
 
-    public get currentStep(): WizardStep {
+    public get currentStep(): WizardNavStep {
         if (this._stepsAt < 0) {
             return null;
         }
         return this._steps[this._stepsAt];
     }
 
-    public get hoverStep(): WizardStep {
+    public get hoverStep(): WizardNavStep {
         return this._steps[this.hoverStepsAt];
     }
 
-    constructor(steps: WizardStep[]) {
+    constructor(steps: WizardNavStep[]) {
         if (steps != null && steps.length > 0) {
             this._steps = steps;
             this.reset();
@@ -91,11 +94,13 @@ export class Wizard {
     }
 
     public next(): boolean {
-        if (this._stepsAt == this._steps.length - 1)
+        if (this._stepsAt == this._steps.length - 1) {
             return false;
+        }
 
-        if (!this.isProgressable())
-            return false;
+        // if (!this.isProgressable()) {
+        //     return false;
+        // }
 
         this._stepsAt++;
         return true;
@@ -122,8 +127,8 @@ export class Wizard {
         this.currentStep.stepAlerts.push(new StepAlert(title).setToMessage());
     }
 
-    public addGreenText(title: string): void {
-        this.currentStep.stepAlerts.push(new StepAlert(title).setToGreenText());
+    public addError(title: string): void {
+        this.currentStep.stepAlerts.push(new StepAlert(title).setToError());
     }
 }
 
@@ -164,7 +169,7 @@ export class WizardNavigatorComponent implements OnInit {
         this.isHoverOn = false;
     }
 
-    get infoBoxStep(): WizardStep {
+    get infoBoxStep(): WizardNavStep {
         return this.isHoverOn ? this.wizard.hoverStep : this.wizard.currentStep;
     }
 

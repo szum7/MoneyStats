@@ -1,10 +1,29 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 import { ExcelReader } from 'src/app/models/component-models/excel-reader';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
 import { StepAlert } from 'src/app/models/component-models/step-alert.model';
+import { Wizard } from 'src/app/components/wizard-navigator/wizard-navigator.component';
+
+// interface IWizardStep {
+//     checkForAlerts(): void;
+// }
+
+export abstract class WizardStepBase {
+    protected abstract checkForAlerts(): void;
+    public abstract next(): void;
+}
+
+export class ChooseFileOutput {
+    matrix: ReadInBankRow[][]; 
+    mapper: ExcelBankRowMapper;
+    constructor(matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper) {
+        this.mapper = mapper;
+        this.matrix = matrix;
+    }
+}
 
 /// <summary>
 /// This component let's you browse for multiple files on your local machine, 
@@ -13,86 +32,131 @@ import { StepAlert } from 'src/app/models/component-models/step-alert.model';
 /// could take a guess).
 /// </summary>
 @Component({
-  selector: 'app-choose-file',
-  templateUrl: './choose-file.component.html',
-  styleUrls: ['./choose-file.component.scss']
+    selector: 'app-choose-file',
+    templateUrl: './choose-file.component.html',
+    styleUrls: ['./choose-file.component.scss']
 })
-export class ChooseFileComponent implements OnInit {
+export class ChooseFileComponent extends WizardStepBase implements OnInit {
 
-  @Output() nextStepChange = new EventEmitter<{ matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper }>();
-  @Output() nextStepAlertsChange = new EventEmitter<string[]>();
+    @Input() wizard: Wizard;
+    @Output() nextStepChange = new EventEmitter<ChooseFileOutput>();
+    //@Output() wizardNavigationChange = new EventEmitter<{ wizard: Wizard }>();
+    //@Output() nextStepAlertsChange = new EventEmitter<string[]>();
 
-  public readFiles: any[];
+    public readFiles: any[];
+    public isBusy: boolean;
 
-  private reader: ExcelReader;
-  private mapper: ExcelBankRowMapper;
+    private reader: ExcelReader;
 
-  constructor(private loadingScreen: LoadingScreenService) {
-    this.readFiles = [];
-    this.mapper = new ExcelBankRowMapper(this.getBankType());
-    this.reader = new ExcelReader(this.mapper);
-  }
+    private mapper: ExcelBankRowMapper;
+    private mappedExcelMatrix: ReadInBankRow[][];
 
-  ngOnInit() {
-    let self = this;
-    setTimeout(function(){
-      self.emitNextStepAlerts();
-    });
-  }
-
-  private getBankType(): BankType {
-    // LATER ask user to provide us with this value or realize it based on the file
-    return BankType.KH;
-  }
-
-  change_filesSelected(event): void {
-
-    // Get the selected files
-    let files = event.target.files;
-
-    // Save filenames
-    this.readFiles = files;
-
-    // Read files
-    if (files == null || files.length === 0) {
-      console.log("No files uploaded.");
-      return;
+    constructor(private loadingScreen: LoadingScreenService) {
+        super();
+        this.readFiles = [];
+        this.mapper = new ExcelBankRowMapper(this.getBankType());
+        this.reader = new ExcelReader(this.mapper);
+        this.isBusy = false;
     }
-    let mappedExcelMatrix: ReadInBankRow[][] = this.reader.getBankRowMatrix(files);
 
-    // Wait for reader to read files
-    var self = this;
-    //this.loadingScreen.start(); // TODO
-    var finishedReadingInterval = setInterval(function () {
+    ngOnInit() {
+        this.checkForAlerts();
+        // setTimeout(function () {
+        //     self.emitNextStepAlerts();
+        // });
+    }
 
-      if (self.reader.isReadingFinished()) {
-        clearInterval(finishedReadingInterval);
+    private getBankType(): BankType {
+        // LATER ask user to provide us with this value or realize it based on the file
+        return BankType.KH;
+    }
 
-        // Evaluate read files
-        if (mappedExcelMatrix == null || mappedExcelMatrix.length == 0) {
-          console.log("No read files/rows to work with.");
+    change_filesSelected(event): void {
+
+        var self = this;
+
+        self.isBusy = true;
+
+        self.mappedExcelMatrix = null;
+
+        // Get the selected files
+        let files = event.target.files;
+
+        // Save filenames
+        self.readFiles = files;
+
+        // Read files
+        if (files == null || files.length === 0) {
+            console.log("No files uploaded.");
+            return;
         }
 
-        //self.loadingScreen.stop();
-        console.log(mappedExcelMatrix);
+        // This is an async program
+        self.mappedExcelMatrix = self.reader.getBankRowMatrix(files);
 
-        self.emitOutput(mappedExcelMatrix, self.mapper);
-        self.emitNextStepAlerts();
-      }
-    }, 50);
-  }
+        // Wait for reader to read files
+        //self.loadingScreen.start(); // TODO
+        var finishedReadingInterval = setInterval(function () {
 
-  private emitNextStepAlerts(): void {
-    let alerts = [];
-    
-    if (this.readFiles.length === 0) {
-      alerts.push(new StepAlert("No files were selected.").setToCriteria());
+            if (self.reader.isReadingFinished()) {
+                clearInterval(finishedReadingInterval);
+
+                // Evaluate read files
+                if (self.mappedExcelMatrix == null || self.mappedExcelMatrix.length == 0) {
+                    console.log("No read files/rows to work with.");
+                }
+
+                //self.loadingScreen.stop();
+                console.log(self.mappedExcelMatrix);
+
+                //self.emitOutput(mappedExcelMatrix, self.mapper);
+                //self.emitNextStepAlerts();
+
+                self.checkForAlerts();
+                self.isBusy = false;
+            }
+        }, 50);
     }
 
-    this.nextStepAlertsChange.emit(alerts);
-  }
+    checkForAlerts(): void {
+        this.wizard.clearAlerts();
 
-  private emitOutput(mappedExcelMatrix: ReadInBankRow[][], mapper: ExcelBankRowMapper): void {
-    this.nextStepChange.emit({ matrix: mappedExcelMatrix, mapper: mapper });
-  }
+        if (this.readFiles.length === 0) {
+            this.wizard.addCriteria("No files were selected.");
+        }
+
+        //this.emitWizardNavigtionOutput();
+    }
+
+    // private emitNextStepAlerts(): void {
+    //     let alerts = [];
+
+    //     if (this.readFiles.length === 0) {
+    //         alerts.push(new StepAlert("No files were selected.").setToCriteria());
+    //     }
+
+    //     this.nextStepAlertsChange.emit(alerts);
+    // }
+
+    private emitOutput(): void {
+        this.nextStepChange.emit(new ChooseFileOutput(this.mappedExcelMatrix, this.mapper));
+    }
+
+    // private emitWizardNavigtionOutput(): void {
+    //     this.wizardNavigationChange.emit({ wizard: this.wizard });
+    // }
+
+    next(): void {
+        if (!this.wizard.isProgressable()) {
+            return;
+        }
+        if (this.isBusy) {
+            return;
+        }
+        
+        this.emitOutput();
+        this.wizard.next();
+        
+        //this.emitWizardNavigtionOutput();
+    }
 }

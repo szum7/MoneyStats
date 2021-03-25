@@ -16,6 +16,8 @@ import { BankRowService } from 'src/app/services/bank-row.service';
 import { Common } from 'src/app/utilities/common.static';
 import { RuleService } from 'src/app/services/rule.service';
 import { UsedGeneratedTransaction } from "src/app/components/update-wizard/step-4/eval-transactions/used-generated-transaction";
+import { Wizard, WizardNavStep } from 'src/app/components/wizard-navigator/wizard-navigator.component';
+import { ChooseFileOutput } from 'src/app/components/update-wizard/step-1/choose-file/choose-file.component';
 
 export class ImportFilesStep extends WizardStep {
 
@@ -253,6 +255,32 @@ export class UpdateWizard {
     }
 }
 
+export class ManageReadFilesInput {
+
+    wizard: Wizard;
+    readInBankRow: ReadInBankRow[][];
+    mapper: ExcelBankRowMapper;
+
+    constructor(wizard: Wizard, readInBankRow: ReadInBankRow[][], mapper: ExcelBankRowMapper) {
+        this.wizard = wizard;
+        this.readInBankRow = readInBankRow;
+        this.mapper = mapper;
+    }
+}
+
+export class CompareDbInput {
+
+    wizard: Wizard;
+    readBankRowForDbCompare: ReadBankRowForDbCompare[];
+    mapper: ExcelBankRowMapper;
+
+    constructor(wizard: Wizard, readBankRowForDbCompare: ReadBankRowForDbCompare[], mapper: ExcelBankRowMapper) {
+        this.wizard = wizard;
+        this.readBankRowForDbCompare = readBankRowForDbCompare;
+        this.mapper = mapper;
+    }
+}
+
 @Component({
     selector: 'app-update-page',
     templateUrl: './update.page.html',
@@ -260,6 +288,10 @@ export class UpdateWizard {
     encapsulation: ViewEncapsulation.None // TODO add comment why this is needed (?)
 })
 export class UpdatePage implements OnInit, AfterViewInit {
+
+    manageReadFilesInput: ManageReadFilesInput;
+    compareDbInput: CompareDbInput;
+    mapper: ExcelBankRowMapper;
 
     wizard: UpdateWizard;
     isTooltipsDisabled: boolean;
@@ -271,9 +303,11 @@ export class UpdatePage implements OnInit, AfterViewInit {
         return this.wizard.currentStep.isProgressable;
     }
 
-    @ViewChild('wizardNavElement', null) wizardNavView: ElementRef;
-    @ViewChild('btnsElement', null) btnsView: ElementRef;
+    //@ViewChild('wizardNavElement', null) wizardNavView: ElementRef;
+    //@ViewChild('btnsElement', null) btnsView: ElementRef;
     wizardNavMaxHeight: number;
+
+    public wizardNav: Wizard;
 
     constructor(
         private loadingScreen: LoadingScreenService,
@@ -283,16 +317,37 @@ export class UpdatePage implements OnInit, AfterViewInit {
 
         this.wizard = new UpdateWizard(bankRowService, generatedTransactionService);
         this.isTooltipsDisabled = true;
+        
+        this.initWizard();
     }
 
     ngAfterViewInit(): void {
-        this.initWizardNavPositionAndHeight();
+        //this.initWizardNavPositionAndHeight();
     }
 
     ngOnInit(): void {
         this.wizard.setFirstStep();
 
         //this.testLastStep();
+    }
+
+    private initWizard(): void {
+        let steps: WizardNavStep[] = [];
+
+        steps.push(new WizardNavStep(
+            "Step 1 - Read in exported files", 
+            ["Select which files you want to read in."]));
+        steps.push(new WizardNavStep(
+            "Step 2 - Eliminate duplicates between read files", 
+            ["Select the records you wish to save to the database. The program helps you by detecting duplicates across multiple read files."]));
+        steps.push(new WizardNavStep(
+            "Step 3 - Compare with database and save", 
+            [
+                "Select the records you wish to save to the database.",
+                "The program compared every single records selected from the previous step with the ones already existing in the database. Comparison is done by properties. Duplicates are shown as excluded (grayed out) rows. (You can decide to include them if you know what you're doing and think they're not duplicates)."
+            ]));
+        
+        this.wizardNav = new Wizard(steps);
     }
 
     test() { // TEST
@@ -323,20 +378,20 @@ export class UpdatePage implements OnInit, AfterViewInit {
         });
     }
 
-    private initWizardNavPositionAndHeight(): void {
-        let btnsHeight = this.btnsView.nativeElement.offsetHeight;
-        this.wizardNavView.nativeElement.style.top = btnsHeight + "px";
-    }
+    // private initWizardNavPositionAndHeight(): void {
+    //     let btnsHeight = this.btnsView.nativeElement.offsetHeight;
+    //     this.wizardNavView.nativeElement.style.top = btnsHeight + "px";
+    // }
 
-    click_NextStep() {
-        this.wizard.next();
-    }
+    // click_NextStep() {
+    //     this.wizard.next();
+    // }
 
-    click_PrevStep() {
-        this.wizard.previous();
-        // TODO could null out the last updateResult (first, second or third)
-        // TODO alert user if sure about going back (handle misclicks)
-    }
+    // click_PrevStep() {
+    //     this.wizard.previous();
+    //     // TODO could null out the last updateResult (first, second or third)
+    //     // TODO alert user if sure about going back (handle misclicks)
+    // }
 
     click_toggleTitleTags(): void {
         this.isTooltipsDisabled = !this.isTooltipsDisabled;
@@ -348,5 +403,46 @@ export class UpdatePage implements OnInit, AfterViewInit {
 
     output_stepAlertChange($output: StepAlert[]): void {
         this.wizard.currentStep.stepAlerts = $output;
+    }
+
+    output_wizardNavigationChange($output: Wizard): void {
+        this.wizardNav = $output;
+    }
+
+    outputChange_step1($output: ChooseFileOutput): void {
+        this.mapper = $output.mapper;
+        this.manageReadFilesInput = new ManageReadFilesInput(this.wizardNav, $output.matrix, $output.mapper);
+    }
+
+    outputChange_step2($output: ReadInBankRow[]): void {
+        if (this.mapper == null) {
+            console.error("Mapper is null!");
+            return;
+        }
+
+        let cast: ReadBankRowForDbCompare[] = [];
+
+        for (let i = 0; i < $output.length; i++) {
+            if (!$output[i].isExcluded) {
+                let c = $output[i];
+
+                let m = new ReadBankRowForDbCompare();
+                m.bankRow = c.bankRow;
+                m.uiId = c.uiId;
+
+                cast.push(m);
+            }
+        }
+
+        if (cast.length === 0) {
+            console.error("List is empty!");
+            return;
+        }
+
+        this.compareDbInput = new CompareDbInput(this.wizardNav, cast, this.mapper);
+    }
+
+    outputChange_step3($output: any): void {
+        // Some sort of success message or log. Save happens inside the component.
     }
 }
