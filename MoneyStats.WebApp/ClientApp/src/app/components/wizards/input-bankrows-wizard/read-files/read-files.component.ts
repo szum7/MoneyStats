@@ -3,34 +3,35 @@ import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row'
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { ReadInBankRowsMerger } from 'src/app/models/component-models/read-in-bank-rows-merger';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
-import { StepAlert } from 'src/app/models/component-models/step-alert.model';
-import { ManageReadFilesInput } from 'src/app/pages/update-page/update.page';
-import { WizardStepBase } from '../../step-1/choose-file/choose-file.component';
-import { Wizard } from 'src/app/components/wizard-navigator/wizard-navigator.component';
+import { WizardNavigator } from 'src/app/components/wizards/wizard-navigator/wizard-navigator.component';
+import { WizardStep } from '../../wizard-step.model';
+
+export class ManageReadFilesInput {
+
+    wizard: WizardNavigator;
+    readInBankRow: ReadInBankRow[][];
+    mapper: ExcelBankRowMapper;
+
+    constructor(wizard: WizardNavigator, readInBankRow: ReadInBankRow[][], mapper: ExcelBankRowMapper) {
+        this.wizard = wizard;
+        this.readInBankRow = readInBankRow;
+        this.mapper = mapper;
+    }
+}
 
 @Component({
     selector: 'app-read-files-component',
     templateUrl: './read-files.component.html',
     styleUrls: ['./read-files.component.scss']
 })
-export class ReadFilesComponent extends WizardStepBase implements OnInit {
+export class ReadFilesComponent extends WizardStep implements OnInit {
 
     @Input() $input: ManageReadFilesInput;
-    //@Input() mapper: ExcelBankRowMapper;
+    public get mapper(): ExcelBankRowMapper { return this.$input.mapper; }
+    public get mappedExcelMatrix(): ReadInBankRow[][] { return this.$input.readInBankRow; }
+    public get wizard(): WizardNavigator { return this.$input.wizard; }
+
     @Output() nextStepChange = new EventEmitter<ReadInBankRow[]>();
-    //@Output() nextStepAlertsChange = new EventEmitter<string[]>();
-
-    public get mapper(): ExcelBankRowMapper {
-        return this.$input ? this.$input.mapper : null;
-    }
-
-    public get mappedExcelMatrix(): ReadInBankRow[][] {
-        return this.$input ? this.$input.readInBankRow : null;
-    }
-
-    public get wizard(): Wizard {
-        return this.$input ? this.$input.wizard : null;
-    }
 
     readInBankRows: ReadInBankRow[];
 
@@ -42,10 +43,6 @@ export class ReadFilesComponent extends WizardStepBase implements OnInit {
     ngOnInit() {
         this.program(this.mappedExcelMatrix);
     }
-
-    // isComponentInitable(): boolean {
-    //     return this.params != null && this.mapper != null;
-    // }
 
     /// <summary>
     /// Searches through the files matrix and 
@@ -71,8 +68,6 @@ export class ReadFilesComponent extends WizardStepBase implements OnInit {
         //this.loadingScreen.stop();
 
         this.checkForAlerts();
-        // this.emitNextStepAlerts();
-        // this.nextStepChange.emit(this.readInBankRows);
     }
 
     private flattenReadInBankRows(matrix: ReadInBankRow[][]): ReadInBankRow[] {
@@ -99,10 +94,6 @@ export class ReadFilesComponent extends WizardStepBase implements OnInit {
 
     click_toggleRowExclusion(row: ReadInBankRow): void {
         row.toggleExclusion();
-
-        //this.emitNextStepAlerts();
-        //this.nextStepChange.emit(this.readInBankRows);
-
         this.checkForAlerts();
     }
 
@@ -113,19 +104,6 @@ export class ReadFilesComponent extends WizardStepBase implements OnInit {
     click_switchDetailsMenu(row: ReadInBankRow, i: number): void {
         row.detailsMenuPageAt = i;
     }
-
-    // private emitNextStepAlerts(): void {
-    //     let alerts = [];
-
-    //     if (this.readInBankRows.length === 0) {
-    //         alerts.push(new StepAlert("Bankrow count is zero!").setToCriteria());
-    //     }
-    //     if (!this.readInBankRows.some(x => !x.isExcluded)) {
-    //         alerts.push(new StepAlert("All bankrows are excluded!").setToCriteria());
-    //     }
-
-    //     this.nextStepAlertsChange.emit(alerts);
-    // }
 
     protected checkForAlerts(): void {
         this.wizard.clearAlerts();

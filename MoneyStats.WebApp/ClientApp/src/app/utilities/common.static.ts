@@ -44,6 +44,7 @@ export class Common {
         }
     }
 
+    // TODO should come from server/db
     public static getConditionTypes(): ConditionTypeObj[] {
         return [
             new ConditionTypeObj(ConditionType.Unset),
@@ -57,6 +58,7 @@ export class Common {
         ];
     }
 
+    // TODO should come from server/db
     public static getActionTypes(): RuleActionTypeObj[] {
         return [
             new RuleActionTypeObj(RuleActionType.Unset),

@@ -33,7 +33,7 @@ class StepAlert {
     }
 }
 
-export class WizardNavStep {
+export class WizardNavigatorStep {
 
     public title: string;
     public description: string[];
@@ -56,27 +56,27 @@ export class WizardNavStep {
     }
 }
 
-export class Wizard {
+export class WizardNavigator {
 
     public hoverStepsAt: number;
     private _stepsAt: number;
-    private _steps: WizardNavStep[];
+    private _steps: WizardNavigatorStep[];
 
     public get stepsAt(): number { return this._stepsAt; }
-    public get steps(): WizardNavStep[] { return this._steps; }
+    public get steps(): WizardNavigatorStep[] { return this._steps; }
 
-    public get currentStep(): WizardNavStep {
+    public get currentStep(): WizardNavigatorStep {
         if (this._stepsAt < 0) {
             return null;
         }
         return this._steps[this._stepsAt];
     }
 
-    public get hoverStep(): WizardNavStep {
+    public get hoverStep(): WizardNavigatorStep {
         return this._steps[this.hoverStepsAt];
     }
 
-    constructor(steps: WizardNavStep[]) {
+    constructor(steps: WizardNavigatorStep[]) {
         if (steps != null && steps.length > 0) {
             this._steps = steps;
             this.reset();
@@ -97,11 +97,6 @@ export class Wizard {
         if (this._stepsAt == this._steps.length - 1) {
             return false;
         }
-
-        // if (!this.isProgressable()) {
-        //     return false;
-        // }
-
         this._stepsAt++;
         return true;
     }
@@ -139,7 +134,7 @@ export class Wizard {
 })
 export class WizardNavigatorComponent implements OnInit {
 
-    @Input() wizard: Wizard;
+    @Input() wizard: WizardNavigator;
     @Input() stepsAt: number;
     
     private isHoverOn: boolean = false;
@@ -169,19 +164,7 @@ export class WizardNavigatorComponent implements OnInit {
         this.isHoverOn = false;
     }
 
-    get infoBoxStep(): WizardNavStep {
+    get infoBoxStep(): WizardNavigatorStep {
         return this.isHoverOn ? this.wizard.hoverStep : this.wizard.currentStep;
     }
-
-    /* Test area #1
-    addError(){
-        this.wizard.currentStep.stepAlerts.push(new StepAlert("Problem").setToCriteria());
-    }
-    removeError(){
-        this.wizard.currentStep.stepAlerts = [];
-    }
-    sout() {
-        console.log(this.wizard);
-    }
-    */
 }

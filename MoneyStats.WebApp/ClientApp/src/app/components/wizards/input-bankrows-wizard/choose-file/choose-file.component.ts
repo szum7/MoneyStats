@@ -4,17 +4,8 @@ import { ExcelReader } from 'src/app/models/component-models/excel-reader';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { BankType } from 'src/app/models/service-models/bank-type.enum';
-import { StepAlert } from 'src/app/models/component-models/step-alert.model';
-import { Wizard } from 'src/app/components/wizard-navigator/wizard-navigator.component';
-
-// interface IWizardStep {
-//     checkForAlerts(): void;
-// }
-
-export abstract class WizardStepBase {
-    protected abstract checkForAlerts(): void;
-    public abstract next(): void;
-}
+import { WizardNavigator } from 'src/app/components/wizards/wizard-navigator/wizard-navigator.component';
+import { WizardStep } from '../../wizard-step.model';
 
 export class ChooseFileOutput {
     matrix: ReadInBankRow[][]; 
@@ -36,18 +27,15 @@ export class ChooseFileOutput {
     templateUrl: './choose-file.component.html',
     styleUrls: ['./choose-file.component.scss']
 })
-export class ChooseFileComponent extends WizardStepBase implements OnInit {
+export class ChooseFileComponent extends WizardStep implements OnInit {
 
-    @Input() wizard: Wizard;
+    @Input() wizard: WizardNavigator;
     @Output() nextStepChange = new EventEmitter<ChooseFileOutput>();
-    //@Output() wizardNavigationChange = new EventEmitter<{ wizard: Wizard }>();
-    //@Output() nextStepAlertsChange = new EventEmitter<string[]>();
 
     public readFiles: any[];
     public isBusy: boolean;
 
     private reader: ExcelReader;
-
     private mapper: ExcelBankRowMapper;
     private mappedExcelMatrix: ReadInBankRow[][];
 
@@ -61,9 +49,6 @@ export class ChooseFileComponent extends WizardStepBase implements OnInit {
 
     ngOnInit() {
         this.checkForAlerts();
-        // setTimeout(function () {
-        //     self.emitNextStepAlerts();
-        // });
     }
 
     private getBankType(): BankType {
@@ -72,6 +57,10 @@ export class ChooseFileComponent extends WizardStepBase implements OnInit {
     }
 
     change_filesSelected(event): void {
+        this.readSelectedFiles(event);
+    }
+
+    private readSelectedFiles(event): void {
 
         var self = this;
 
@@ -109,42 +98,23 @@ export class ChooseFileComponent extends WizardStepBase implements OnInit {
                 //self.loadingScreen.stop();
                 console.log(self.mappedExcelMatrix);
 
-                //self.emitOutput(mappedExcelMatrix, self.mapper);
-                //self.emitNextStepAlerts();
-
                 self.checkForAlerts();
                 self.isBusy = false;
             }
         }, 50);
     }
 
-    checkForAlerts(): void {
+    protected checkForAlerts(): void {
         this.wizard.clearAlerts();
 
         if (this.readFiles.length === 0) {
             this.wizard.addCriteria("No files were selected.");
         }
-
-        //this.emitWizardNavigtionOutput();
     }
-
-    // private emitNextStepAlerts(): void {
-    //     let alerts = [];
-
-    //     if (this.readFiles.length === 0) {
-    //         alerts.push(new StepAlert("No files were selected.").setToCriteria());
-    //     }
-
-    //     this.nextStepAlertsChange.emit(alerts);
-    // }
 
     private emitOutput(): void {
         this.nextStepChange.emit(new ChooseFileOutput(this.mappedExcelMatrix, this.mapper));
     }
-
-    // private emitWizardNavigtionOutput(): void {
-    //     this.wizardNavigationChange.emit({ wizard: this.wizard });
-    // }
 
     next(): void {
         if (!this.wizard.isProgressable()) {
@@ -156,7 +126,9 @@ export class ChooseFileComponent extends WizardStepBase implements OnInit {
         
         this.emitOutput();
         this.wizard.next();
-        
-        //this.emitWizardNavigtionOutput();
+    }
+    
+    previous(): void {
+        throw new Error('Method not implemented.');
     }
 }

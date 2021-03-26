@@ -1,417 +1,69 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, AfterContentInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ReadInBankRow } from 'src/app/models/component-models/read-in-bank-row';
 import { ExcelBankRowMapper } from 'src/app/models/component-models/excel-bank-row-mapper';
 import { ReadBankRowForDbCompare } from 'src/app/models/component-models/read-bank-row-for-db-compare';
-import { BankRow } from 'src/app/models/service-models/bank-row.model';
-import { BankType } from 'src/app/models/service-models/bank-type.enum';
 import { LoadingScreenService } from 'src/app/services/loading-screen-service/loading-screen.service';
 import { GeneratedTransaction } from 'src/app/models/service-models/generated-transaction.model';
 import { GeneratedTransactionService } from 'src/app/services/generated-transaction.service';
 import { GenericResponse } from 'src/app/models/service-models/generic-response.model';
-import { StepAlertType } from '../../models/component-models/step-alert-type.enum';
-import { StepAlert } from '../../models/component-models/step-alert.model';
-import { WizardStep } from '../../models/component-models/wizard-step.model';
-import { UpdateResultsUtilities } from '../../models/component-models/update-results-utilities.model';
-import { BankRowService } from 'src/app/services/bank-row.service';
 import { Common } from 'src/app/utilities/common.static';
-import { RuleService } from 'src/app/services/rule.service';
-import { UsedGeneratedTransaction } from "src/app/components/update-wizard/step-4/eval-transactions/used-generated-transaction";
-import { Wizard, WizardNavStep } from 'src/app/components/wizard-navigator/wizard-navigator.component';
-import { ChooseFileOutput } from 'src/app/components/update-wizard/step-1/choose-file/choose-file.component';
-
-export class ImportFilesStep extends WizardStep {
-
-    constructor() {
-        super("Step 1 - Import files");
-    }
-
-    setInput($input: any): void {
-        throw new Error("The first step has no input!");
-    }
-
-    getOutput(): ReadInBankRow[][] {
-        return this.$output;
-    }
-}
-
-export class ManageReadFilesStep extends WizardStep {
-
-    $input: ReadInBankRow[][];
-
-    constructor() {
-        super("Step 2 - Manage read files");
-    }
-
-    setInput($input: ReadInBankRow[][]): void {
-        this.$input = $input;
-    }
-
-    getOutput(): ReadBankRowForDbCompare[] {
-
-        let ret: ReadBankRowForDbCompare[] = [];
-        let cast: ReadBankRowForDbCompare[] = this.$output;
-
-        for (let i = 0; i < cast.length; i++) {
-            const el = cast[i];
-            if (!el.isExcluded) {
-
-                let tr: ReadBankRowForDbCompare = new ReadBankRowForDbCompare();
-
-                tr.uiId = el.uiId;
-                tr.bankRow = el.bankRow;
-
-                ret.push(tr);
-            }
-        }
-        return ret;
-    }
-}
-
-export class CompareWithDatabaseStep extends WizardStep {
-
-    $input: ReadBankRowForDbCompare[];
-
-    constructor() {
-        super("Step 3 - Compare with database");
-    }
-
-    setInput($input: ReadBankRowForDbCompare[]): void {
-        this.$input = $input;
-    }
-
-    getOutput(): BankRow[] {
-
-        let ret: BankRow[] = [];
-        let cast: ReadBankRowForDbCompare[] = this.$output;
-
-        for (let i = 0; i < cast.length; i++) {
-            if (!cast[i].isExcluded) {
-                ret.push(cast[i].bankRow);
-            }
-        }
-        return ret;
-    }
-}
-
-export class EvalTransactionsStep extends WizardStep {
-
-    $input: BankRow[];
-
-    constructor() {
-        super("Step 4 - Create transactions");
-    }
-
-    setInput($input: any): void {
-        this.$input = $input;
-    }
-
-    getOutput(): GeneratedTransaction[] {
-
-        let ret: GeneratedTransaction[] = [];
-        let cast: UsedGeneratedTransaction[] = this.$output;
-
-        for (let i = 0; i < cast.length; i++) {
-            if (!cast[i].isExcluded){
-                ret.push(cast[i].value);
-            }
-        }
-        return ret;
-    }
-}
-
-export class EmptyStep extends WizardStep {
-
-    constructor() {
-        super("");
-    }
-
-    setInput($input: any): void {
-    }
-
-    getOutput(): GeneratedTransaction[] {
-        return null;
-    }
-}
-
-export class UpdateWizard {
-
-    public stepsAt: number;
-    public wizardSteps: WizardStep[];
-    public utils: UpdateResultsUtilities;
-
-    private generatedTransactionService: GeneratedTransactionService;
-    private bankRowService: BankRowService;
-
-    public get currentStep(): WizardStep {
-        if (this.stepsAt < 0) {
-            return new EmptyStep();
-        }
-        return this.wizardSteps[this.stepsAt];
-    }
-
-    public get nextStep(): WizardStep {
-        if (this.stepsAt + 1 <= this.wizardSteps.length - 1) {
-            return this.wizardSteps[this.stepsAt + 1];
-        }
-        return null;
-    }
-
-    constructor(bankRowService: BankRowService, generatedTransactionService: GeneratedTransactionService) {
-
-        this.generatedTransactionService = generatedTransactionService;
-        this.bankRowService = bankRowService;
-
-        this.wizardSteps = [
-            new ImportFilesStep(),
-            new ManageReadFilesStep(),
-            new CompareWithDatabaseStep(),
-            new EvalTransactionsStep()
-        ];
-
-        this.stepsAt = -1;
-
-        this.utils = new UpdateResultsUtilities();
-    }
-
-    public setFirstStep(): void {
-        this.stepsAt = 0;
-    }
-
-    public next(): void {
-        if (this.stepsAt > this.wizardSteps.length - 1)
-            return;
-
-        if (!this.currentStep.isProgressable)
-            return;
-
-        let self = this;
-        this.beforeNextStepActions(() => {
-            self.stepsAt++;
-        });
-    }
-
-    public previous(): boolean {
-        if (this.stepsAt <= 0)
-            return false;
-
-        this.stepsAt--;
-
-        return true;
-    }
-
-    private beforeNextStepActions(callback: () => void): void { // TODO make the outputs strongly types somehow (?)
-        let self = this;
-        switch (this.stepsAt) {
-            case 0:
-                let o: { matrix: ReadInBankRow[][], mapper: ExcelBankRowMapper } = this.currentStep.getOutput();
-                this.utils.bankMapper = o.mapper;
-                this.nextStep.setInput(o.matrix);
-                callback();
-                break;
-            case 1:
-                this.nextStep.setInput(this.currentStep.getOutput());
-                callback();
-                break;
-            case 2:
-                let cast: BankRow[] = this.currentStep.getOutput();
-                self.saveBankRows(cast, function (response) {
-                    cast = response;
-                    self.nextStep.setInput(response);
-                    callback();
-                });
-                break;
-            case 3:
-                self.saveTransactions(self.currentStep.getOutput(), function (response: GenericResponse) {
-                    if (response.isError) {
-                        console.error(response.message);
-                    } else {
-                        console.log(response.message);
-                        // NEXT this is the end, transactions are saved. Some endscreen (?)
-                        // NEXT test and remove unused, old code
-                    }
-                });
-                break;
-            default:
-                break;
-        }
-    }
-
-    private saveTransactions(generatedTransactions: GeneratedTransaction[], callback: (response: GenericResponse) => void): void {
-        this.generatedTransactionService.save(generatedTransactions).subscribe(response => {
-            Common.ConsoleResponse("saveTransactions", response);
-            callback(response);
-        }, error => {
-            console.log(error);
-        });
-    }
-
-    private saveBankRows(bankRows: BankRow[], callback: (bankRows: BankRow[]) => void): void {
-        this.bankRowService.save(bankRows).subscribe(response => {
-            Common.ConsoleResponse("saveBankRows", response);
-            callback(response);
-        }, error => {
-            console.error(error);
-        })
-    }
-}
-
-export class ManageReadFilesInput {
-
-    wizard: Wizard;
-    readInBankRow: ReadInBankRow[][];
-    mapper: ExcelBankRowMapper;
-
-    constructor(wizard: Wizard, readInBankRow: ReadInBankRow[][], mapper: ExcelBankRowMapper) {
-        this.wizard = wizard;
-        this.readInBankRow = readInBankRow;
-        this.mapper = mapper;
-    }
-}
-
-export class CompareDbInput {
-
-    wizard: Wizard;
-    readBankRowForDbCompare: ReadBankRowForDbCompare[];
-    mapper: ExcelBankRowMapper;
-
-    constructor(wizard: Wizard, readBankRowForDbCompare: ReadBankRowForDbCompare[], mapper: ExcelBankRowMapper) {
-        this.wizard = wizard;
-        this.readBankRowForDbCompare = readBankRowForDbCompare;
-        this.mapper = mapper;
-    }
-}
+import { WizardNavigator, WizardNavigatorStep } from 'src/app/components/wizards/wizard-navigator/wizard-navigator.component';
+import { ChooseFileOutput } from 'src/app/components/wizards/input-bankrows-wizard/choose-file/choose-file.component';
+import { ManageReadFilesInput } from 'src/app/components/wizards/input-bankrows-wizard/read-files/read-files.component';
+import { CompareDbInput } from 'src/app/components/wizards/input-bankrows-wizard/compare-db/compare-db.component';
 
 @Component({
     selector: 'app-update-page',
     templateUrl: './update.page.html',
     styleUrls: ['./update.page.scss'],
-    encapsulation: ViewEncapsulation.None // TODO add comment why this is needed (?)
+    //encapsulation: ViewEncapsulation.None // TODO add comment why this is needed (?)
 })
-export class UpdatePage implements OnInit, AfterViewInit {
+export class UpdatePage implements OnInit {
 
+    wizard: WizardNavigator;
     manageReadFilesInput: ManageReadFilesInput;
     compareDbInput: CompareDbInput;
-    mapper: ExcelBankRowMapper;
 
-    wizard: UpdateWizard;
-    isTooltipsDisabled: boolean;
-    get stepAlertType() { return StepAlertType; }
-    get isStepReadyToProgress() {
-        if (!this.wizard)
-            return false;
-
-        return this.wizard.currentStep.isProgressable;
-    }
-
-    //@ViewChild('wizardNavElement', null) wizardNavView: ElementRef;
-    //@ViewChild('btnsElement', null) btnsView: ElementRef;
-    wizardNavMaxHeight: number;
-
-    public wizardNav: Wizard;
+    private mapper: ExcelBankRowMapper;
 
     constructor(
         private loadingScreen: LoadingScreenService,
-        private bankRowService: BankRowService,
-        private generatedTransactionService: GeneratedTransactionService,
-        private ruleService: RuleService) {
-
-        this.wizard = new UpdateWizard(bankRowService, generatedTransactionService);
-        this.isTooltipsDisabled = true;
+        private generatedTransactionService: GeneratedTransactionService) {
         
         this.initWizard();
     }
 
-    ngAfterViewInit(): void {
-        //this.initWizardNavPositionAndHeight();
-    }
-
     ngOnInit(): void {
-        this.wizard.setFirstStep();
-
-        //this.testLastStep();
     }
 
     private initWizard(): void {
-        let steps: WizardNavStep[] = [];
+        let steps: WizardNavigatorStep[] = [];
 
-        steps.push(new WizardNavStep(
+        steps.push(new WizardNavigatorStep(
             "Step 1 - Read in exported files", 
-            ["Select which files you want to read in."]));
-        steps.push(new WizardNavStep(
+            [
+                "Import files from your local drive.",
+                "Supported file types: .xls, .xlsx",
+                "Supported bank type: K&H"
+            ]));
+        steps.push(new WizardNavigatorStep(
             "Step 2 - Eliminate duplicates between read files", 
-            ["Select the records you wish to save to the database. The program helps you by detecting duplicates across multiple read files."]));
-        steps.push(new WizardNavStep(
+            [
+                "Select the records you wish to save to the database. The program helps you by detecting duplicates across multiple read files."
+            ]));
+        steps.push(new WizardNavigatorStep(
             "Step 3 - Compare with database and save", 
             [
                 "Select the records you wish to save to the database.",
                 "The program compared every single records selected from the previous step with the ones already existing in the database. Comparison is done by properties. Duplicates are shown as excluded (grayed out) rows. (You can decide to include them if you know what you're doing and think they're not duplicates)."
             ]));
         
-        this.wizardNav = new Wizard(steps);
-    }
-
-    test() { // TEST
-        (this.wizard.wizardSteps[1] as ManageReadFilesStep).$input = [
-            [
-                // Already in db
-                new ReadInBankRow().get(new BankRow().get(new Date(1999, 0, 1), null, null, null, null, null, null, 2000, null, '')),
-                new ReadInBankRow().get(new BankRow().get(new Date(2010, 9, 10), 'bankTransactionId', 'type', 'account', 'accountName', 'partnerAccount', 'partnerName', 1, 'currency', 'message')),
-                // Not yet in db
-                new ReadInBankRow().get(new BankRow().get(new Date(2013, 0, 1), '', '', '', '', '', '', 0, '', 'test1')),
-                new ReadInBankRow().get(new BankRow().get(new Date(2014, 0, 1), '', '', '', '', '', '', 0, '', 'test2'))
-            ]
-        ];
-        this.wizard.utils.bankMapper = new ExcelBankRowMapper(BankType.KH);
-        this.wizard.stepsAt = 1;
-    }
-
-    private testLastStep(): void {
-        this.wizard.utils.bankMapper = new ExcelBankRowMapper(BankType.KH);
-
-        let self = this;
-        this.bankRowService.get().subscribe(r => {
-            Common.ConsoleResponse("testLastStep BankRows:", r);
-            self.wizard.wizardSteps[3].setInput(r);
-            self.wizard.stepsAt = 3;
-        }, e => {
-            console.log(e);
-        });
-    }
-
-    // private initWizardNavPositionAndHeight(): void {
-    //     let btnsHeight = this.btnsView.nativeElement.offsetHeight;
-    //     this.wizardNavView.nativeElement.style.top = btnsHeight + "px";
-    // }
-
-    // click_NextStep() {
-    //     this.wizard.next();
-    // }
-
-    // click_PrevStep() {
-    //     this.wizard.previous();
-    //     // TODO could null out the last updateResult (first, second or third)
-    //     // TODO alert user if sure about going back (handle misclicks)
-    // }
-
-    click_toggleTitleTags(): void {
-        this.isTooltipsDisabled = !this.isTooltipsDisabled;
-    }
-
-    output_change($output: any): void {
-        this.wizard.currentStep.$output = $output;
-    }
-
-    output_stepAlertChange($output: StepAlert[]): void {
-        this.wizard.currentStep.stepAlerts = $output;
-    }
-
-    output_wizardNavigationChange($output: Wizard): void {
-        this.wizardNav = $output;
+        this.wizard = new WizardNavigator(steps);
     }
 
     outputChange_step1($output: ChooseFileOutput): void {
         this.mapper = $output.mapper;
-        this.manageReadFilesInput = new ManageReadFilesInput(this.wizardNav, $output.matrix, $output.mapper);
+        this.manageReadFilesInput = new ManageReadFilesInput(this.wizard, $output.matrix, $output.mapper);
     }
 
     outputChange_step2($output: ReadInBankRow[]): void {
@@ -439,10 +91,19 @@ export class UpdatePage implements OnInit, AfterViewInit {
             return;
         }
 
-        this.compareDbInput = new CompareDbInput(this.wizardNav, cast, this.mapper);
+        this.compareDbInput = new CompareDbInput(this.wizard, cast, this.mapper);
     }
 
     outputChange_step3($output: any): void {
         // Some sort of success message or log. Save happens inside the component.
+    }
+
+    private saveTransactions(generatedTransactions: GeneratedTransaction[], callback: (response: GenericResponse) => void): void {
+        this.generatedTransactionService.save(generatedTransactions).subscribe(response => {
+            Common.ConsoleResponse("saveTransactions", response);
+            callback(response);
+        }, error => {
+            console.log(error);
+        });
     }
 }

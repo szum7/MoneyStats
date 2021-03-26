@@ -19,9 +19,6 @@ import { TestTablePage } from './pages/test-table-page/test-table.page';
 import { UpdatePage } from './pages/update-page/update.page';
 import { ManageRulesPage } from './pages/manage-rules/manage-rules.page';
 import { StatisticsPage } from './pages/statistics/statistics.page';
-import { ApplyRulesPage } from './pages/apply-rules-page/apply-rules.page';
-import { ReadInPage } from './pages/read-in-page/read-in.page';
-import { BankRowToTransactionPage } from './pages/bank-row-to-transaction-page/bank-row-to-transaction.page';
 
 // Services
 import { LoadingScreenService } from './services/loading-screen-service/loading-screen.service';
@@ -40,20 +37,17 @@ import { AppComponent } from './app.component';
 import { NavComponent } from './components/nav/nav.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { WizardNavigationComponent } from './components/wizard-navigation/wizard-navigation.component';
-import { ChooseFileComponent } from './components/update-wizard/step-1/choose-file/choose-file.component';
-import { ReadFilesComponent } from './components/update-wizard/step-2/read-files/read-files.component';
-import { EvalTransactionsComponent } from './components/update-wizard/step-4/eval-transactions/eval-transactions.component';
+import { ChooseFileComponent } from './components/wizards/input-bankrows-wizard/choose-file/choose-file.component';
+import { ReadFilesComponent } from './components/wizards/input-bankrows-wizard/read-files/read-files.component';
+import { EvalTransactionsComponent } from './components/wizards/create-transactions-wizard/eval-transactions/eval-transactions.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { CompareDbComponent } from './components/update-wizard/step-3/compare-db/compare-db.component';
+import { CompareDbComponent } from './components/wizards/input-bankrows-wizard/compare-db/compare-db.component';
 import { EditRulesComponent } from './components/edit-rules/edit-rules.component';
 import { SelectComponent } from './components/select/select.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { BasicMonthlyBarchartComponent } from './components/statistics/basic-monthly-barchart/basic-monthly-barchart.component';
 import { ReversePipe } from './pipes/reverse.pipe';
-import { ReadInComponent } from './components/read-in/read-in.component';
-import { BankRowToTransactionComponent } from './components/bank-row-to-transaction/bank-row-to-transaction.component';
-import { WizardNavigatorComponent } from './components/wizard-navigator/wizard-navigator.component';
-import { ApplyRulesComponent } from './components/apply-rules/apply-rules.component';
+import { WizardNavigatorComponent } from './components/wizards/wizard-navigator/wizard-navigator.component';
 
 @NgModule({
   declarations: [
@@ -63,9 +57,6 @@ import { ApplyRulesComponent } from './components/apply-rules/apply-rules.compon
     UpdatePage,
     ManageRulesPage,
     StatisticsPage,
-    ApplyRulesPage,
-    ReadInPage,
-    BankRowToTransactionPage,
     // Components
     AppComponent,
     NavComponent,
@@ -80,9 +71,6 @@ import { ApplyRulesComponent } from './components/apply-rules/apply-rules.compon
     SelectComponent,
     DropdownComponent,
     BasicMonthlyBarchartComponent,
-    ReadInComponent,
-    BankRowToTransactionComponent,
-    ApplyRulesComponent,
     // Pipes
     ReversePipe,
     WizardNavigatorComponent,
@@ -96,10 +84,9 @@ import { ApplyRulesComponent } from './components/apply-rules/apply-rules.compon
     RouterModule.forRoot([
       { path: '', component: HomePage },
       { path: 'test', component: TestTablePage },
-      { path: 'update', component: UpdatePage },
+      { path: 'input-bank-rows', component: UpdatePage },
       { path: 'rules', component: ManageRulesPage },
       { path: 'statistics', component: StatisticsPage },
-      { path: 'read-in', component: ReadInPage },
     ], { useHash: true })
   ],
   providers: [
