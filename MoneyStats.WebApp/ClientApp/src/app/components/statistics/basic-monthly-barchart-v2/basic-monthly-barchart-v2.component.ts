@@ -5,36 +5,16 @@ import { Common } from 'src/app/utilities/common.static';
 import { Transaction } from 'src/app/models/service-models/transaction.model';
 import { BasicMonthlyBar } from 'src/app/models/service-models/basic-monthly-bar.model';
 
-// TODO
-// - click blanket over bars
-// - order transactions by
-// - order asc, desc (icomperable)
-// - előjel abszolútérték szerinti sorrend (100, 10, 1, -200, -10, -2)
-// - to top btn
-// - 
-
 @Component({
-    selector: 'app-basic-monthly-barchart-component',
-    templateUrl: './basic-monthly-barchart.component.html',
-    styleUrls: ['./basic-monthly-barchart.component.scss']
+    selector: 'app-basic-monthly-barchart-v2-component',
+    templateUrl: './basic-monthly-barchart-v2.component.html',
+    styleUrls: ['./basic-monthly-barchart-v2.component.scss']
 })
-export class BasicMonthlyBarchartComponent implements OnInit {
+export class BasicMonthlyBarchartV2Component implements OnInit {
 
     data: BasicMonthlyBarchart;
-    transactionList: Transaction[];
-    barWidth: number = 60;
-    maxHeight: number = 300;
-    yUnitGap: number;
-    yUnits: number[];
-    xUnitsHeight: number = 30;
-    xUnits: string[];
 
     constructor(private statisticsService: StatisticsService) {
-        // TODO tesztelni, hogy 0-0-0 esetén kihagyja-e az oszlop szélességét
-        // TODO minden hónapra szélességet állítani
-        this.yUnits = [];
-        this.xUnits = [];
-        this.yUnitGap = 0;
     }
 
     ngOnInit(): void {
@@ -46,39 +26,7 @@ export class BasicMonthlyBarchartComponent implements OnInit {
     }
 
     private initProperties() {
-        let unit: number = this.calculateYUnits(this.data.maxValue);
-        let unitTimes: number = this.data.maxValue / unit;
-        this.yUnitGap = (this.maxHeight / unitTimes) * (100 / this.maxHeight);
-        for (let i = 1; i < unitTimes - 1; i++) {
-            this.yUnits.push(i * unit);
-        }
-    }
-
-    getXUnitsWidth(): string {
-        if (this.data == null)
-            return "0px";
-        return (this.data.bars.length * this.barWidth) + "px";
-    }
-
-    getBarLeftPosition(i: number): string {
-        return (this.barWidth * i) + "px";
-    }
-
-    getBarHeight(value: number): string {
-        let ratio = this.maxHeight / this.data.maxValue;
-        return Math.max(Math.abs(value) * ratio, 2) + "px";
-    }
-
-    showTransactionList(item: BasicMonthlyBar): void {
-        this.transactionList = item.transactions;
-    }
-
-    getDateLiteralX(dateString: string): string {
-        return new Date(dateString).toDateString();
-    }
-
-    getDateLiteral(dateString: string): Date {
-        return new Date(dateString);
+        
     }
 
     private getBasicMonthlyBarchart(from: Date, to: Date, callback: (response: BasicMonthlyBarchart) => void): void {

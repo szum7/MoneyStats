@@ -12,6 +12,7 @@ export class TableRowAttribute {
 
     constructor(message: string){
         this._message = message;
+        this.value = false;
     }
 }
 

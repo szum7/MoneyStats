@@ -1,5 +1,77 @@
 
-                
+
+  private flattenMatrix(matrix: any[][]): any[] {
+    return [].concat.apply([], matrix);
+  }
+
+
+steps.push(new WizardStep(
+            "Introduction - Save bank data from exported files", 
+            [
+                "Two step wizard to save bank exported excel data to the MoneyStats database.", 
+                "Read about - bank rows.", 
+                "Read about - transactions",
+                "Read about - Supported banks and export files"
+            ]));
+        steps.push(new WizardStep(
+            "Step 1 - Read in exported files", 
+            ["Select which files you want to read in."]));
+        steps.push(new WizardStep(
+            "Step 2 - Eliminate duplicates and save", 
+            [
+                "Select the records you wish to save to the database.", 
+                "The program helps you by detecting duplicates across multiple read files. It compares every single read records with the ones already existing in the database by their properties. Duplicates are shown as excluded (grayed out) rows. (You can decide to include them if you think they're not duplicates)."
+            ]));
+
+
+
+<section class="btns">
+        <!-- To bottom btn -->
+        <div class="btn-item" (click)="click_scrollToBottom()" title="Scroll to bottom">
+            <div class="btn-toggle">
+                <fa-icon icon="chevron-down"></fa-icon>
+            </div>
+        </div>
+        <!-- To top btn -->
+        <div class="btn-item" (click)="click_scrollToTop()" title="Scroll to top">
+            <div class="btn-toggle">
+                <fa-icon icon="chevron-up"></fa-icon>
+            </div>
+        </div>
+        <!-- Settings btn -->
+        <div ngbTooltip="Settings" tooltipClass="general-tooltip no-wrap" placement="right">
+            <div class="btn-item" ngbDropdown placement="right-top">
+                <div class="btn-toggle" id="dd1" ngbDropdownToggle>
+                    <fa-icon icon="cog"></fa-icon>
+                </div>
+                <div class="sub-menu" ngbDropdownMenu aria-labelledby="dd1">
+                    <div class="sub-item" ngbDropdownItem>Info</div>
+                    <div class="sub-item" ngbDropdownItem>Sound</div>
+                    <div class="sub-item" ngbDropdownItem>Resolution</div>
+                </div>
+            </div>
+        </div>
+        <!-- Tools btn -->
+        <div ngbTooltip="Tools" tooltipClass="general-tooltip no-wrap" placement="right">
+            <div class="btn-item" ngbDropdown placement="right-top">
+                <div class="btn-toggle" id="dd2" ngbDropdownToggle>
+                    <fa-icon icon="wrench"></fa-icon>
+                </div>
+                <div class="sub-menu" ngbDropdownMenu aria-labelledby="dd2">
+                    <div class="sub-item" ngbDropdownItem>Delete life</div>
+                    <div class="sub-item" ngbDropdownItem>Add life</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+---------------------------------------
+---------------------------------------
+---------------------------------------
+---------------------------------------
+
+
 <!-- <app-dropdown-component [setOfValues]="tags" [alreadySelectedValues]="ruleAction.tag == null ? [] : [ruleAction.tag]" (valueChange)=""></app-dropdown-component> -->
                 
                 <!-- <div class="tr-cell" style="width: 200px;" [title]="tr.value.date">{{tr.value.date}}</div>

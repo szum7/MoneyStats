@@ -1,5 +1,5 @@
 <div class="content">
-    <div class="tr-table" *ngIf="bankRows != null && bankRows.length > 0">
+    <div class="tr-table" *ngIf="readInBankRows != null && readInBankRows.length > 0">
         <!-- Header -->
         <div class="tr-row header">
             <!-- Actions head -->
@@ -16,7 +16,7 @@
             </div>
         </div>
         <!-- Content -->
-        <div class="tr-row" *ngFor="let tr of sortBy_bankRows(bankRows, 'accountingDate')"
+        <div class="tr-row" *ngFor="let tr of sortBy_bankRows(readInBankRows, 'accountingDate')"
             [ngClass]="{'excluded': tr.isExcluded, 'opened': tr.isDetailsOpen}">
             <div class="tr-row-content">
                 <!-- Actions -->
@@ -71,5 +71,7 @@
                 </div>
             </div>
         </div>
+        <button (click)="previous()">Previous</button>
+        <button (click)="next()">Next</button>
     </div>
 </div>

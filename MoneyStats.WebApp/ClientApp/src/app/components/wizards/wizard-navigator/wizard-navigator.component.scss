@@ -1,0 +1,107 @@
+$circleDiameter: 28px;
+$lineThickness: 8px;
+
+$moduleBackground: #333;
+$infoBoxBackground: #494949;
+$infoBoxColor: #eee;
+$goodColor: rgb(113, 187, 113);
+$badColor: #585858;
+$inactiveColor: #444;
+
+
+.wizard-nav {
+    margin: auto;    
+    $leftPadding: $circleDiameter + 20px;
+    padding: 20px 20px 20px $leftPadding;
+    background-color: $moduleBackground;
+
+    .step {
+        position: relative;
+        display: inline-block;
+        height: $lineThickness;
+
+        &.first {
+            width: 0px !important;
+
+            .circle {
+                right: -2px;
+                //right: -($circleDiameter / 2);
+            }
+        }
+
+        .line {
+            background-color: $inactiveColor;
+            height: $lineThickness;
+        }
+        .circle {
+            position: absolute;
+            top: - ($circleDiameter / 2) + ($lineThickness / 2);
+            right: -2px;          
+            background-color: $inactiveColor;
+            width: $circleDiameter;
+            height: $circleDiameter;
+            border-radius: 100px;
+            z-index: 2000;
+            cursor: pointer;
+
+            &:hover {
+                -webkit-box-shadow: 0px 0px 3px 1px #000; 
+                box-shadow: 0px 0px 3px 1px #000;
+            }
+        }
+
+        &.active {
+            .line {
+                background-color: $goodColor;
+            }
+            .circle {
+                background-color: $badColor;
+            }
+            
+            &.green {
+                .circle {
+                    background-color: $goodColor;
+                }
+            }
+        }        
+    }
+
+    .info-box {   
+        margin-top: 20px;
+
+        .arrow-width-box {
+            position: relative;
+
+            .arrow {
+                position: absolute;
+                bottom: -2px;
+                width: 0; 
+                height: 0; 
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;                
+                border-bottom: 15px solid $infoBoxBackground;
+                right: 2px;
+            }
+        }
+        .info {
+            $delta: -$circleDiameter + 2px;
+            padding: 20px;
+            color: $infoBoxColor;
+            background: $infoBoxBackground;
+            margin-left: $delta;
+            width: calc(100% - #{$delta});
+
+            h3 {
+                margin: 0 0 9px;
+                font-weight: bold;
+                font-size: 28px;
+            }
+
+            p {
+                padding: 0 0 2px;
+                margin: 0;
+                font-size: 14px;
+            }
+        }
+    }
+}

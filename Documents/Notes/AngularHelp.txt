@@ -1,0 +1,2 @@
+﻿-- Generate module
+ng generate module module-name

@@ -23,9 +23,9 @@ export class RuleActionTypeObj {
 
 export class Common {
     public static ConsoleResponse(name: string, response: any): void {
-        console.log("=> " + name + ":");
+        console.log("%c=> " + name + ":", "color:#fcba03");
         console.log(response);
-        console.log("<=");
+        console.log("%c<=", "color:#fcba03");
     }
 
     public static containsObjectOnId(obj: any, list: any[]): boolean {
@@ -44,6 +44,7 @@ export class Common {
         }
     }
 
+    // TODO should come from server/db
     public static getConditionTypes(): ConditionTypeObj[] {
         return [
             new ConditionTypeObj(ConditionType.Unset),
@@ -57,6 +58,7 @@ export class Common {
         ];
     }
 
+    // TODO should come from server/db
     public static getActionTypes(): RuleActionTypeObj[] {
         return [
             new RuleActionTypeObj(RuleActionType.Unset),

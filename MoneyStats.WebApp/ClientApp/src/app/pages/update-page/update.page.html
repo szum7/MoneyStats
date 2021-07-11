@@ -1,45 +1,5 @@
 <div class="left-side-menu">
-    <section class="btns" #btnsElement>
-        <!-- Next step btn -->
-        <div class="btn-item" (click)="click_NextStep()">
-            <div class="btn-toggle">
-                <div *ngIf="!wizard.currentStep.isProgressable">
-                    <fa-icon icon="times"></fa-icon>
-                </div>
-                <div *ngIf="wizard.currentStep.isProgressable">                    
-                    <fa-icon *ngIf="wizard.stepsAt < wizard.wizardSteps.length - 1" icon="arrow-right"></fa-icon>
-                    <fa-icon *ngIf="wizard.stepsAt === wizard.wizardSteps.length - 1" icon="check"></fa-icon>
-                </div>
-            </div>
-            <div class="next-step-tooltip">
-                <p class="title">Next step</p>
-                <p class="progress-text okay" *ngIf="isStepReadyToProgress">
-                    <span class="icon">
-                        <fa-icon icon="check"></fa-icon>
-                    </span>
-                    All is good, you're ready to advance.
-                </p>
-                <p class="progress-text not-okay" *ngIf="!isStepReadyToProgress">
-                    <span class="icon">
-                        <fa-icon icon="times"></fa-icon>
-                    </span>
-                    There are still unresolved issues!
-                </p>
-                <ul class="tips" *ngIf="wizard.currentStep.stepAlerts.length > 0">
-                    <li class="tip" *ngFor="let tip of wizard.currentStep.stepAlerts"
-                        [ngClass]="{'error': tip.type === stepAlertType.Criteria, 'green-text': tip.type === stepAlertType.GreenText}">
-                        {{tip.title}}</li>
-                </ul>
-            </div>
-        </div>
-        <!-- Previous step btn -->
-        <div class="btn-item" (click)="click_PrevStep()" [ngClass]="{'unabled': wizard.stepsAt <= 0}"
-            ngbTooltip="Previous step" tooltipClass="general-tooltip no-wrap" placement="right"
-            [disableTooltip]="isTooltipsDisabled">
-            <div class="btn-toggle">
-                <fa-icon icon="arrow-left"></fa-icon>
-            </div>
-        </div>
+    <section class="btns">
         <!-- Settings btn -->
         <div ngbTooltip="Settings" tooltipClass="general-tooltip no-wrap" placement="right"
             [disableTooltip]="isTooltipsDisabled">
@@ -76,51 +36,24 @@
             </div>
         </div>
     </section>
-    <section class="wizard-nav-section" #wizardNavElement>
-        <app-wizard-navigation [isTooltipsHidden]="isTooltipsDisabled" [stepsAt]="wizard.stepsAt"
-            [wizardSteps]="wizard.wizardSteps"></app-wizard-navigation>
-    </section>
 </div>
 
 <div class="update-page-content right-side-content">
+
+    <app-wizard-navigator-component [wizard]="wizard"></app-wizard-navigator-component>
+    
     <div class="dialog-contianer" [ngSwitch]="wizard.stepsAt">
         <div *ngSwitchCase="0">
-            <div class="padd10 center">
-                <h2 class="mt20">{{wizard.wizardSteps[0].title}}</h2>
-                <p>
-                    Import files from your local drive. <br />
-                    Supported format: <strong>.xls, .xlsx</strong>. <br />
-                    Supported transactions: <strong>K&H</strong>.
-                </p>
-            </div>
-            <app-choose-file (nextStepChange)="output_change($event)"
-                (nextStepAlertsChange)="output_stepAlertChange($event)"></app-choose-file>
+            <app-choose-file [wizard]="wizard" (nextStepChange)="outputChange_step1($event)"></app-choose-file>
         </div>
         <div *ngSwitchCase="1">
-            <div class="padd10 center">
-                <h2 class="mt20">{{wizard.wizardSteps[1].title}}</h2>
-                <p>
-                    The program finds the duplicates across multiple files and omits them.
-                </p>
-            </div>
-            <app-read-files-component [params]="wizard.wizardSteps[1].$input" [mapper]="wizard.utils.bankMapper"
-                (nextStepChange)="output_change($event)" (nextStepAlertsChange)="output_stepAlertChange($event)">
-            </app-read-files-component>
+            <app-read-files-component [$input]="manageReadFilesInput" (nextStepChange)="outputChange_step2($event)"></app-read-files-component>
         </div>
         <div *ngSwitchCase="2">
-            <div class="padd10 center">
-                <h2 class="mt20">{{wizard.wizardSteps[2].title}}</h2>
-                <p>
-                    The program will compare the browsed, read-in BankRows from the previous step with what the database
-                    already has. Recommends exclusion of duplicates.
-                </p>
-            </div>
-            <app-compare-db-component [params]="wizard.wizardSteps[2].$input" [mapper]="wizard.utils.bankMapper"
-                (nextStepChange)="output_change($event)" (nextStepAlertsChange)="output_stepAlertChange($event)">
-            </app-compare-db-component>
+            <app-compare-db-component [$input]="compareDbInput" (nextStepChange)="outputChange_step3($event)"></app-compare-db-component>
         </div>
         <div *ngSwitchCase="3">
-            <div class="padd10 center">
+            <!-- <div class="padd10 center">
                 <h2 class="mt20">{{wizard.wizardSteps[3].title}}</h2>
                 <p>
                     Maybe.
@@ -128,7 +61,7 @@
             </div>
             <app-eval-transactions-component [params]="wizard.wizardSteps[3].$input" [mapper]="wizard.utils.bankMapper" 
                 (nextStepAlertsChange)="output_stepAlertChange($event)" (nextStepChange)="output_change($event)">
-            </app-eval-transactions-component>
+            </app-eval-transactions-component> -->
         </div>
         <div *ngSwitchDefault>
             <p>Something went wrong.</p>

@@ -24,6 +24,7 @@ export class ExcelReader {
         return true;
     }
 
+    /** Includes async 'readFile' functions in a loop. */
     public getBankRowMatrix(inputFiles: Array<any>): Array<Array<ReadInBankRow>> {
         
         let self = this;
@@ -56,7 +57,7 @@ export class ExcelReader {
         }
     }
 
-    //@Async-function-with-callback
+    /** Async function with a callback. */
     private readFile(file: File, callback: (response: any) => void): void {
 
         let fileReader = new FileReader();

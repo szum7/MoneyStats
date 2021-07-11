@@ -9,7 +9,8 @@ import {
   faPlus, faWrench, faCheck, faTimes, faInfoCircle, 
   faEye, faEyeSlash, faCog, faTag, faAlignJustify, 
   faArrowRight, faArrowLeft, faChartBar, faChartPie, 
-  IconDefinition, faBan, faFeather } from '@fortawesome/free-solid-svg-icons';
+  IconDefinition, faBan, faFeather, faUniversity, 
+  faAngleDoubleRight, faClipboardList, faClipboardCheck } from '@fortawesome/free-solid-svg-icons';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Pages
@@ -36,16 +37,18 @@ import { AppComponent } from './app.component';
 import { NavComponent } from './components/nav/nav.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { WizardNavigationComponent } from './components/wizard-navigation/wizard-navigation.component';
-import { ChooseFileComponent } from './components/update-wizard/step-1/choose-file/choose-file.component';
-import { ReadFilesComponent } from './components/update-wizard/step-2/read-files/read-files.component';
-import { EvalTransactionsComponent } from './components/update-wizard/step-4/eval-transactions/eval-transactions.component';
+import { ChooseFileComponent } from './components/wizards/input-bankrows-wizard/choose-file/choose-file.component';
+import { ReadFilesComponent } from './components/wizards/input-bankrows-wizard/read-files/read-files.component';
+import { EvalTransactionsComponent } from './components/wizards/create-transactions-wizard/eval-transactions/eval-transactions.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { CompareDbComponent } from './components/update-wizard/step-3/compare-db/compare-db.component';
+import { CompareDbComponent } from './components/wizards/input-bankrows-wizard/compare-db/compare-db.component';
 import { EditRulesComponent } from './components/edit-rules/edit-rules.component';
 import { SelectComponent } from './components/select/select.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { BasicMonthlyBarchartComponent } from './components/statistics/basic-monthly-barchart/basic-monthly-barchart.component';
+import { BasicMonthlyBarchartV2Component } from './components/statistics/basic-monthly-barchart-v2/basic-monthly-barchart-v2.component';
 import { ReversePipe } from './pipes/reverse.pipe';
+import { WizardNavigatorComponent } from './components/wizards/wizard-navigator/wizard-navigator.component';
 
 @NgModule({
   declarations: [
@@ -69,8 +72,10 @@ import { ReversePipe } from './pipes/reverse.pipe';
     SelectComponent,
     DropdownComponent,
     BasicMonthlyBarchartComponent,
+    BasicMonthlyBarchartV2Component,
     // Pipes
     ReversePipe,
+    WizardNavigatorComponent,
   ],
   imports: [
     BrowserModule,
@@ -81,7 +86,7 @@ import { ReversePipe } from './pipes/reverse.pipe';
     RouterModule.forRoot([
       { path: '', component: HomePage },
       { path: 'test', component: TestTablePage },
-      { path: 'update', component: UpdatePage },
+      { path: 'input-bank-rows', component: UpdatePage },
       { path: 'rules', component: ManageRulesPage },
       { path: 'statistics', component: StatisticsPage },
     ], { useHash: true })
@@ -109,7 +114,9 @@ export class AppModule {
       faArrowLeft, faArrowRight, faChartPie, faChartBar,
       faEye, faEyeSlash, faCheck, faTimes, 
       faWrench, faPlus, faMinus, faChevronDown, 
-      faChevronUp, faTrashAlt, faBan, faFeather
+      faChevronUp, faTrashAlt, faBan, faFeather,
+      faUniversity, faAngleDoubleRight, faClipboardList,
+      faClipboardCheck
     ];
 
     this.initIcons(library, icons);

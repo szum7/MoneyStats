@@ -1,3 +1,5 @@
+
+
 - tranzakció listánál legyen mindegyiknek egy belső id-ja, hogy pl tudjak utalni rá, hogy duplikáció: id4 és id39 egyezik
 - jó lenne egy kijelölhető contentId egyben, hogy ctrl+F-el rá lehessen keresni, hogy tényleg van duplikáció
 - leírni az update.page folyamatát, ha lehet képekkel -> milyen param hova megy mi után
