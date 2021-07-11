@@ -1,0 +1,30 @@
+<div class="columns" *ngIf="!!data" (mouseenter) ="mouseEnter()" (mouseleave) ="mouseLeave()">
+    <div class="crosshair-x" [ngStyle]="{'height': crosshairHeight + 'px', 'left': crosshairLeft + 'px', 'bottom': crosshairBottom + 'px'}"></div>
+    <div class="crosshair-y" [ngStyle]="{'width': crosshairWidth + 'px', 'top': crosshairTop + 'px'}"></div>
+    <div class="column-y">
+        <div class="unit-step" *ngFor="let unit of yUnits | reverse; let i = index" [ngStyle]="{'top': getUnitStepHeight(i)}">{{formatNumber(unit)}}</div>
+    </div>
+    <div class="column" *ngFor="let bar of data.bars; let i = index">
+        <div class="bar-income" [ngClass]="{'hidden': barToggle.isIncomeHidden}" [ngStyle]="{'height': getBarHeight(bar.income), 'z-index': getBarZIndex(bar, 'income')}"></div>
+        <div class="bar-expense" [ngClass]="{'hidden': barToggle.isExpenseHidden}" [ngStyle]="{'height': getBarHeight(bar.expense), 'z-index': getBarZIndex(bar, 'expense')}"></div>
+        <div class="bar-flow" 
+            [ngClass]="{'hidden': barToggle.isFlowHidden, 'negative': bar.flow < 0}" 
+            [ngStyle]="{'height': getBarHeight(bar.flow), 'z-index': getBarZIndex(bar, 'flow')}"></div>
+        <div class="hover"></div>
+        <div class="date">
+            <span>{{bar.date | date:'yyyy.MM'}}</span>
+        </div>
+        <div class="stats">
+            <div class="align-right">
+                <div class="owf income" [title]="formatNumber(bar.income)">{{formatNumber(bar.income)}}</div>
+                <div class="owf expense" [title]="formatNumber(bar.expense)">{{formatNumber(bar.expense)}}</div>
+                <div class="owf flow" [title]="formatNumber(bar.flow)">{{formatNumber(bar.flow)}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="position: fixed;bottom:200px;left:20px;">
+    <button (click)="toggleBar('income')">Button 1</button>
+    <button (click)="toggleBar('expense')">Button 1</button>
+    <button (click)="toggleBar('flow')">Button 1</button>
+</div>

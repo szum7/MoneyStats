@@ -1,0 +1,156 @@
+
+// Dimensions
+$chartHeight: 600px;
+$columnWidth: 56px;
+$columnYWidth: 70px;
+
+// Fonts
+$numberFont: "Courier New";
+
+// Colors
+$barIncomeBgColor: #6bc582;
+$barExpenseBgColor: #de7373;
+$barPositiveFlowBgColor: #63b6ff;
+$barNegativeFlowBgColor: repeating-linear-gradient(
+    45deg,
+    #63b6ff,
+    #63b6ff 10px,
+    #388ad1 10px,
+    #388ad1 20px
+);
+$yUnitsBgColor: #f8f8f8;
+$yUnitsColor: #444;
+
+.columns {
+    position: relative;
+    display: flex;
+    height: $chartHeight;
+
+    .crosshair-y,
+    .crosshair-x {
+        position: fixed;
+        z-index: 15;
+    }
+
+    .crosshair-y {
+        left: 0;
+        height: 1px;
+        border-top: 1px dashed #777;
+    }
+    
+    .crosshair-x {
+        width: 1px;
+        border-left: 1px dashed #777;
+    }
+
+    .column-y {
+        position: fixed;
+        width: $columnYWidth;
+        height: $chartHeight;
+        font-size: 11px;
+        background-color: rgba(240, 240, 240, 0.6);
+        color: $yUnitsColor;
+        border-right: 1px dashed #eee;
+        z-index: 10;
+        font-family: $numberFont;
+
+        .unit-step {
+            position: absolute;
+            right: 3px;
+        }
+    }
+
+    .column {
+        flex: 0 0 $columnWidth;
+        border-right: 1px dashed #ddd;
+        position: relative;
+
+        &:nth-child(2) {
+            margin-left: $columnYWidth;
+            padding-left: 5px;
+        }
+
+        .hover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.03);
+            }
+        }
+
+        .bar-income,
+        .bar-expense,
+        .bar-flow {
+            position: absolute;
+            bottom: 0;
+            border: 2px solid rgba(255, 255, 255, 0.27);
+            border-bottom: none;
+        }
+        
+        .bar-income {
+            background-color: $barIncomeBgColor;
+            right: 7px;
+            left: 7px;
+        }
+        
+        .bar-expense {
+            background-color: $barExpenseBgColor;
+            right: 4px;
+            left: 4px;
+        }
+        
+        .bar-flow {
+            background-color: $barPositiveFlowBgColor;
+            right: 1px;
+            left: 1px;
+
+            &.negative {
+                background: $barNegativeFlowBgColor;
+            }
+        }
+
+        .date,
+        .stats {
+            position: absolute;
+            left: 0;
+            right: 0;
+            font-size: 11px;
+            font-family: $numberFont;
+        }
+
+        .date {
+            bottom: -23px;
+            text-align: center;
+        }
+
+        .stats {
+            bottom: -76px;
+            text-align: center;
+
+            .align-right {
+                display: inline-block;
+                text-align: right;
+            }
+
+            .owf {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                max-width: $columnWidth;
+            }
+
+            .income {
+                color: $barIncomeBgColor;
+            }
+            .expense {
+                color: $barExpenseBgColor;
+            }
+            .flow {
+                color: $barPositiveFlowBgColor;
+            }
+        }
+    }
+}
