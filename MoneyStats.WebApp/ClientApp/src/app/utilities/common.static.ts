@@ -23,9 +23,9 @@ export class RuleActionTypeObj {
 
 export class Common {
     public static ConsoleResponse(name: string, response: any): void {
-        console.log("=> " + name + ":");
+        console.log("%c=> " + name + ":", "color:#fcba03");
         console.log(response);
-        console.log("<=");
+        console.log("%c<=", "color:#fcba03");
     }
 
     public static containsObjectOnId(obj: any, list: any[]): boolean {

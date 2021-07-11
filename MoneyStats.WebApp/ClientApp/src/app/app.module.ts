@@ -46,6 +46,7 @@ import { EditRulesComponent } from './components/edit-rules/edit-rules.component
 import { SelectComponent } from './components/select/select.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { BasicMonthlyBarchartComponent } from './components/statistics/basic-monthly-barchart/basic-monthly-barchart.component';
+import { BasicMonthlyBarchartV2Component } from './components/statistics/basic-monthly-barchart-v2/basic-monthly-barchart-v2.component';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { WizardNavigatorComponent } from './components/wizards/wizard-navigator/wizard-navigator.component';
 
@@ -71,6 +72,7 @@ import { WizardNavigatorComponent } from './components/wizards/wizard-navigator/
     SelectComponent,
     DropdownComponent,
     BasicMonthlyBarchartComponent,
+    BasicMonthlyBarchartV2Component,
     // Pipes
     ReversePipe,
     WizardNavigatorComponent,
