@@ -7,7 +7,106 @@ type EnumDictionary<T extends string | symbol | number, U> = {
     [K in T]?: U;
 };
 
+class BankFileReadConfig {
+    
+    public bankType: BankType;
+    public postProcessFunction: (matrix: any) => any;
+    public columns: Array<ColumnDefinition>;
+
+    /**
+     * To be able to get columns by name in O(1). This is a speed over memory solution.
+     */
+    private reverseColumns: { [id: string] : number };
+    
+    /**
+     * @param bankType 
+     * @param postProcessFunction Can be set to null
+     * @param columns Order matters!
+     */
+    constructor(bankType: BankType, postProcessFunction: (matrix: any) => any, columns: Array<ColumnDefinition>) {
+        this.bankType = bankType;
+        this.postProcessFunction = postProcessFunction;
+        this.columns = columns;
+
+        this.initReverseColumns(columns);
+    }
+
+    getColumnByName(name: string): ColumnDefinition {
+        return this.columns[this.reverseColumns[name]];
+    }
+
+    getCssClassByColumnName(name: string): string {
+        return this.getColumnByName(name).cssClass;
+    }
+
+    getColumnNames(): string[] {
+        let ret: string[] = [];
+        this.columns.forEach(item => {
+            ret.push(item.columnName);
+        });
+        return ret;
+    }
+
+    private initReverseColumns(columns: Array<ColumnDefinition>){
+        this.reverseColumns = {};
+        for (let i = 0; i < columns.length; i++) {
+            this.reverseColumns[columns[i].columnName] = i;
+        }
+    }
+}
+
+class ColumnDefinition {
+
+    public columnName: string;
+    public literal: string; // Könyvelés dátuma | Tranzakció azonosító  | ...
+    public cssClass: string;
+    public valueConverterFunction: (any) => any;
+    public isOpen: boolean;
+    public width: string;
+
+    /**
+     * @param columnName 
+     * @param cssClass 
+     * @param valueConverterFunction Can be set to null
+     */
+    constructor(columnName: string, literal: string, cssClass: string, valueConverterFunction: (any) => any) {
+        this.columnName = columnName;
+        this.cssClass = cssClass;
+        this.valueConverterFunction = valueConverterFunction;
+        this.isOpen = true;
+    }
+}
+
 export class ExcelBankRowMapper {
+
+    private readonly BANK_FILE_MAPS: EnumDictionary<BankType, BankFileReadConfig> = {
+        [BankType.KH]: new BankFileReadConfig(BankType.KH, this.trimKAndHFromUnwantedRows, [
+            new ColumnDefinition("accountingDate", "", null, this.getJsDateFromExcel),
+            new ColumnDefinition("bankTransactionId", "", null, null),
+            new ColumnDefinition("type", "", null, null),
+            new ColumnDefinition("account", "", null, null),
+            new ColumnDefinition("accountName", "", null, null),
+            new ColumnDefinition("partnerAccount", "", null, null),
+            new ColumnDefinition("partnerName", "", null, null),
+            new ColumnDefinition("sum", "", null, null),
+            new ColumnDefinition("currency", "", null, null),
+            new ColumnDefinition("message", "", null, null)
+        ]),
+        [BankType.Raiffeisen]: new BankFileReadConfig(BankType.Raiffeisen, this.trimRaifeissenFromUnwantedRows, [
+            new ColumnDefinition("type", "", null, null),
+            new ColumnDefinition("accountingDate", "", null, this.getJsDateFromExcel),
+            new ColumnDefinition("ignore1", "", null, null),
+            new ColumnDefinition("transactionId", "", null, null),
+            new ColumnDefinition("sum", "", null, null),
+            new ColumnDefinition("partnerAccount", "", null, null),
+            new ColumnDefinition("partnerName", "", null, null),
+            new ColumnDefinition("messagePart1", "", null, null),
+            new ColumnDefinition("messagePart2", "", null, null),
+            new ColumnDefinition("messagePart3", "", null, null),
+            new ColumnDefinition("messagePart4", "", null, null),
+            new ColumnDefinition("messagePart5", "", null, null)
+        ])
+    };
 
     private readonly bankPropertyMaps: EnumDictionary<BankType, Array<PropertyMapRow>> = {
         [BankType.KH]: [
@@ -28,10 +127,48 @@ export class ExcelBankRowMapper {
         [BankType.OTP]: []
     };
 
-    public propertyMaps: Array<PropertyMapRow>;
+    private _config: BankFileReadConfig; // old name propertyMaps    
+
+    get config(): BankFileReadConfig {
+        return this._config;
+    }
+
+    get columns(): ColumnDefinition[] {
+        if (this._config === null) {
+            return null;
+        }
+        return this._config.columns;
+    }
+
+    get columnNames(): string[] {
+        return this._config.getColumnNames();
+    }
 
     constructor(bankType: BankType) {
-        this.propertyMaps = this.bankPropertyMaps[bankType];
+        this._config = this.BANK_FILE_MAPS[bankType];
+    }
+
+    // TODO nem itt a helye, csak példa hogy kb így nézzen ki
+    postProcessMatrix(selectedBank: BankType, data) {
+        let func = this.BANK_FILE_MAPS[selectedBank].postProcessFunction;
+        if (func === null) {
+            return data;
+        }
+        return func(data);
+    }
+
+    trimKAndHFromUnwantedRows(data) {
+        return data.splice(0, 1);
+    }
+
+    trimRaifeissenFromUnwantedRows(data) {
+        let count = 0;
+        while (count < data.length && data[count].type !== "Könyvelt tételek") count++;
+
+        if (count < data.length) {
+            return data.splice(0, count);
+        } 
+        return data;
     }
 
     getPropertyValue(obj: ReadInBankRow, key: string): any {
@@ -59,17 +196,17 @@ export class ExcelBankRowMapper {
     }
 
     isPropertyMapUnset(): boolean {
-        if (this.propertyMaps == null || this.propertyMaps.length == 0)
+        if (this._config == null || this._config.columns.length == 0)
             return true;
-        return this.propertyMaps[0].literal == null || this.propertyMaps[0].literal == "";
+        return false;
     }
 
-    setPropertyMapLiterals(worksheet: any): void {
-        for (let i = 0; i < this.propertyMaps.length; i++) {
-            let propertyMap = this.propertyMaps[i];
-            propertyMap.literal = worksheet[propertyMap.cell].v;
-        }
-    }
+    // setPropertyMapLiterals(worksheet: any): void {
+    //     for (let i = 0; i < this.propertyMaps.columns.length; i++) {
+    //         let propertyMap = this.propertyMaps.columns[i];
+    //         propertyMap.literal = worksheet[propertyMap.cell].v;
+    //     }
+    // }
 
     mapBankRows(list: Array<any>): Array<ReadInBankRow> {
         let array: Array<ReadInBankRow> = [];
@@ -100,23 +237,35 @@ export class ExcelBankRowMapper {
     private mapBankRow(obj: any): BankRow {
         let cast: BankRow = new BankRow();
 
-        for (let i = 0; i < this.propertyMaps.length; i++) {
-            const propertyMap = this.propertyMaps[i];
-            let value = obj[propertyMap.literal]; // Get the value
-            if (propertyMap.parser != null) {
-                value = propertyMap.parser(value); // Parse value if parse function is specified
+        for (let i = 0; i < this._config.columns.length; i++) {
+
+            const propertyMap = this._config.columns[i];
+
+            if (["ignore1"].some(x => x === propertyMap.columnName)){
+                continue;
             }
-            cast[propertyMap.property] = value; // Set the value
+
+            let value = obj[propertyMap.columnName]; // Get the value
+
+            if (value === null) {
+                continue;
+            }
+
+            if (propertyMap.valueConverterFunction != null) { // Parse value if parse function is specified
+                value = propertyMap.valueConverterFunction(value);
+            }
+
+            if (["messagePart1", "messagePart2", "messagePart3", "messagePart4", "messagePart5"].some(x => x === propertyMap.columnName)) {
+                if (cast["message"] === null) {
+                    cast["message"] = "";
+                }
+                cast["message"] += value;
+            } else {
+                cast[propertyMap.columnName] = value; // Set the value
+            }
         }
 
-        cast = this.setAdditionalProperties(cast);
-
         return cast;
-    }
-
-    private setAdditionalProperties(m: BankRow): BankRow {
-        //m.OriginalContentId = m.getContentId();
-        return m;
     }
 
     private getJsDateFromExcel(excelDate): Date {

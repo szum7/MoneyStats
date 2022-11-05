@@ -59,7 +59,7 @@
             <!-- BankRow reference -->
             <div class="br-container">
                 <div class="br-row" *ngFor="let br of tr.value.bankRowArray">
-                    <div class="br-cell" *ngFor="let propertyMap of mapper.propertyMaps" [title]="propertyMap.property">
+                    <div class="br-cell" *ngFor="let propertyMap of mapper.columns" [title]="propertyMap.property">
                         {{mapper.getPropertyValueOrNull(br, propertyMap.property)}}
                     </div>
                 </div>

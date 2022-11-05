@@ -42,8 +42,9 @@ export class ExcelReader {
 
             // Read file
             self.readFile(file, function(unmappedArray) { // this is an async function
-                mappedExcelMatrix.push(self.mapper.mapBankRows(unmappedArray));
-                self.isFinishedArray[i] = true;
+                console.log(unmappedArray);
+                //mappedExcelMatrix.push(self.mapper.mapBankRows(unmappedArray));
+                //self.isFinishedArray[i] = true;
             });
         }
 
@@ -57,7 +58,12 @@ export class ExcelReader {
         }
     }
 
-    /** Async function with a callback. */
+    /** 
+     * Async function with a callback. 
+     * Returns the file in an array of objects. 
+     * An array is a row.
+     * The properties' name of the objects are the first row of the file.
+     */
     private readFile(file: File, callback: (response: any) => void): void {
 
         let fileReader = new FileReader();
@@ -76,11 +82,35 @@ export class ExcelReader {
             var first_sheet_name = workbook.SheetNames[0];
             var worksheet = workbook.Sheets[first_sheet_name];
 
-            if (_this.mapper.isPropertyMapUnset()) {
-                _this.mapper.setPropertyMapLiterals(worksheet);
-            }
+            // if (_this.mapper.isPropertyMapUnset()) {
+            //     _this.mapper.setPropertyMapLiterals(worksheet);
+            // }
 
-            var result = XLSX.utils.sheet_to_json(worksheet, { raw: true });
+            let kAndHHeader = [
+                "accountingDate",
+                "transactionId", 
+                "type", 
+                "account",
+                "accountName",
+                "partnerAccount", 
+                "partnerName", 
+                "sum", 
+                "currency", 
+                "message"
+                // the rest is ignored
+            ];
+
+            let raiffeisenHeader = [
+                "type", 
+                "accountingDate", 
+                "ignore1", 
+                "transactionId", 
+                "sum", 
+                "partnerAccount", 
+                "partnerName", 
+                "messagePart1", "messagePart2", "messagePart3", "messagePart4", "messagePart5"];
+
+            var result = XLSX.utils.sheet_to_json(worksheet, { raw: true, header: _this.mapper.columnNames });
             callback(result);
         }
         fileReader.readAsArrayBuffer(file);

@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+Documents/BankFiles/Raiffeisen/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

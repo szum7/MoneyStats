@@ -9,7 +9,7 @@
             <!-- Id head -->
             <div class="tr-cell" style="width: 30px;">#</div>
             <!-- BankRow value head -->
-            <div class="tr-cell" *ngFor="let propertyMap of mapper.propertyMaps"
+            <div class="tr-cell" *ngFor="let propertyMap of mapper.columns"
                 [ngStyle]="{'width': propertyMap.width}">
                 <span *ngIf="!propertyMap.literal">{{propertyMap.property}}</span>
                 <span *ngIf="propertyMap.literal">{{propertyMap.literal}}</span>
@@ -37,7 +37,7 @@
                 <!-- Id -->
                 <div class="tr-cell" style="width: 30px;">{{tr.uiId}}</div>
                 <!-- BankRow value -->
-                <div class="tr-cell {{propertyMap.customClass}}" *ngFor="let propertyMap of mapper.propertyMaps"
+                <div class="tr-cell {{propertyMap.customClass}}" *ngFor="let propertyMap of mapper.columns"
                     [ngStyle]="{'width': propertyMap.width}"
                     [title]="mapper.getPropertyValue(tr.bankRow, propertyMap.property)">
                     {{mapper.getPropertyValue(tr.bankRow, propertyMap.property)}}
